@@ -1,0 +1,621 @@
+{
+  "diagnosticRules": [
+    {
+      "shortName": "nic",
+      "displayName": "Network Interfaces",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/networkInterfaces"
+        },
+        {
+          "field": "tags.DatabricksEnvironment",
+          "exists": false
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/networkInterfaces/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "timeGrain": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "nsg",
+      "displayName": "Network Security Groups",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/networkSecurityGroups"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/networkSecurityGroups/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [],
+            "logs": [
+              {
+                "category": "NetworkSecurityGroupEvent",
+                "enabled": true
+              },
+              {
+                "category": "NetworkSecurityGroupRuleCounter",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "publicip",
+      "displayName": "Public IPs",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/publicIPAddresses"
+        },
+        {
+          "field": "tags.databricks-instance-name",
+          "exists": false
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/publicIPAddresses/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "timeGrain": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              }
+            ],
+            "logs": [
+              {
+                "category": "DDoSProtectionNotifications",
+                "enabled": true
+              },
+              {
+                "category": "DDoSMitigationFlowLogs",
+                "enabled": true
+              },
+              {
+                "category": "DDoSMitigationReports",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "bastionhost",
+      "displayName": "Bastion Host",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/bastionHosts"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/bastionHosts/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "timeGrain": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              }
+            ],
+            "logs": [
+              {
+                "category": "BastionAuditLogs",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "lbalancer",
+      "displayName": "Load Balancers",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/loadBalancers"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/loadBalancers/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "timeGrain": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              }
+            ],
+            "logs": [
+              {
+                "category": "LoadBalancerAlertEvent",
+                "enabled": true
+              },
+              {
+                "category": "LoadBalancerProbeHealthStatus",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "cdnendpoints",
+      "displayName": "CDN Endpoints",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Cdn/profiles/endpoints"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Cdn/profiles/endpoints/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceFullName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [],
+            "logs": [
+              {
+                "category": "CoreAnalytics",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "appgw",
+      "displayName": "Application Gateways",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/applicationGateways"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/applicationGateways/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "ApplicationGatewayAccessLog",
+                "enabled": true
+              },
+              {
+                "category": "ApplicationGatewayPerformanceLog",
+                "enabled": true
+              },
+              {
+                "category": "ApplicationGatewayFirewallLog",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "firewall",
+      "displayName": "Azure Firewalls",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/azureFirewalls"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/azureFirewalls/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "AzureFirewallApplicationRule",
+                "enabled": true
+              },
+              {
+                "category": "AzureFirewallDnsProxy",
+                "enabled": true
+              },
+              {
+                "category": "AzureFirewallNetworkRule",
+                "enabled": true
+              },
+              {
+                "category": "AZFWNetworkRule",
+                "enabled": true
+              },
+              {
+                "category": "AZFWApplicationRule",
+                "enabled": true
+              },
+              {
+                "category": "AZFWNatRule",
+                "enabled": true
+              },
+              {
+                "category": "AZFWThreatIntel",
+                "enabled": true
+              },
+              {
+                "category": "AZFWIdpsSignature",
+                "enabled": true
+              },
+              {
+                "category": "AZFWDnsQuery",
+                "enabled": true
+              },
+              {
+                "category": "AZFWFqdnResolveFailure",
+                "enabled": true
+              },
+              {
+                "category": "AZFWFatFlow",
+                "enabled": true
+              },
+              {
+                "category": "AZFWFlowTrace",
+                "enabled": true
+              },
+              {
+                "category": "AZFWApplicationRuleAggregation",
+                "enabled": true
+              },
+              {
+                "category": "AZFWNetworkRuleAggregation",
+                "enabled": true
+              },
+              {
+                "category": "AZFWNatRuleAggregation",
+                "enabled": true
+              }
+            ],
+            "logAnalyticsDestinationType": "Dedicated"
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "expressroutegw",
+      "displayName": "ExpressRoute Gateways",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/expressRouteGateways"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/expressRouteGateways/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "expressroutes",
+      "displayName": "Express Routes Circuits",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/expressRouteCircuits"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/expressRouteCircuits/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "PeeringRouteLog",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "vnet",
+      "displayName": "Virtual Networks",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/virtualNetworks"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/virtualNetworks/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "VMProtectionAlerts",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "vnetgw",
+      "displayName": "Virtual Network Gateways",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/virtualNetworkGateways"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/virtualNetworkGateways/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "GatewayDiagnosticLog",
+                "enabled": true
+              },
+              {
+                "category": "IKEDiagnosticLog",
+                "enabled": true
+              },
+              {
+                "category": "P2SDiagnosticLog",
+                "enabled": true
+              },
+              {
+                "category": "RouteDiagnosticLog",
+                "enabled": true
+              },
+              {
+                "category": "TunnelDiagnosticLog",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "vpngw",
+      "displayName": "VPN Gateways",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/vpnGateways"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/vpnGateways/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "GatewayDiagnosticLog",
+                "enabled": true
+              },
+              {
+                "category": "TunnelDiagnosticLog",
+                "enabled": true
+              },
+              {
+                "category": "RouteDiagnosticLog",
+                "enabled": true
+              },
+              {
+                "category": "IKEDiagnosticLog",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "trafficmgr",
+      "displayName": "Azure Traffic Manager",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/trafficManagerProfiles"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Network/trafficManagerProfiles/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "ProbeHealthStatusEvents",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+    "resourceType": "Microsoft.Logic/workflows",
+    "functionName": "",
+    "advancedFilters": [
+        {
+            "operator": "StringBeginsWith",
+            "key": "data.operationName",
+            "Values": [
+                "Microsoft.Compute/virtualMachines/write",
+                "Microsoft.Compute/virtualMachines/delete",
+                "Microsoft.Compute/virtualMachines/start/action",
+                "Microsoft.Compute/virtualMachines/stop/action",
+                "Microsoft.Compute/virtualMachines/deallocate/action",
+                "Microsoft.Compute/virtualMachineScaleSets/write",
+                "Microsoft.Compute/virtualMachineScaleSets/delete",
+                "Microsoft.Compute/virtualMachineScaleSets/start/action",
+                "Microsoft.Compute/virtualMachineScaleSets/stop/action",
+                "Microsoft.Compute/virtualMachineScaleSets/deallocate/action",
+                "Microsoft.ContainerService/managedClusters/write",
+                "Microsoft.ContainerService/managedClusters/delete"
+            ]
+        }
+    ],
+    "includedEventType": [
+        "Microsoft.Resources.ResourceDeleteSuccess",
+        "Microsoft.Resources.ResourceWriteSuccess",
+        "Microsoft.Resources.ResourceActionSuccess"
+    ]
+}

@@ -1,0 +1,225 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{SubscriptionPicker}"
+        ],
+        "parameters": [
+          {
+            "id": "83ebaff2-4c26-449e-a2f9-e3a4d436027d",
+            "version": "KqlParameterItem/1.0",
+            "name": "SubscriptionPicker",
+            "label": "Subscription",
+            "type": 6,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": true,
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "27b9c18d-76a9-4b26-ab6c-52b1f11afc0a",
+            "version": "KqlParameterItem/1.0",
+            "name": "ResourceGroupPicker",
+            "label": "Resource Group",
+            "type": 2,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| distinct resourceGroup\r\n| order by resourceGroup asc",
+            "crossComponentResources": [
+              "{SubscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "selectAllValue": "",
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "f61ecb1c-bd10-40da-9a84-c047621aac92",
+            "version": "KqlParameterItem/1.0",
+            "name": "ResourcetypePicker",
+            "label": "Resource Type",
+            "type": 7,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": true,
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "value": [
+              "value::all"
+            ]
+          },
+          {
+            "id": "f4cb727b-e4c4-4594-9e23-1a4058a337de",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]ManagedPicker",
+            "label": "[parameter(tagPrefix)]Managed",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "Yes"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Not set\", \"Yes\", \"Tag value invalid\"]",
+            "defaultValue": "value::all"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]MaintenancePicker",
+            "label": "[parameter(tagPrefix)]Maintenance",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Not set\", \"Yes\", \"No\"]",
+            "defaultValue": "value::all",
+            "id": "3d0b1d07-ffad-4c81-ba44-989d1d8d1f16",
+            "value": [
+              "Yes",
+              "Not set"
+            ]
+          },
+          {
+            "id": "da9683be-dee0-49a2-b782-3b141eb97a63",
+            "version": "KqlParameterItem/1.0",
+            "name": "Locationpicker",
+            "label": "Location",
+            "type": 8,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": true,
+              "selectAllValue": "All",
+              "showDefault": false
+            },
+            "defaultValue": "value::all"
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 0"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Resources\r\n| extend [parameter(tagPrefix)]Managed = case(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"', \"Yes\",\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Managed\":', \"Tag value invalid\", \r\n    \"Not Set\")\r\n| extend [parameter(tagPrefix)]Maintenance = case(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Maintenance\":\"true\"', \"Yes\",\r\n    tostring(tags) has '\" [parameter(tagPrefix)]Maintenance \":', \"Tag value invalid\", \r\n    \"Not Set\")    \r\n| where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]ManagedPicker})\r\n| where [parameter(tagPrefix)]Maintenance in~ ({[parameter(tagPrefix)]MaintenancePicker})\r\n| where type in~ ({ResourcetypePicker})\r\n| where resourceGroup in~ ({ResourceGroupPicker})\r\n| project id, name, subscriptionId, ResourceGroup = resourceGroup, ResourceType = type , [parameter(tagPrefix)]Managed, [parameter(tagPrefix)]Maintenance, Location = location, tags\r\n| order by tolower(name) asc \r\n| project-away name\r\n",
+        "size": 3,
+        "title": "Maintenance Resource List  - Overview",
+        "noDataMessage": "No data to display. Please check filters at the top",
+        "showRefreshButton": true,
+        "showExportToExcel": true,
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{SubscriptionPicker}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "tags",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "60ch"
+              }
+            },
+            {
+              "columnMatch": "name",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "SubScription",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            }
+          ],
+          "labelSettings": [
+            {
+              "columnId": "id",
+              "label": "Resource Name"
+            },
+            {
+              "columnId": "subscriptionId",
+              "label": "Subscription"
+            },
+            {
+              "columnId": "tags",
+              "label": "All tags overview"
+            }
+          ]
+        },
+        "sortBy": []
+      },
+      "name": "query - 0"
+    }
+  ],
+  "fallbackResourceIds": [
+    "azure monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

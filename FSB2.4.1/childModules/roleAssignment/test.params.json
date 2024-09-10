@@ -1,0 +1,14 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "managedIdentityId": {
+            "value": "818807b4-bb80-4024-8dd7-122ca23cf41a"
+        },
+        "roleDefinitionIdOrNames": {
+            "value": [
+                "Reader"
+            ]
+        }
+    }
+}

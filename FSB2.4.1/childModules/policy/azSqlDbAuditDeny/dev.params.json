@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlSettings": {
+            "value": {
+                "enableSqlTlsPolicy": "Audit",
+                "azureSqlDbAvoidGrsBackup": "Disabled",
+                "vulnerabilitySqlDatabase":"AuditIfNotExists",
+                "sqlDbAdvancedDataSecurity":"AuditIfNotExists",
+                "sqlDbEnsureServerTdeIsEncryptedWithYourOwnKey":"Audit",
+                "sqlDbAdOnlyEnabled":"Audit"
+            }
+        },
+        "azSqlDbAuditDenySetName": {
+            "value": "azsqldb.auditdeny.policy.set"
+        },
+        "azSqlDbAuditDenySetDisplayName": {
+            "value": "Sql Db auditdeny policy set"
+        },
+        "azSqlDbAuditDenySetAssignmentName": {
+            "value": "azsqldb.auditdeny.policy.set.assignment"
+        },
+        "azSqlDbAuditDenySetAssignmentDisplayName": {
+		    "value": "Sql Db auditdeny policy set assignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

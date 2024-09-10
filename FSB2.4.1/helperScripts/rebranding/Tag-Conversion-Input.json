@@ -1,0 +1,199 @@
+{
+   "Subscriptions": [
+      {
+         "SubscriptionID": "tyuty5345asd-u6y5yqwe-98we7wer3a733d2",
+         "SubscriptionName": "SUBSCRIPTION TEST MGMT",
+         "Include": true
+      },
+      {
+         "SubscriptionID": "23423dfgrer-u6876qwe-98we7tywb25587e",
+         "SubscriptionName": "SUBSCRIPTION TEST CNTY",
+         "Include": true
+      },
+      {
+         "SubscriptionID": "345evcvxdfe4-u6876qwe-98we7tywb25587e",
+         "SubscriptionName": "SUBSCRIPTION TEST LND1",
+          "Include": true
+      },
+      {
+         "SubscriptionID": "df345ertter-u6876qwe-98we7tywb25587e",
+         "SubscriptionName": "SUBSCRIPTION TEST LND2",
+         "Include": true
+      },
+      {
+         "SubscriptionID": "tyuty56745g5-u6876qwe-98we7tywb25587e",
+         "SubscriptionName": "SUBSCRIPTION TEST LND3",
+         "Include": true
+      }
+   ],
+   "ResourceTags": [
+      {
+         "ExistingTagName": "AtosManaged",
+         "NewTagName": "EvidenManaged",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      },
+      {
+         "ExistingTagName": "AtosPurpose",
+         "NewTagName": "EvidenPurpose",
+         "ReplaceTagName": false,
+         "RemoveExistingTag": true
+      },
+      {
+         "ExistingTagName": "AtosLogicAppScope",
+         "NewTagName": "EvidenLogicAppScope",
+         "ReplaceTagName": false,
+         "RemoveExistingTag": true
+      },
+      {
+         "ExistingTagName": "AtosStorageAccountKeyRotation",
+         "NewTagName": "EvidenStorageAccountKeyRotation",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      },
+      {
+         "ExistingTagName": "AtosBackup",
+         "NewTagName": "EvidenBackup",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      },
+      {
+         "ExistingTagName": "AtosOsVersion",
+         "NewTagName": "EvidenOsVersion",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      },
+      {
+         "ExistingTagName": "AtosPatching",
+         "NewTagName": "EvidenPatching",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      },
+      {
+         "ExistingTagName": "AtosAntimalware",
+         "NewTagName": "EvidenAntimalware",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      },
+      {
+         "ExistingTagName": "AtosEncryption",
+         "NewTagName": "EvidenEncryption",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      },
+      {
+         "ExistingTagName": "AtosMaintenance",
+         "NewTagName": "EvidenMaintenance",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      },
+      {
+         "ExistingTagName": "AtosITSMServiceNowEnvironment",
+         "NewTagName": "EvidenITSMServiceNowEnvironment",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      },
+      {
+         "ExistingTagName": "AtosITSMServiceNowCICriticality",
+         "NewTagName": "EvidenITSMServiceNowCICriticality",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      },
+      {
+         "ExistingTagName": "AtosCompliance",
+         "NewTagName": "EvidenCompliance",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      }
+   ],
+   "SubscriptionsTags": [
+      {
+         "ExistingTagName": "AtosITSMServiceNowEnvironment",
+         "NewTagName": "EvidenITSMServiceNowEnvironment",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      },
+      {
+         "ExistingTagName": "AtosITSMServiceNowFO",
+         "NewTagName": "EvidenITSMServiceNowFO",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      },
+      {
+         "ExistingTagName": "AtosCompliance",
+         "NewTagName": "EvidenCompliance",
+         "ReplaceTagName": true,
+         "RemoveExistingTag": false
+      }
+   ],
+   "DiagnosticsConfigResourceType" : [
+         "Microsoft.Storage/storageAccounts",
+         "Microsoft.AAD/domainServices",
+         "Microsoft.Resources/subscriptions",
+         "Microsoft.KeyVault/vaults",
+         "Microsoft.Automation/automationAccounts",
+         "Microsoft.EventGrid/topics",
+         "Microsoft.EventGrid/eventSubscriptions",
+         "Microsoft.Network/networkInterfaces",
+         "Microsoft.Network/networkSecurityGroups",
+         "Microsoft.Network/publicIPAddresses",
+         "Microsoft.Network/bastionHosts",
+         "Microsoft.Network/loadBalancers",
+         "Microsoft.Cdn/profiles/endpoints",
+         "Microsoft.Network/applicationGateways",
+         "Microsoft.Network/azureFirewalls",
+         "Microsoft.Network/expressRouteCircuits",
+         "Microsoft.Network/virtualNetworks",
+         "Microsoft.Network/virtualNetworkGateways",
+         "Microsoft.Network/trafficManagerProfiles",
+         "Microsoft.Compute/virtualMachines",
+         "Microsoft.Compute/virtualMachineScaleSets",
+         "Microsoft.RecoveryServices/vaults",
+         "Microsoft.Synapse/workspaces/sqlPools",
+         "Microsoft.Synapse/workspaces",
+         "Microsoft.Synapse/workspaces/bigDataPools",
+         "Microsoft.CognitiveServices/accounts",
+         "Microsoft.DataLakeAnalytics/accounts",
+         "Microsoft.DataLakeStore/accounts",
+         "Microsoft.EventHub/namespaces",
+         "Microsoft.Devices/IotHubs",
+         "Microsoft.Logic/workflows",
+         "Microsoft.Logic/integrationAccounts",
+         "Microsoft.Search/searchServices",
+         "Microsoft.ServiceBus/namespaces",
+         "Microsoft.Sql/servers/databases",
+         "Microsoft.Sql/servers/databases",
+         "Microsoft.Sql/servers/elasticPools",
+         "Microsoft.ApiManagement/service",
+         "Microsoft.Batch/batchAccounts",
+         "Microsoft.DBforMySQL/servers",
+         "Microsoft.DBforMySQL/flexibleServers",
+         "Microsoft.DBforPostgreSQL/servers",
+         "Microsoft.DBforPostgreSQL/flexibleServers",
+         "Microsoft.DocumentDB/databaseAccounts",
+         "Microsoft.DataFactory/factories",
+         "Microsoft.PowerBIDedicated/capacities",
+         "Microsoft.StreamAnalytics/streamingjobs",
+         "Microsoft.ContainerInstance/containerGroups",
+         "Microsoft.ContainerRegistry/registries",
+         "Microsoft.ContainerService/managedClusters",
+         "Microsoft.Web/sites",
+         "Microsoft.AnalysisServices/servers",
+         "Microsoft.HDInsight/clusters",
+         "Microsoft.Cache/redis",
+         "Microsoft.Cache/redisEnterprise",
+         "Microsoft.Relay/namespaces",
+         "Microsoft.SignalRService/SignalR",
+         "Microsoft.Web/serverfarms",
+         "Microsoft.Sql/managedInstances",
+         "Microsoft.TimeSeriesInsights/environments",
+         "Microsoft.DBforMariaDB/servers",
+         "Microsoft.Sql/servers",
+         "Microsoft.Databricks/workspaces"
+   ],
+   "Alerts" : [
+      "Delete Atos Disk Encryption KeyVault",
+      "Delete Atos Disk Encryption Set",
+      "New DCS Azure custom alert"
+   ]
+}

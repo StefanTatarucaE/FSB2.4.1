@@ -1,0 +1,1622 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{subscriptionPicker}"
+        ],
+        "parameters": [
+          {
+            "id": "f5f66862-c38c-4c25-98fa-ad1e7f463a0f",
+            "version": "KqlParameterItem/1.0",
+            "name": "subscriptionPicker",
+            "label": "Subscription",
+            "type": 6,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": false,
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "b1ae8eeb-0570-482d-af41-aa81999ad44a",
+            "version": "KqlParameterItem/1.0",
+            "name": "resourceGroupPicker",
+            "label": "Resource Group",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where ['type']contains  \"Microsoft.ContainerService\"\r\n| project resourceGroup\r\n| distinct resourceGroup",
+            "crossComponentResources": [
+              "{subscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "af203fe9-f903-40c7-8d81-f9842eccfde4",
+            "version": "KqlParameterItem/1.0",
+            "name": "Location",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where ['type']contains  \"Microsoft.ContainerService\"\r\n| distinct location",
+            "crossComponentResources": [
+              "{subscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "2a6e9715-65ac-4e99-8087-36d38c6df94b",
+            "version": "KqlParameterItem/1.0",
+            "name": "SKU",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where ['type']contains  \"Microsoft.ContainerService\"\r\n| extend Name=tostring(sku.name)\r\n| distinct Name",
+            "crossComponentResources": [
+              "{subscriptionPicker}"
+            ],
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "c5cdfd6b-4b9e-4d8b-83f1-cf59a9d64b6f",
+            "version": "KqlParameterItem/1.0",
+            "name": "ProvisioningState",
+            "label": "Status",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Online\", \"Failed\", \"Creating\"]",
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "cfea8840-7445-43c0-9181-448c3cb0d681",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]Managed",
+            "label": "Managed by [parameter(companyName)]",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Yes\", \"No\"]",
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "ebd25144-b13a-411c-a76f-4a15a2b2e668",
+            "version": "KqlParameterItem/1.0",
+            "name": "MonitoringInsights",
+            "label": "Monitoring Insights",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Enabled\", \"Not Enabled\"]",
+            "defaultValue": "value::all"
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "parameters - 1"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where ['type'] contains  \"Microsoft.ContainerService\"\r\n| extend ResGroup = strcat('/subscriptions/', subscriptionId, '/resourceGroups/', resourceGroup)\r\n| extend aksSKU = tostring(properties.sku.name)\r\n| extend Subscription = strcat('/subscriptions/', subscriptionId)\r\n| extend Status = case(\r\n    tolower(properties.provisioningState) == \"succeeded\", \"Online\",\r\n    tolower(properties.provisioningState) == \"failed\", \"Failed\",\r\n    tolower(properties.provisioningState) == \"creating\", \"Creating\",\r\n    properties.provisoningState\r\n)\r\n| extend [parameter(tagPrefix)]Managed = iff((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"Yes\", \"No\")\r\n| extend InsightsEnabled = iif((properties.addonProfiles.omsagent.enabled==\"true\"), \"Enabled\", \"Not Enabled\")\r\n| extend InsightLAW = iif((properties.addonProfiles.omsagent.config.logAnalyticsWorkspaceResourceID!=\"\"),split(split(properties.addonProfiles.omsagent.config.logAnalyticsWorkspaceResourceID,\"/\",8)[0],'\"}',0)[0], \"n/a\")\r\n| where [parameter(tagPrefix)]Managed in ({[parameter(tagPrefix)]Managed})\r\n| where resourceGroup in ({resourceGroupPicker})\r\n| where sku.name in ({SKU})\r\n| where location in ({Location})\r\n| where Status in ({ProvisioningState})\r\n| where InsightsEnabled in ({MonitoringInsights})\r\n| project ['Resource'] = ['id'], ['Name'] = name, Subscription, ['Resource group']=ResGroup, ['SKU'] = tostring(sku.name), ['Location'] = location, Status, [parameter(tagPrefix)]Managed, ['Monitoring Insights'] = InsightsEnabled, ['Log Analytics Workspace'] = InsightLAW \r\n",
+        "size": 0,
+        "noDataMessage": "The query returned no results for selected filters",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "value::all"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Status",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Creating",
+                    "representation": "1",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Failed",
+                    "representation": "4",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "contains",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "Monitoring Insights",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Not",
+                    "representation": "2",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "InsightLAW",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            }
+          ]
+        },
+        "sortBy": []
+      },
+      "conditionalVisibility": {
+        "parameterName": "resourceGroupPicker",
+        "comparison": "isNotEqualTo"
+      },
+      "name": "query - 11"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "#### No Azure Kubernetes Services are deployed in selected subscription(s).",
+        "style": "info"
+      },
+      "conditionalVisibility": {
+        "parameterName": "resourceGroupPicker",
+        "comparison": "isEqualTo"
+      },
+      "name": "text - 2",
+      "styleSettings": {
+        "margin": "0"
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## Azure Kubernetes Services Metrics"
+      },
+      "name": "text - 7"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### Metrics are only available for AKS that have Monitoring Insights enabled and logs its data to the [parameter(companyName)] Managed Log Analytics Workspace",
+        "style": "info"
+      },
+      "name": "text - 8"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{subscriptionPicker}"
+        ],
+        "parameters": [
+          {
+            "id": "361b6464-733f-433e-aba7-4e35472db602",
+            "version": "KqlParameterItem/1.0",
+            "name": "aksid",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where ['type'] contains  \"Microsoft.ContainerService\"\r\n| extend Name= tostring(split(id,\"/\",8)[0])\r\n| project Name\r\n| distinct Name",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "isHiddenWhenLocked": true,
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "ca323f2a-96d0-46d6-ab7e-c698699ac900",
+            "version": "KqlParameterItem/1.0",
+            "name": "LAWorkspace",
+            "type": 5,
+            "isRequired": true,
+            "query": "resources\r\n| where type =~ 'microsoft.operationalinsights/workspaces'\r\n| where (tostring(tags) has ('\"[parameter(tagValuePrefix)]LogAnalytics\"')) or (tostring(tags) has ('\"[parameter(tagValuePrefix)]Monitoring\"'))\r\n| project id",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "isHiddenWhenLocked": true,
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::1"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::1",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "5703c1f1-7725-4972-bfa0-79994bb97b01",
+            "version": "KqlParameterItem/1.0",
+            "name": "timeRange",
+            "type": 4,
+            "isRequired": true,
+            "value": {
+              "durationMs": 14400000
+            },
+            "typeSettings": {
+              "selectableValues": [
+                {
+                  "durationMs": 3600000
+                },
+                {
+                  "durationMs": 14400000
+                },
+                {
+                  "durationMs": 43200000
+                },
+                {
+                  "durationMs": 86400000
+                },
+                {
+                  "durationMs": 172800000
+                },
+                {
+                  "durationMs": 259200000
+                },
+                {
+                  "durationMs": 604800000
+                },
+                {
+                  "durationMs": 1209600000
+                },
+                {
+                  "durationMs": 2592000000
+                },
+                {
+                  "durationMs": 5184000000
+                },
+                {
+                  "durationMs": 7776000000
+                }
+              ],
+              "allowCustom": true
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "label": "Time Range"
+          },
+          {
+            "id": "0eabf395-b8dd-4dc0-9cb7-cb613b40d243",
+            "version": "KqlParameterItem/1.0",
+            "name": "ClusterID",
+            "label": "ClusterId",
+            "type": 5,
+            "isRequired": true,
+            "query": "resources\r\n| where ['type'] == \"microsoft.containerservice/managedclusters\"\r\n| extend InsightLAW = iif((properties.addonProfiles.omsagent.config.logAnalyticsWorkspaceResourceID!=\"\"),split(split(properties.addonProfiles.omsagent.config.logAnalyticsWorkspaceResourceID,\"/\",8)[0],'\"}',0)[0], \"n/a\")\r\n| where properties.addonProfiles.omsagent.enabled==\"true\"\r\n| project  id, InsightLAW ",
+            "crossComponentResources": [
+              "{subscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::1"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::1",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "db6e1bcd-4a48-4917-b776-bdf5fb0af241",
+            "version": "KqlParameterItem/1.0",
+            "name": "clusterIdWhereClause",
+            "type": 1,
+            "isHiddenWhenLocked": true,
+            "criteriaData": [
+              {
+                "criteriaContext": {
+                  "operator": "Default",
+                  "resultValType": "static",
+                  "resultVal": "| where ClusterId =~ \"{ClusterID}\""
+                }
+              }
+            ],
+            "timeContext": {
+              "durationMs": 86400000
+            }
+          },
+          {
+            "id": "fdbf4288-4d02-4392-bef2-33dd35da04d2",
+            "version": "KqlParameterItem/1.0",
+            "name": "namespace",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "union isfuzzy=true (KubePodInventory\r\n{clusterIdWhereClause}\r\n| distinct Namespace ),\r\n( print Namespace=\"\" )\r\n| where isnotempty(Namespace)",
+            "crossComponentResources": [
+              "{LAWorkspace}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces"
+          },
+          {
+            "id": "9589261a-4a04-4c83-9f1f-2439a6f12672",
+            "version": "KqlParameterItem/1.0",
+            "name": "deploymentName",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "union isfuzzy=true ( InsightsMetrics\r\n| where Name == \"kube_deployment_status_replicas_ready\"\r\n| extend Tags = parse_json(Tags)\r\n| extend ClusterId = Tags[\"container.azm.ms/clusterId\"]\r\n{clusterIdWhereClause}\r\n| extend DeploymentName = tostring(Tags.deployment)\r\n| where Tags.k8sNamespace in ({namespace})\r\n| distinct DeploymentName ),\r\n( print DeploymentName=\"\" )\r\n| where isnotempty(DeploymentName)",
+            "crossComponentResources": [
+              "{LAWorkspace}"
+            ],
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces"
+          },
+          {
+            "id": "43954a2e-aa81-40f1-82a4-812a27a57af9",
+            "version": "KqlParameterItem/1.0",
+            "name": "Type",
+            "label": "PV Type",
+            "type": 2,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "union isfuzzy=true ( KubePVInventory\r\n| distinct PVType ),\r\n( print PVType=\"\" )\r\n| where isnotempty(PVType)",
+            "crossComponentResources": [
+              "{LAWorkspace}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces"
+          },
+          {
+            "id": "8925b059-d1fc-42c4-a016-9a3b930828d7",
+            "version": "KqlParameterItem/1.0",
+            "name": "StorageClass",
+            "label": " Storage Class",
+            "type": 2,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "union isfuzzy=true ( KubePVInventory\r\n| extend PVStorageClassName = iff(PVStorageClassName == '', '<None>', PVStorageClassName)\r\n| distinct PVStorageClassName ),\r\n( print PVStorageClassName=\"\" )\r\n| where isnotempty(PVStorageClassName)",
+            "crossComponentResources": [
+              "{LAWorkspace}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces"
+          },
+          {
+            "id": "1c10fab8-c7ec-4bf0-a885-3a0cae40505f",
+            "version": "KqlParameterItem/1.0",
+            "name": "AccessMode",
+            "type": 2,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "datatable(AccessModes:string)\r\n[\r\n    'ReadWriteOnce',\r\n    'ReadWriteMany',\r\n    'ReadOnlyMany'\r\n]",
+            "crossComponentResources": [
+              "{LAWorkspace}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ]
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "value": [
+              "value::all"
+            ]
+          },
+          {
+            "id": "fa7e69d8-8935-4269-a1a5-d9e22dd71517",
+            "version": "KqlParameterItem/1.0",
+            "name": "StorageClassWhereClause",
+            "type": 1,
+            "isHiddenWhenLocked": true,
+            "criteriaData": [
+              {
+                "criteriaContext": {
+                  "leftOperand": "StorageClass",
+                  "operator": "isNotNull",
+                  "rightValType": "param",
+                  "resultValType": "static",
+                  "resultVal": "| where PVStorageClassName in ({StorageClass})"
+                }
+              },
+              {
+                "criteriaContext": {
+                  "operator": "Default",
+                  "resultValType": "static",
+                  "resultVal": "| where \"a\" == \"a\""
+                }
+              }
+            ],
+            "timeContext": {
+              "durationMs": 86400000
+            }
+          },
+          {
+            "id": "5c6e6d70-c3fb-4c3e-96fe-4ffdf3178fa6",
+            "version": "KqlParameterItem/1.0",
+            "name": "AccessModeWhereClause",
+            "type": 1,
+            "isHiddenWhenLocked": true,
+            "criteriaData": [
+              {
+                "criteriaContext": {
+                  "leftOperand": "AccessMode",
+                  "operator": "isNotNull",
+                  "rightValType": "param",
+                  "resultValType": "static",
+                  "resultVal": "| where PVAccessModes has_any ({AccessMode})"
+                }
+              },
+              {
+                "criteriaContext": {
+                  "operator": "Default",
+                  "resultValType": "static",
+                  "resultVal": "| where \"a\" == \"a\""
+                }
+              }
+            ],
+            "timeContext": {
+              "durationMs": 86400000
+            }
+          },
+          {
+            "id": "51514c82-3b25-497d-b4ba-2dbf42afac39",
+            "version": "KqlParameterItem/1.0",
+            "name": "namespaceWhereClause",
+            "type": 1,
+            "isHiddenWhenLocked": true,
+            "criteriaData": [
+              {
+                "criteriaContext": {
+                  "leftOperand": "namespace",
+                  "operator": "isNotNull",
+                  "rightValType": "param",
+                  "resultValType": "static",
+                  "resultVal": "| where Namespace in ({namespace})"
+                }
+              },
+              {
+                "criteriaContext": {
+                  "operator": "Default",
+                  "resultValType": "static",
+                  "resultVal": "| where \"a\" == \"a\""
+                }
+              }
+            ],
+            "timeContext": {
+              "durationMs": 86400000
+            }
+          },
+          {
+            "id": "2a7d0cf6-f4ad-4f6a-9534-76f419c6f955",
+            "version": "KqlParameterItem/1.0",
+            "name": "TypeWhereClause",
+            "label": "PV Type Where Clause",
+            "type": 1,
+            "isHiddenWhenLocked": true,
+            "criteriaData": [
+              {
+                "criteriaContext": {
+                  "leftOperand": "Type",
+                  "operator": "isNotNull",
+                  "rightValType": "param",
+                  "resultValType": "static",
+                  "resultVal": "| where PVType in ({Type})"
+                }
+              },
+              {
+                "criteriaContext": {
+                  "operator": "Default",
+                  "resultValType": "static",
+                  "resultVal": "| where \"a\" == \"a\""
+                }
+              }
+            ],
+            "timeContext": {
+              "durationMs": 86400000
+            }
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 0"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "\r\n### Azure Kubernetes Service: {ClusterID:name}"
+      },
+      "conditionalVisibility": {
+        "parameterName": "namespace",
+        "comparison": "isNotEqualTo"
+      },
+      "name": "text - 10"
+    },
+    {
+      "type": 11,
+      "content": {
+        "version": "LinkItem/1.0",
+        "style": "tabs",
+        "links": [
+          {
+            "id": "58ddb909-b74b-424e-8c82-19e97860ae84",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Deployments",
+            "subTarget": "deployments",
+            "style": "link"
+          },
+          {
+            "id": "4358339d-d829-4351-a3f3-99c873f3f647",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Pods",
+            "subTarget": "pods",
+            "style": "link"
+          },
+          {
+            "id": "ce85146f-0fe7-42d5-9563-c5dab68afb45",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "PV",
+            "subTarget": "pv",
+            "style": "link"
+          },
+          {
+            "id": "f5e650ab-0533-4bd1-8c90-4163f58fb559",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Replicaset",
+            "subTarget": "replicaset",
+            "style": "link"
+          },
+          {
+            "id": "a8ddeeb4-13a4-47a5-a828-e48e8bda0635",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Daemonset",
+            "subTarget": "daemonset",
+            "style": "link"
+          },
+          {
+            "id": "a73b27fb-6121-49ba-a8bc-53d0fa7b042a",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "HPA",
+            "subTarget": "hpa",
+            "style": "link"
+          },
+          {
+            "id": "2827c416-2213-45e5-8cbb-46b03be9a937",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Service",
+            "subTarget": "service",
+            "style": "link"
+          },
+          {
+            "id": "1d9bfb84-384f-40b6-a5db-0ec30e2c02db",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Statefulset",
+            "subTarget": "statefulset",
+            "style": "link"
+          }
+        ]
+      },
+      "name": "links - 1"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "InsightsMetrics\r\n| where Name == \"kube_deployment_status_replicas_ready\"\r\n| extend parsed = parse_json(Tags)\r\n| where parsed.deployment in ({deploymentName})\r\n| extend Deployment = tostring(parsed.deployment)\r\n| extend k8sNamespace = tostring(parsed.k8sNamespace)\r\n| where k8sNamespace in ({namespace})\r\n| extend Ready = Val/parsed.spec_replicas * 100, Updated = Val/parsed.status_replicas_updated * 100, Available = Val/parsed.status_replicas_available * 100\r\n| extend ReadyCase = case(Ready == 100, \"Healthy\", \"Warning\"),  UpdatedCase = case(Updated == 100, \"Healthy\", \"Warning\"),  AvailableCase = case(Available == 100, \"Healthy\", \"Warning\")\r\n| extend Overall = case(ReadyCase == \"Healthy\" and UpdatedCase == \"Healthy\" and AvailableCase == \"Healthy\", \"Healthy\", \"Warning\")\r\n| summarize arg_max(TimeGenerated, *) by k8sNamespace, Deployment\r\n| summarize OverallStatus = count() by Overall",
+              "size": 3,
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{LAWorkspace}"
+              ],
+              "visualization": "tiles",
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "Overall",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "OverallStatus",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              }
+            },
+            "name": "deployments"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let data = materialize(\r\nInsightsMetrics\r\n| where Name == \"kube_deployment_status_replicas_ready\"\r\n| extend Tags = parse_json(Tags)\r\n| extend ClusterId = Tags[\"container.azm.ms/clusterId\"]\r\n{clusterIdWhereClause}\r\n| where Tags.deployment in ({deploymentName})\r\n| extend Deployment = tostring(Tags.deployment)\r\n| extend k8sNamespace = tostring(Tags.k8sNamespace)\r\n| where k8sNamespace in ({namespace})\r\n| extend Ready = Val/Tags.spec_replicas * 100, Updated = Val/Tags.status_replicas_updated * 100, Available = Val/Tags.status_replicas_available * 100\r\n| project k8sNamespace, Deployment, Ready, Updated, Available, TimeGenerated, Tags\r\n);\r\nlet data2 = data\r\n| extend Age = strcat(datetime_diff('hour',now(),todatetime(Tags[\"creationTime\"])),' ','hours')\r\n| summarize arg_max(TimeGenerated, *) by k8sNamespace, Deployment\r\n| project k8sNamespace, Deployment, Age, Ready, Updated, Available;\r\nlet ReadyData = data\r\n| make-series ReadyTrend = avg(Ready) default = 0 on TimeGenerated from {timeRange:start} to {timeRange:end} step {timeRange:grain} by k8sNamespace, Deployment;\r\nlet UpdatedData = data\r\n| make-series UpdatedTrend = avg(Updated) default = 0 on TimeGenerated from {timeRange:start} to {timeRange:end} step {timeRange:grain} by k8sNamespace, Deployment;\r\nlet AvailableData = data\r\n| make-series AvailableTrend = avg(Available) default = 0 on TimeGenerated from {timeRange:start} to {timeRange:end} step {timeRange:grain} by k8sNamespace, Deployment;\r\ndata2\r\n| join kind = inner(ReadyData) on k8sNamespace, Deployment \r\n| join kind = inner(UpdatedData) on k8sNamespace, Deployment \r\n| join kind = inner(AvailableData) on k8sNamespace, Deployment\r\n| extend ReadyCase = case(Ready == 100, \"Healthy\", \"Warning\"),  UpdatedCase = case(Updated == 100, \"Healthy\", \"Warning\"),  AvailableCase = case(Available == 100, \"Healthy\", \"Warning\")\r\n| extend Overall = case(ReadyCase == \"Healthy\" and UpdatedCase == \"Healthy\" and AvailableCase == \"Healthy\", \"Healthy\", \"Warning\")\r\n| extend OverallFilterStatus = case('*' contains \"Healthy\", \"Healthy\", '*' contains \"Warning\", \"Warning\", \"Healthy, Warning\")\r\n| extend ReadyPercent = strcat(Ready,\"%\")\r\n| extend UpdatedPercent = strcat(Updated,\"%\")\r\n| extend AvailablePercent = strcat(Available,\"%\")\r\n| where OverallFilterStatus has Overall\r\n| project Deployment, Namespace = k8sNamespace, Age, Ready, ReadyTrend, Updated, UpdatedTrend, Available,AvailableTrend\r\n",
+              "size": 0,
+              "showAnalytics": true,
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{LAWorkspace}"
+              ],
+              "visualization": "table",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Age",
+                    "formatter": 0,
+                    "numberFormat": {
+                      "unit": 25,
+                      "options": {
+                        "style": "decimal",
+                        "maximumFractionDigits": 1
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "Ready",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "100",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "NaN",
+                          "representation": "more",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "warning",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal",
+                        "maximumFractionDigits": 1
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "ReadyTrend",
+                    "formatter": 9,
+                    "formatOptions": {
+                      "palette": "redGreen"
+                    }
+                  },
+                  {
+                    "columnMatch": "Updated",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "100",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "NaN",
+                          "representation": "more",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "warning",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal",
+                        "maximumFractionDigits": 1
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "UpdatedTrend",
+                    "formatter": 9,
+                    "formatOptions": {
+                      "palette": "redGreen"
+                    }
+                  },
+                  {
+                    "columnMatch": "Available",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "100",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "NaN",
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal",
+                        "maximumFractionDigits": 1
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "AvailableTrend",
+                    "formatter": 9,
+                    "formatOptions": {
+                      "palette": "redGreen"
+                    }
+                  }
+                ],
+                "filter": true
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "deployments"
+            },
+            "showPin": true,
+            "name": "deployment-grid"
+          }
+        ]
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "selectedTab",
+          "comparison": "isEqualTo",
+          "value": "deployments"
+        },
+        {
+          "parameterName": "namespace",
+          "comparison": "isNotEqualTo"
+        }
+      ],
+      "name": "Deployments"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let startDateTime = {timeRange:grain};\r\nKubePodInventory\r\n| where TimeGenerated >= ago(startDateTime)\r\n{namespaceWhereClause}\r\n| distinct ClusterName, TimeGenerated, Name\r\n| summarize Clustersnapshot = count() by ClusterName, Name\r\n| join kind=inner (\r\n    KubePodInventory\r\n    | where TimeGenerated >= ago(startDateTime)\r\n    {namespaceWhereClause}\r\n    | distinct ClusterName, Computer, PodUid, TimeGenerated, PodStatus, ServiceName, PodLabel, Namespace, ContainerStatus, Name\r\n    | summarize arg_max(TimeGenerated, *), TotalPODCount = count(), podCount = sumif(1, PodStatus == 'Running' or PodStatus != 'Running'), containerRunning = sumif(1, ContainerStatus =~ 'running'),containerCount = sumif(1, ContainerStatus =~ 'running' or ContainerStatus != 'running' )\r\n        by ClusterName, TimeGenerated, ServiceName, PodLabel, Namespace, Name\r\n    )\r\n    on ClusterName\r\n| project ClusterName, ServiceName, podCount, containerRunning, containerRunningPercent = (containerRunning * 100 / podCount), TimeGenerated, PodStatus, PodLabel, Namespace, Environment = tostring(split(ClusterName, '-')[3]), Location = tostring(split(ClusterName, '-')[4]), ContainerStatus,Name,containerCount\r\n| summarize arg_max(TimeGenerated, *), c_entry=count() by PodLabel, ServiceName, ClusterName,containerRunning,Name, podCount,containerCount\r\n//Below lines are to parse the labels to identify the impacted service/component name\r\n| extend parseLabel = replace(@'k8s-app', @'k8sapp', PodLabel)\r\n| extend parseLabel = replace(@'app.kubernetes.io/component', @'appkubernetesiocomponent', parseLabel)\r\n| extend parseLabel = replace(@'app.kubernetes.io/instance', @'appkubernetesioinstance', parseLabel)\r\n| extend tags = todynamic(parseLabel)\r\n| extend tag01 = todynamic(tags[0].app)\r\n| extend tag02 = todynamic(tags[0].k8sapp)\r\n| extend tag03 = todynamic(tags[0].appkubernetesiocomponent)\r\n| extend tag04 = todynamic(tags[0].aadpodidbinding)\r\n| extend tag05 = todynamic(tags[0].appkubernetesioinstance)\r\n| extend tag06 = todynamic(tags[0].component)\r\n| distinct ClusterName, Namespace,containerRunningPercent,containerRunning,Name,podCount,containerCount\r\n| project ClusterName, Namespace,Name,Pods = podCount,\r\n    ContainersAvailablity = containerRunningPercent, \r\n    ContainersRunning = strcat(containerRunning,'/',containerCount)",
+              "size": 2,
+              "showAnalytics": true,
+              "title": "List Pods",
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{LAWorkspace}"
+              ],
+              "visualization": "table",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "ContainersAvailablity",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "100",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "!=",
+                          "thresholdValue": "100",
+                          "representation": "3",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "avg_RestartCount",
+                    "formatter": 10,
+                    "formatOptions": {
+                      "palette": "orange",
+                      "aggregation": "Average"
+                    }
+                  }
+                ]
+              }
+            },
+            "showPin": true,
+            "name": "pods"
+          }
+        ]
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "selectedTab",
+          "comparison": "isEqualTo",
+          "value": "pods"
+        },
+        {
+          "parameterName": "namespace",
+          "comparison": "isNotEqualTo"
+        }
+      ],
+      "name": "pods"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let endDateTime = {timeRange:end};\r\nlet startDateTime = {timeRange:start};\r\nlet trendBinSize = {timeRange:grain};\r\nlet data = KubePVInventory\r\n| where TimeGenerated < endDateTime\r\n| where TimeGenerated >= startDateTime\r\n{clusterIdWhereClause}\r\n{TypeWhereClause}\r\n| extend PVStorageClassName = iff(PVStorageClassName == '', '<None>', PVStorageClassName)\r\n{StorageClassWhereClause}\r\n{AccessModeWhereClause}\r\n| summarize arg_max(TimeGenerated, *) by PVName;\r\n\r\ndata\r\n| summarize Count = count(), PVs = makeset(PVName) by PVStatus\r\n| union (\r\n   data\r\n    | summarize Count = count(), PVs = dynamic([\"*\"])\r\n    | extend PVStatus = 'All PVs'\r\n)\r\n| join kind = fullouter (datatable (PVStatus: string) ['All PVs', 'Available', 'Bound', 'Released', 'Failed']) on PVStatus\r\n| extend Count = iff(PVStatus == '', 0, Count), PVCs = iff(PVStatus == '', dynamic([]), PVs), PVStatus = iff(PVStatus == '', PVStatus1, PVStatus)",
+              "size": 3,
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{LAWorkspace}"
+              ],
+              "visualization": "tiles",
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "PVStatus",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "Count",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  }
+                },
+                "showBorder": false
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "namespace",
+              "comparison": "isNotEqualTo"
+            },
+            "name": "query - 0"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let endDateTime = {timeRange:end};\r\nlet startDateTime = {timeRange:start};\r\nlet trendBinSize = {timeRange:grain};\r\nlet pvStatusFilter = 'All PVs';\r\nlet capacityData =\r\nInsightsMetrics\r\n| where TimeGenerated < endDateTime + trendBinSize\r\n| where TimeGenerated >= startDateTime - trendBinSize\r\n| where Namespace == 'container.azm.ms/pv'\r\n| where Name == 'pvUsedBytes'\r\n| extend Tags = todynamic(Tags)\r\n| extend Capacity = tolong(Tags.pvCapacityBytes), PVCName = tostring(Tags.pvcName), PVCNamespace = tostring(Tags.pvcNamespace), PodName = tostring(Tags.podName);\r\n\r\nKubePVInventory\r\n{clusterIdWhereClause}\r\n{TypeWhereClause}\r\n| extend PVStorageClassName = iff(PVStorageClassName == '', '<None>', PVStorageClassName)\r\n{StorageClassWhereClause}\r\n| extend PVStorageClassName = iff(PVStorageClassName == '<None>', '--', PVStorageClassName)\r\n| extend PVCNamespace = iff(PVCNamespace == '<None>', '--', PVCNamespace)\r\n{AccessModeWhereClause}\r\n| extend PVStatusFilter = pvStatusFilter\r\n| where PVStatus == iff(PVStatusFilter == 'All PVs', PVStatus, PVStatusFilter)  \r\n| join hint.strategy=shuffle kind=leftouter (\r\n    capacityData\r\n    | extend UsagePercent = (Val / Capacity) * 100\r\n    | project TimeGenerated, Capacity, PVCName, PVCNamespace, UsagePercent\r\n    | make-series Trend = max(UsagePercent) default = 0 on TimeGenerated step trendBinSize by PVCName, Capacity, PVCNamespace\r\n) on PVCName, PVCNamespace\r\n| join hint.strategy=shuffle kind=leftouter (\r\n    capacityData\r\n    | summarize Nodes = make_set(Computer) by PVCName, PVCNamespace\r\n) on PVCName, PVCNamespace\r\n| join hint.strategy=shuffle kind=leftouter (\r\n    capacityData\r\n    | join hint.strategy=shuffle kind=leftouter (\r\n        KubePodInventory\r\n        | extend PodName = Name\r\n        | project ControllerName, PodName\r\n    ) on PodName\r\n    | summarize ControllerNames = make_set(ControllerName) by PVCName, PVCNamespace\r\n) on PVCName, PVCNamespace\r\n| summarize arg_max(TimeGenerated, *) by PVName\r\n| extend Capacity = PVCapacityBytes\r\n| extend PVCapacityBytes = format_bytes(PVCapacityBytes, 2)\r\n| extend AzureDisk = iff(PVType == 'azureDisk', PVTypeInfo.DiskUri, '--')\r\n| extend PVAccessModes = replace('ReadWriteOnce', 'RWO', PVAccessModes)\r\n| extend PVAccessModes = replace('ReadWriteMany', 'RWX', PVAccessModes)\r\n| extend PVAccessModes = replace('ReadOnlyMany', 'ROX', PVAccessModes)\r\n| extend PVCNamespaceAndName = iff(PVCName != '', strcat(PVCNamespace, \"/\", PVCName), \"\")\r\n| extend PVDetails = iff(PVType == 'azureDisk', pack(\"PV Name\", PVName, \"Status\", PVStatus, \"Capacity\", PVCapacityBytes, \"Access Modes\", PVAccessModes, \"Storage Class\", PVStorageClassName, \"Type\", PVType, \"Disk Name\", tostring(PVTypeInfo.DiskName), \"Creation Timestamp\", PVCreationTimeStamp, \"PVC  Namespace/Name\", PVCNamespaceAndName, \"Nodes\", Nodes), iff(PVType == 'azureFile', pack(\"PV Name\", PVName, \"Status\", PVStatus, \"Capacity\", PVCapacityBytes, \"Access Modes\", PVAccessModes, \"Storage Class\", PVStorageClassName, \"Type\", PVType, \"File Share Name\", tostring(PVTypeInfo.FileShareName),\"Creation Timestamp\", PVCreationTimeStamp, \"PVC Namespace/Name\", PVCNamespaceAndName, \"Nodes\", Nodes), pack(\"PV Name\", PVName, \"Status\", PVStatus, \"Capacity\", PVCapacityBytes, \"Access Modes\", PVAccessModes, \"Storage Class\", PVStorageClassName, \"Type\", PVType, \"Creation Timestamp\", PVCreationTimeStamp, \"PVC Namespace/Name\", PVCNamespaceAndName, \"Nodes\", Nodes)))\r\n| extend LastUsagePercent = Trend[-1]\r\n| extend LastUsagePercent = iff(isnull(LastUsagePercent), iff(PVStatus == 'Bound', 'not mounted', '--'), LastUsagePercent)\r\n| project PVName, PVStatus, Trend, LastUsagePercent,  PVAccessModes, PVStorageClassName, PVType, AzureDisk, ClusterId, PVDetails, ControllerNames[0]\r\n| order by todouble(LastUsagePercent) desc, tostring(LastUsagePercent), PVStatus",
+              "size": 0,
+              "showAnalytics": true,
+              "noDataMessage": "No persistent volume claims to display",
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{LAWorkspace}"
+              ],
+              "visualization": "table",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "PVName",
+                    "formatter": 1,
+                    "formatOptions": {
+                      "linkColumn": "PVDetails",
+                      "linkTarget": "CellDetails",
+                      "linkIsContextBlade": true
+                    }
+                  },
+                  {
+                    "columnMatch": "PVStatus",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Released",
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Failed",
+                          "representation": "failed",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ],
+                      "customColumnWidthSetting": "81px"
+                    }
+                  },
+                  {
+                    "columnMatch": "Trend",
+                    "formatter": 21,
+                    "formatOptions": {
+                      "max": 100,
+                      "palette": "blue",
+                      "customColumnWidthSetting": "175px"
+                    }
+                  },
+                  {
+                    "columnMatch": "PVDetails",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "ControllerNames_0",
+                    "formatter": 5
+                  }
+                ]
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "namespace",
+              "comparison": "isNotEqualTo"
+            },
+            "showPin": true,
+            "name": "PVstatusgrid"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "pv"
+      },
+      "name": "PV"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let startDateTime = {timeRange:grain}; // the minimum time interval goes here\r\nKubePodInventory\r\n| where TimeGenerated >= ago(startDateTime)\r\n| distinct ClusterName, TimeGenerated\r\n| summarize Clustersnapshot = count() by ClusterName\r\n| join kind=inner (\r\n    KubePodInventory\r\n    | where TimeGenerated >= ago(startDateTime)\r\n    {namespaceWhereClause}\r\n    | where ControllerKind == 'ReplicaSet' // the system namespace filter goes here\r\n    | distinct ClusterName, Computer, PodUid, TimeGenerated, PodStatus, ServiceName, PodLabel, Namespace, ContainerStatus,ControllerName\r\n    | summarize arg_max(TimeGenerated, *), TotalPODCount = count(), podCount = sumif(1, PodStatus == 'Running' or PodStatus != 'Running'), containerRunning = sumif(1, ContainerStatus =~ 'running')\r\n        by ClusterName, TimeGenerated, ServiceName, PodLabel, Namespace,ControllerName\r\n    )\r\n    on ClusterName\r\n| project ClusterName, ServiceName, podCount, containerRunning, containerRunningPercent = (containerRunning * 100 / podCount), TimeGenerated, PodStatus, PodLabel, Namespace, Environment = tostring(split(ClusterName, '-')[3]), Location = tostring(split(ClusterName, '-')[4]), ContainerStatus,ControllerName\r\n| summarize arg_max(TimeGenerated, *), c_entry=count() by PodLabel, ServiceName, ClusterName,ControllerName\r\n//Below lines are to parse the labels to identify the impacted service/component name\r\n| extend parseLabel = replace(@'k8s-app', @'k8sapp', PodLabel)\r\n| extend parseLabel = replace(@'app.kubernetes.io/component', @'appkubernetesiocomponent', parseLabel)\r\n| extend parseLabel = replace(@'app.kubernetes.io/instance', @'appkubernetesioinstance', parseLabel)\r\n| extend tags = todynamic(parseLabel)\r\n| extend tag01 = todynamic(tags[0].app)\r\n| extend tag02 = todynamic(tags[0].k8sapp)\r\n| extend tag03 = todynamic(tags[0].appkubernetesiocomponent)\r\n| extend tag04 = todynamic(tags[0].aadpodidbinding)\r\n| extend tag05 = todynamic(tags[0].appkubernetesioinstance)\r\n| extend tag06 = todynamic(tags[0].component)\r\n| distinct ClusterName, Namespace,ControllerName,containerRunningPercent\r\n| project ClusterName, Namespace,ControllerName,\r\n    //ServiceName = strcat( ServiceName, tag01, tag02, tag03, tag04, tag05, tag06),\r\n    ContainersAvailablity = containerRunningPercent\r\n    //PodStatus = PodStatus, \r\n    //ContainerStatus = ContainerStatus",
+              "size": 0,
+              "showAnalytics": true,
+              "timeContext": {
+                "durationMs": 1800000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{LAWorkspace}"
+              ],
+              "visualization": "table",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "ContainersAvailablity",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "100",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "!=",
+                          "thresholdValue": "100",
+                          "representation": "3",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "showPin": true,
+            "name": "Daemonset"
+          }
+        ]
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "selectedTab",
+          "comparison": "isEqualTo",
+          "value": "replicaset"
+        },
+        {
+          "parameterName": "namespace",
+          "comparison": "isNotEqualTo"
+        }
+      ],
+      "name": "Replicaset"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let startDateTime = {timeRange:grain}; // the minimum time interval goes here\r\nKubePodInventory\r\n| where TimeGenerated >= ago(startDateTime)\r\n| distinct ClusterName, TimeGenerated\r\n| summarize Clustersnapshot = count() by ClusterName\r\n| join kind=inner (\r\n    KubePodInventory\r\n    | where TimeGenerated >= ago(startDateTime)\r\n    {namespaceWhereClause}\r\n    | where ControllerKind == 'DaemonSet' // the system namespace filter goes here\r\n    | distinct ClusterName, Computer, PodUid, TimeGenerated, PodStatus, ServiceName, PodLabel, Namespace, ContainerStatus,ControllerName\r\n    | summarize arg_max(TimeGenerated, *), TotalPODCount = count(), podCount = sumif(1, PodStatus == 'Running' or PodStatus != 'Running'), containerRunning = sumif(1, ContainerStatus =~ 'running')\r\n        by ClusterName, TimeGenerated, ServiceName, PodLabel, Namespace,ControllerName\r\n    )\r\n    on ClusterName\r\n| project ClusterName, ServiceName, podCount, containerRunning, containerRunningPercent = (containerRunning * 100 / podCount), TimeGenerated, PodStatus, PodLabel, Namespace, Environment = tostring(split(ClusterName, '-')[3]), Location = tostring(split(ClusterName, '-')[4]), ContainerStatus,ControllerName\r\n| summarize arg_max(TimeGenerated, *), c_entry=count() by PodLabel, ServiceName, ClusterName,ControllerName\r\n//Below lines are to parse the labels to identify the impacted service/component name\r\n| extend parseLabel = replace(@'k8s-app', @'k8sapp', PodLabel)\r\n| extend parseLabel = replace(@'app.kubernetes.io/component', @'appkubernetesiocomponent', parseLabel)\r\n| extend parseLabel = replace(@'app.kubernetes.io/instance', @'appkubernetesioinstance', parseLabel)\r\n| extend tags = todynamic(parseLabel)\r\n| extend tag01 = todynamic(tags[0].app)\r\n| extend tag02 = todynamic(tags[0].k8sapp)\r\n| extend tag03 = todynamic(tags[0].appkubernetesiocomponent)\r\n| extend tag04 = todynamic(tags[0].aadpodidbinding)\r\n| extend tag05 = todynamic(tags[0].appkubernetesioinstance)\r\n| extend tag06 = todynamic(tags[0].component)\r\n| distinct ClusterName, Namespace,ControllerName,containerRunningPercent\r\n| project ClusterName, Namespace,ControllerName,\r\n    //ServiceName = strcat( ServiceName, tag01, tag02, tag03, tag04, tag05, tag06),\r\n    ContainersAvailablity = containerRunningPercent\r\n    //PodStatus = PodStatus, \r\n    //ContainerStatus = ContainerStatus",
+              "size": 0,
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{LAWorkspace}"
+              ],
+              "visualization": "table",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "ContainersAvailablity",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "100",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "!=",
+                          "thresholdValue": "100",
+                          "representation": "3",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            "name": "daemonset"
+          }
+        ]
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "selectedTab",
+          "comparison": "isEqualTo",
+          "value": "daemonset"
+        },
+        {
+          "parameterName": "namespace",
+          "comparison": "isNotEqualTo"
+        }
+      ],
+      "name": "Daemonset"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let startDateTime = ago({timeRange:grain});\r\nKubePodInventory\r\n| where TimeGenerated >= startDateTime \r\n| where Namespace !in('default', 'kube-system') // List of non system namespace filter goes here.\r\n| extend labels = todynamic(PodLabel)\r\n| extend deployment_hpa = reverse(substring(reverse(ControllerName), indexof(reverse(ControllerName), \"-\") + 1))\r\n| distinct tostring(deployment_hpa)\r\n| join kind=inner (InsightsMetrics \r\n    | where TimeGenerated > startDateTime \r\n    | where Name == 'kube_hpa_status_current_replicas'\r\n    | extend pTags = todynamic(Tags) \r\n    | extend ns = todynamic(pTags.k8sNamespace)\r\n    | extend deployment_hpa = todynamic(pTags.targetName) \r\n    | extend max_reps = todynamic(pTags.spec_max_replicas)\r\n    | extend desired_reps = todynamic(pTags.status_desired_replicas) \r\n    | summarize arg_max(TimeGenerated, *) by tostring(ns), tostring(deployment_hpa), Cluster=toupper(tostring(split(_ResourceId, '/')[8])), toint(desired_reps), toint(max_reps), scale_out_percentage=(desired_reps * 100 / max_reps)\r\n    //| where scale_out_percentage > _minthreshold and scale_out_percentage <= _maxthreshold\r\n    )\r\n    on deployment_hpa",
+              "size": 0,
+              "noDataMessage": "No Horizontal pod autoscalers to display",
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{LAWorkspace}"
+              ],
+              "visualization": "table",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "ns",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "deployment_hpa2",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "TimeGenerated",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "TenantId",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "SourceSystem",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Origin",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Tags",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "AgentId",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "Type",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "_ResourceId",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "pTags",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "ns1",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "deployment_hpa1",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "max_reps1",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "desired_reps1",
+                    "formatter": 5
+                  }
+                ]
+              }
+            },
+            "name": "hpa"
+          }
+        ]
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "selectedTab",
+          "comparison": "isEqualTo",
+          "value": "hpa"
+        },
+        {
+          "parameterName": "namespace",
+          "comparison": "isNotEqualTo"
+        }
+      ],
+      "name": "HPA"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "KubeServices \r\n{clusterIdWhereClause}\r\n{namespaceWhereClause}\r\n| distinct ClusterName,Namespace,ServiceName,ServiceType\r\n| project  ClusterName, Namespace, ServiceName, ServiceType",
+              "size": 0,
+              "noDataMessage": "No services to display",
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{LAWorkspace}"
+              ]
+            },
+            "name": "service"
+          }
+        ]
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "selectedTab",
+          "comparison": "isEqualTo",
+          "value": "service"
+        },
+        {
+          "parameterName": "namespace",
+          "comparison": "isNotEqualTo"
+        }
+      ],
+      "name": "Service"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let startDateTime = {timeRange:grain}; \r\nKubePodInventory\r\n| where TimeGenerated >= ago(startDateTime) \r\n| distinct ClusterName, TimeGenerated, PodStartTime\r\n| summarize Clustersnapshot = count() by ClusterName, PodStartTime\r\n| join kind=inner (KubePodInventory\r\n    | where TimeGenerated >= ago(startDateTime)\r\n    {namespaceWhereClause}\r\n    | where ControllerKind =~ 'statefulset' \r\n    | distinct\r\n        ClusterName,\r\n        Computer,\r\n        TimeGenerated,\r\n        PodStatus,\r\n        Namespace,\r\n        ContainerStatus,\r\n        ControllerName \r\n    | summarize\r\n        arg_max(TimeGenerated, *),\r\n        TotalPODCount = count(),\r\n        podCount = sumif(1, PodStatus == 'Running'),\r\n        containerRunning = sumif(1, ContainerStatus =~ 'running')\r\n        by ClusterName, TimeGenerated, Namespace, ControllerName)\r\n    on ClusterName \r\n| project\r\n    ClusterName,\r\n    podCount,\r\n    containerRunning,\r\n    containerRunningPercent = (containerRunning * 100 / podCount),\r\n    TimeGenerated,\r\n    PodStatus,\r\n    Namespace,\r\n    Environment = tostring(split(ClusterName, '-')[3]),\r\n    Location = tostring(split(ClusterName, '-')[4]),\r\n    ContainerStatus,\r\n    ControllerName,\r\n    PodStartTime \r\n| summarize arg_max(TimeGenerated, *), c_entry=count() by  ClusterName, ControllerName,PodStartTime \r\n| distinct ClusterName, Namespace, ControllerName, containerRunningPercent\r\n| project\r\n    ClusterName,\r\n    Namespace,\r\n    ControllerName,\r\n    ContainersAvailablity = containerRunningPercent",
+              "size": 0,
+              "noDataMessage": "No statefulsets to display",
+              "timeContext": {
+                "durationMs": 1800000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{LAWorkspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "ContainersAvailablity",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "100",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "!=",
+                          "thresholdValue": "100",
+                          "representation": "3",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            "name": "statefulset"
+          }
+        ]
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "selectedTab",
+          "comparison": "isEqualTo",
+          "value": "statefulset"
+        },
+        {
+          "parameterName": "namespace",
+          "comparison": "isNotEqualTo"
+        }
+      ],
+      "name": "statefulset"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### Azure Kubernetes Service: No AKS found that has Insights enabled and logs its data to {LAWorkspace:name}",
+        "style": "warning"
+      },
+      "conditionalVisibility": {
+        "parameterName": "namespace",
+        "comparison": "isEqualTo"
+      },
+      "name": "text - 10"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

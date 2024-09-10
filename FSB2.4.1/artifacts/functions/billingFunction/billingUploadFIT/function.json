@@ -1,0 +1,25 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "name": "mytimer",
+      "type": "timerTrigger",
+      "direction": "in",
+      "schedule": "0 0 0 2 * *"
+    },
+    {
+      "type": "blob",
+      "name": "errorOutput",
+      "path": "billing-errors-fit/billinguploadFIT-{datetime:yyyyMMdd}-error.log",
+      "direction": "out",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "blob",
+      "name": "infoOutput",
+      "path": "billing-output-fit/billinguploadFIT-{datetime:yyyyMMdd}-output.log",
+      "direction": "out",
+      "connection": "AzureWebJobsStorage"
+    }
+  ]
+}

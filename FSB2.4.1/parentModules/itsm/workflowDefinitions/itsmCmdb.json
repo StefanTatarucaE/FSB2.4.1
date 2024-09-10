@@ -1,0 +1,1083 @@
+{
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "actions": {
+      "API_Call_-_Call_Event_Listener_function": {
+          "inputs": {
+              "body": "@variables('EventJSON')",
+              "headers": {
+                  "Content-Type": "application/json",
+                  "x-functions-key": "@{body('API_Call_-_Retrieve_Function_Secret')?['default']}"
+              },
+              "method": "POST",
+              "retryPolicy": {
+                  "count": 10,
+                  "interval": "PT30S",
+                  "maximumInterval": "PT2M",
+                  "minimumInterval": "PT30S",
+                  "type": "exponential"
+              },
+              "uri": "@{parameters('ListenerFunctionUrl')}"
+          },
+          "runAfter": {
+              "Set_variable_-_EventJSON": [
+                  "Succeeded"
+              ]
+          },
+          "runtimeConfiguration": {
+              "secureData": {
+                  "properties": [
+                      "inputs"
+                  ]
+              }
+          },
+          "type": "Http"
+      },
+      "API_Call_-_Retrieve_Function_Secret": {
+          "inputs": {
+              "authentication": {
+                  "audience": "https://management.azure.com",
+                  "type": "ManagedServiceIdentity"
+              },
+              "headers": {
+                  "Content-Type": "application/json"
+              },
+              "method": "POST",
+              "queries": {
+                  "api-version": "2019-08-01"
+              },
+              "uri": "https://management.azure.com@{parameters('ListenerFunctionResourceID')}/listKeys"
+          },
+          "runAfter": {
+              "Initialize_variable_-_SNOWEnvironmentCode": [
+                  "Succeeded"
+              ]
+          },
+          "runtimeConfiguration": {
+              "secureData": {
+                  "properties": [
+                      "outputs"
+                  ]
+              }
+          },
+          "type": "Http"
+      },
+      "Abort_if_Service_Provider_TAG_is_not_present": {
+          "actions": {},
+          "else": {
+              "actions": {
+                  "If_resource_was_created_or_updated,_check_if_TAG_was_removed": {
+                      "actions": {
+                          "Check_if_Service_Provider_TAG_has_been_deleted_from_resource": {
+                              "actions": {
+                                  "Deletes_Diagnostic_Rule": {
+                                      "actions": {
+                                          "API_Call_-_Delete_Diagnostic_Rule": {
+                                              "inputs": {
+                                                  "authentication": {
+                                                      "audience": "https://management.azure.com",
+                                                      "type": "ManagedServiceIdentity"
+                                                  },
+                                                  "headers": {
+                                                      "Content-Type": "application/json"
+                                                  },
+                                                  "method": "DELETE",
+                                                  "queries": {
+                                                      "api-version": "2021-05-01-preview"
+                                                  },
+                                                  "uri": "https://management.azure.com@{variables('ResourceID')}/providers/Microsoft.Insights/diagnosticSettings/@{parameters('DiagnosticRuleName')}"
+                                              },
+                                              "runAfter": {},
+                                              "type": "Http"
+                                          },
+                                          "If_resource_type_is_Storage_account,_delete_additional_rules": {
+                                              "actions": {
+                                                  "API_Call_-_Delete_Diagnostic_Rule_-_BLOB": {
+                                                      "inputs": {
+                                                          "authentication": {
+                                                              "audience": "https://management.azure.com",
+                                                              "type": "ManagedServiceIdentity"
+                                                          },
+                                                          "headers": {
+                                                              "Content-Type": "application/json"
+                                                          },
+                                                          "method": "DELETE",
+                                                          "queries": {
+                                                              "api-version": "2021-05-01-preview"
+                                                          },
+                                                          "uri": "https://management.azure.com@{variables('ResourceID')}/blobServices/default/providers/Microsoft.Insights/diagnosticSettings/@{parameters('DiagnosticRuleName')}"
+                                                      },
+                                                      "runAfter": {},
+                                                      "type": "Http"
+                                                  },
+                                                  "API_Call_-_Delete_Diagnostic_Rule_-_FILE": {
+                                                      "inputs": {
+                                                          "authentication": {
+                                                              "audience": "https://management.azure.com",
+                                                              "type": "ManagedServiceIdentity"
+                                                          },
+                                                          "headers": {
+                                                              "Content-Type": "application/json"
+                                                          },
+                                                          "method": "DELETE",
+                                                          "queries": {
+                                                              "api-version": "2021-05-01-preview"
+                                                          },
+                                                          "uri": "https://management.azure.com@{variables('ResourceID')}/fileServices/default/providers/Microsoft.Insights/diagnosticSettings/@{parameters('DiagnosticRuleName')}"
+                                                      },
+                                                      "runAfter": {
+                                                          "API_Call_-_Delete_Diagnostic_Rule_-_TABLE": [
+                                                              "Succeeded",
+                                                              "Failed"
+                                                          ]
+                                                      },
+                                                      "type": "Http"
+                                                  },
+                                                  "API_Call_-_Delete_Diagnostic_Rule_-_QUEUE": {
+                                                      "inputs": {
+                                                          "authentication": {
+                                                              "audience": "https://management.azure.com",
+                                                              "type": "ManagedServiceIdentity"
+                                                          },
+                                                          "headers": {
+                                                              "Content-Type": "application/json"
+                                                          },
+                                                          "method": "DELETE",
+                                                          "queries": {
+                                                              "api-version": "2021-05-01-preview"
+                                                          },
+                                                          "uri": "https://management.azure.com@{variables('ResourceID')}/queueServices/default/providers/Microsoft.Insights/diagnosticSettings/@{parameters('DiagnosticRuleName')}"
+                                                      },
+                                                      "runAfter": {
+                                                          "API_Call_-_Delete_Diagnostic_Rule_-_FILE": [
+                                                              "Succeeded",
+                                                              "Failed"
+                                                          ]
+                                                      },
+                                                      "type": "Http"
+                                                  },
+                                                  "API_Call_-_Delete_Diagnostic_Rule_-_TABLE": {
+                                                      "inputs": {
+                                                          "authentication": {
+                                                              "audience": "https://management.azure.com",
+                                                              "type": "ManagedServiceIdentity"
+                                                          },
+                                                          "headers": {
+                                                              "Content-Type": "application/json"
+                                                          },
+                                                          "method": "DELETE",
+                                                          "queries": {
+                                                              "api-version": "2021-05-01-preview"
+                                                          },
+                                                          "uri": "https://management.azure.com@{variables('ResourceID')}/tableServices/default/providers/Microsoft.Insights/diagnosticSettings/@{parameters('DiagnosticRuleName')}"
+                                                      },
+                                                      "runAfter": {
+                                                          "API_Call_-_Delete_Diagnostic_Rule_-_BLOB": [
+                                                              "Succeeded",
+                                                              "Failed"
+                                                          ]
+                                                      },
+                                                      "type": "Http"
+                                                  }
+                                              },
+                                              "expression": {
+                                                  "and": [
+                                                      {
+                                                          "equals": [
+                                                              "@{variables('PayloadData')?['data']['resourceProvider']}/@{split(variables('PayloadData')?['data']['resourceUri'],'/')[7]}",
+                                                              "Microsoft.Storage/storageAccounts"
+                                                          ]
+                                                      }
+                                                  ]
+                                              },
+                                              "runAfter": {
+                                                  "API_Call_-_Delete_Diagnostic_Rule": [
+                                                      "Succeeded"
+                                                  ]
+                                              },
+                                              "type": "If"
+                                          }
+                                      },
+                                      "runAfter": {
+                                          "Set_variable_-_EventTypeAction_=_delete_(TAG_removed)": [
+                                              "Succeeded"
+                                          ]
+                                      },
+                                      "type": "Scope"
+                                  },
+                                  "Set_variable_-_EventTypeAction_=_delete_(TAG_removed)": {
+                                      "inputs": {
+                                          "name": "EventTypeAction",
+                                          "value": "delete"
+                                      },
+                                      "runAfter": {},
+                                      "type": "SetVariable"
+                                  }
+                              },
+                              "else": {
+                                  "actions": {
+                                      "Cancel_if_Service_Provider_TAG_is_not_present_on_the_resource": {
+                                          "description": "Tag is not present and has not been removed",
+                                          "inputs": {
+                                              "runStatus": "Cancelled"
+                                          },
+                                          "runAfter": {},
+                                          "type": "Terminate"
+                                      }
+                                  }
+                              },
+                              "expression": {
+                                  "and": [
+                                      {
+                                          "equals": [
+                                              "@empty(variables('PreviousResourceData'))",
+                                              false
+                                          ]
+                                      },
+                                      {
+                                          "contains": [
+                                              "@variables('PreviousResourceData')",
+                                              "tags"
+                                          ]
+                                      },
+                                      {
+                                          "not": {
+                                              "equals": [
+                                                  "@variables('PreviousResourceData')?['tags']",
+                                                  "@null"
+                                              ]
+                                          }
+                                      },
+                                      {
+                                          "contains": [
+                                              "@variables('PreviousResourceData')?['tags']",
+                                              "@parameters('ServiceProviderManagedTag')"
+                                          ]
+                                      },
+                                      {
+                                          "equals": [
+                                              "@toLower(trim(variables('PreviousResourceData')['tags'][parameters('ServiceProviderManagedTag')]))",
+                                              "@toLower('true')"
+                                          ]
+                                      }
+                                  ]
+                              },
+                              "runAfter": {
+                                  "Scope_-_Retrieve_previous_ResourceData_for_latest_update_action": [
+                                      "Succeeded",
+                                      "Failed"
+                                  ]
+                              },
+                              "type": "If"
+                          },
+                          "Scope_-_Retrieve_previous_ResourceData_for_latest_update_action": {
+                              "actions": {
+                                  "API_Call_-_Find_change_detail_for_ResourceID-TAGS": {
+                                      "inputs": {
+                                          "authentication": {
+                                              "audience": "https://management.azure.com",
+                                              "type": "ManagedServiceIdentity"
+                                          },
+                                          "body": "@outputs('Compose_JSON_-_API_Change_request-TAGS')",
+                                          "method": "POST",
+                                          "queries": {
+                                              "api-version": "2018-09-01-preview"
+                                          },
+                                          "uri": "https://management.azure.com/providers/Microsoft.ResourceGraph/resourceChangeDetails"
+                                      },
+                                      "runAfter": {
+                                          "Compose_JSON_-_API_Change_request-TAGS": [
+                                              "Succeeded"
+                                          ]
+                                      },
+                                      "type": "Http"
+                                  },
+                                  "API_Call_-_Find_change_events_for_ResourceID-TAGS": {
+                                      "inputs": {
+                                          "authentication": {
+                                              "audience": "https://management.azure.com",
+                                              "type": "ManagedServiceIdentity"
+                                          },
+                                          "body": "@outputs('Compose_JSON_-_API_Event_request-TAGS')",
+                                          "headers": {
+                                              "Content-Type": "application/json"
+                                          },
+                                          "method": "POST",
+                                          "queries": {
+                                              "api-version": "2018-09-01-preview"
+                                          },
+                                          "uri": "https://management.azure.com/providers/Microsoft.ResourceGraph/resourceChanges"
+                                      },
+                                      "runAfter": {
+                                          "Compose_JSON_-_API_Event_request-TAGS": [
+                                              "Succeeded"
+                                          ]
+                                      },
+                                      "type": "Http"
+                                  },
+                                  "Compose_JSON_-_API_Change_request-TAGS": {
+                                      "inputs": {
+                                          "changeId": "@{body('Filter_array_-_Update_change_Event-TAGS')[0]['changeId']}",
+                                          "resourceId": "@{variables('ResourceId')}"
+                                      },
+                                      "runAfter": {
+                                          "Filter_array_-_Update_change_Event-TAGS": [
+                                              "Succeeded"
+                                          ]
+                                      },
+                                      "type": "Compose"
+                                  },
+                                  "Compose_JSON_-_API_Event_request-TAGS": {
+                                      "inputs": {
+                                          "fetchPropertyChanges": true,
+                                          "interval": {
+                                              "end": "@{addMinutes(variables('PayloadData')?['eventTime'],15)}",
+                                              "start": "@{addMinutes(variables('PayloadData')?['eventTime'],-60)}"
+                                          },
+                                          "resourceId": "@{variables('ResourceId')}"
+                                      },
+                                      "runAfter": {},
+                                      "type": "Compose"
+                                  },
+                                  "Filter_array_-_Update_change_Event-TAGS": {
+                                      "inputs": {
+                                          "from": "@body('API_Call_-_Find_change_events_for_ResourceID-TAGS')['changes']",
+                                          "where": "@equals(item()['changeType'], 'Update')"
+                                      },
+                                      "runAfter": {
+                                          "API_Call_-_Find_change_events_for_ResourceID-TAGS": [
+                                              "Succeeded"
+                                          ]
+                                      },
+                                      "type": "Query"
+                                  },
+                                  "Set_variable_-_PreviousResourceData": {
+                                      "inputs": {
+                                          "name": "PreviousResourceData",
+                                          "value": "@body('API_Call_-_Find_change_detail_for_ResourceID-TAGS')['beforeSnapshot']['content']"
+                                      },
+                                      "runAfter": {
+                                          "API_Call_-_Find_change_detail_for_ResourceID-TAGS": [
+                                              "Succeeded"
+                                          ]
+                                      },
+                                      "type": "SetVariable"
+                                  }
+                              },
+                              "runAfter": {},
+                              "type": "Scope"
+                          }
+                      },
+                      "else": {
+                          "actions": {
+                              "Cancel_if_Service_Provider_TAG_is_not_present_on_the_resource_(DELETE)": {
+                                  "inputs": {
+                                      "runStatus": "Cancelled"
+                                  },
+                                  "runAfter": {},
+                                  "type": "Terminate"
+                              }
+                          }
+                      },
+                      "expression": {
+                          "and": [
+                              {
+                                  "equals": [
+                                      "@variables('ResourceEventType')",
+                                      "Microsoft.Resources.ResourceWriteSuccess"
+                                  ]
+                              },
+                              {
+                                  "not": {
+                                      "equals": [
+                                          "@toLower(trim(coalesce(variables('ResourceData')?['tags']?[parameters('DatabricksStorageTags')],'')))",
+                                          "databricks"
+                                      ]
+                                  }
+                              },
+                              {
+                                  "not": {
+                                      "equals": [
+                                          "@toLower(trim(coalesce(variables('ResourceData')?['tags']?[parameters('DatabricksClusterTags')],'')))",
+                                          "databricks"
+                                      ]
+                                  }
+                              }
+                          ]
+                      },
+                      "runAfter": {},
+                      "type": "If"
+                  }
+              }
+          },
+          "expression": {
+              "or": [
+                  {
+                      "and": [
+                          {
+                              "contains": [
+                                  "@variables('ResourceData')",
+                                  "tags"
+                              ]
+                          },
+                          {
+                              "not": {
+                                  "equals": [
+                                      "@variables('ResourceData')?['tags']",
+                                      "@null"
+                                  ]
+                              }
+                          },
+                          {
+                              "contains": [
+                                  "@variables('ResourceData')?['tags']",
+                                  "@parameters('ServiceProviderManagedTag')"
+                              ]
+                          },
+                          {
+                              "equals": [
+                                  "@toLower(trim(variables('ResourceData')?['tags']?[parameters('ServiceProviderManagedTag')]))",
+                                  "@toLower('true')"
+                              ]
+                          },
+                          {
+                              "not": {
+                                  "equals": [
+                                      "@toLower(trim(coalesce(variables('ResourceData')?['tags']?[parameters('DatabricksStorageTags')],'')))",
+                                      "databricks"
+                                  ]
+                              }
+                          },
+                          {
+                              "not": {
+                                  "equals": [
+                                      "@toLower(trim(coalesce(variables('ResourceData')?['tags']?[parameters('DatabricksClusterTags')],'')))",
+                                      "databricks"
+                                  ]
+                              }
+                          }
+                      ]
+                  },
+                  {
+                      "equals": [
+                          "@parameters('ServiceProviderManagedTag')",
+                          "@trim('')"
+                      ]
+                  }
+              ]
+          },
+          "runAfter": {
+              "GET_GENERIC_RESOURCE_DATA_(Event_type_delete,_or_create-update)": [
+                  "Succeeded"
+              ]
+          },
+          "type": "If"
+      },
+      "Determine_SNOW_target_ENV": {
+          "actions": {
+              "API_CALL_-_Get_subscription_data": {
+                  "inputs": {
+                      "authentication": {
+                          "audience": "https://management.azure.com",
+                          "type": "ManagedServiceIdentity"
+                      },
+                      "headers": {
+                          "Content-Type": "application/json"
+                      },
+                      "method": "GET",
+                      "queries": {
+                          "api-version": "2020-01-01"
+                      },
+                      "uri": "https://management.azure.com/subscriptions/@{variables('SubscriptionID')}"
+                  },
+                  "runAfter": {},
+                  "type": "Http"
+              },
+              "If_SNOW_ENV_overide_tag_is_present_at_subscription_level_set_new_ENV": {
+                  "actions": {
+                      "Set_new_ENV_for_SNOW": {
+                          "inputs": {
+                              "name": "SNOWEnvironmentCode",
+                              "value": "@{body('API_CALL_-_Get_subscription_data')['tags'][parameters('SnowEnvOverideTag')]}"
+                          },
+                          "runAfter": {},
+                          "type": "SetVariable"
+                      }
+                  },
+                  "expression": {
+                      "and": [
+                          {
+                              "contains": [
+                                  "@body('API_CALL_-_Get_subscription_data')",
+                                  "tags"
+                              ]
+                          },
+                          {
+                              "not": {
+                                  "equals": [
+                                      "@body('API_CALL_-_Get_subscription_data')?['tags']",
+                                      "@null"
+                                  ]
+                              }
+                          },
+                          {
+                              "contains": [
+                                  "@body('API_CALL_-_Get_subscription_data')?['tags']",
+                                  "@parameters('SnowEnvOverideTag')"
+                              ]
+                          }
+                      ]
+                  },
+                  "runAfter": {
+                      "API_CALL_-_Get_subscription_data": [
+                          "Succeeded"
+                      ]
+                  },
+                  "type": "If"
+              },
+              "If_SNOW_FO_overide_tag_is_present_at_subscription_level_set_new_FO": {
+                  "actions": {
+                      "Set_new_FO_for_SNOW": {
+                          "inputs": {
+                              "name": "SNOWTenantCode",
+                              "value": "@{body('API_CALL_-_Get_subscription_data')['tags'][parameters('SnowFoOverideTag')]}"
+                          },
+                          "runAfter": {},
+                          "type": "SetVariable"
+                      }
+                  },
+                  "expression": {
+                      "and": [
+                          {
+                              "contains": [
+                                  "@body('API_CALL_-_Get_subscription_data')",
+                                  "tags"
+                              ]
+                          },
+                          {
+                              "not": {
+                                  "equals": [
+                                      "@body('API_CALL_-_Get_subscription_data')?['tags']",
+                                      "@null"
+                                  ]
+                              }
+                          },
+                          {
+                              "contains": [
+                                  "@body('API_CALL_-_Get_subscription_data')?['tags']",
+                                  "@parameters('SnowFoOverideTag')"
+                              ]
+                          }
+                      ]
+                  },
+                  "runAfter": {
+                      "If_SNOW_ENV_overide_tag_is_present_at_subscription_level_set_new_ENV": [
+                          "Succeeded"
+                      ]
+                  },
+                  "type": "If"
+              }
+          },
+          "runAfter": {
+              "API_Call_-_Retrieve_Function_Secret": [
+                  "Succeeded"
+              ]
+          },
+          "type": "Scope"
+      },
+      "GET_GENERIC_RESOURCE_DATA_(Event_type_delete,_or_create-update)": {
+          "cases": {
+              "Microsoft.Resources.ResourceDeleteSuccess": {
+                  "actions": {
+                      "Condition_-_If_Resource_data_is_available": {
+                          "actions": {},
+                          "else": {
+                              "actions": {
+                                  "Terminate": {
+                                      "inputs": {
+                                          "runError": {
+                                              "code": "003",
+                                              "message": "Could not retrieve deleted resource data !"
+                                          },
+                                          "runStatus": "Failed"
+                                      },
+                                      "runAfter": {},
+                                      "type": "Terminate"
+                                  }
+                              }
+                          },
+                          "expression": {
+                              "and": [
+                                  {
+                                      "equals": [
+                                          "@empty(variables('ResourceData'))",
+                                          false
+                                      ]
+                                  }
+                              ]
+                          },
+                          "runAfter": {
+                              "Scope_-_Retrieve_Deleted_resource_object_Data": [
+                                  "Succeeded",
+                                  "Failed"
+                              ]
+                          },
+                          "type": "If"
+                      },
+                      "Scope_-_Retrieve_Deleted_resource_object_Data": {
+                          "actions": {
+                              "API_Call_-_Find_change_detail_for_ResourceID": {
+                                  "inputs": {
+                                      "authentication": {
+                                          "audience": "https://management.azure.com",
+                                          "type": "ManagedServiceIdentity"
+                                      },
+                                      "body": "@outputs('Compose_JSON_-_API_Change_request')",
+                                      "method": "POST",
+                                      "queries": {
+                                          "api-version": "2018-09-01-preview"
+                                      },
+                                      "uri": "https://management.azure.com/providers/Microsoft.ResourceGraph/resourceChangeDetails"
+                                  },
+                                  "runAfter": {
+                                      "Compose_JSON_-_API_Change_request": [
+                                          "Succeeded"
+                                      ]
+                                  },
+                                  "type": "Http"
+                              },
+                              "API_Call_-_Find_change_events_for_ResourceID": {
+                                  "inputs": {
+                                      "authentication": {
+                                          "audience": "https://management.azure.com",
+                                          "type": "ManagedServiceIdentity"
+                                      },
+                                      "body": "@outputs('Compose_JSON_-_API_Event_request')",
+                                      "headers": {
+                                          "Content-Type": "application/json"
+                                      },
+                                      "method": "POST",
+                                      "queries": {
+                                          "api-version": "2018-09-01-preview"
+                                      },
+                                      "uri": "https://management.azure.com/providers/Microsoft.ResourceGraph/resourceChanges"
+                                  },
+                                  "runAfter": {
+                                      "Compose_JSON_-_API_Event_request": [
+                                          "Succeeded"
+                                      ]
+                                  },
+                                  "type": "Http"
+                              },
+                              "Compose_JSON_-_API_Change_request": {
+                                  "inputs": {
+                                      "changeId": "@{body('Filter_array_-_Delete_change_Event')[0]['changeId']}",
+                                      "resourceId": "@{variables('ResourceId')}"
+                                  },
+                                  "runAfter": {
+                                      "Filter_array_-_Delete_change_Event": [
+                                          "Succeeded"
+                                      ]
+                                  },
+                                  "type": "Compose"
+                              },
+                              "Compose_JSON_-_API_Event_request": {
+                                  "inputs": {
+                                      "fetchPropertyChanges": true,
+                                      "interval": {
+                                          "end": "@{addMinutes(variables('PayloadData')?['eventTime'],15)}",
+                                          "start": "@{addMinutes(variables('PayloadData')?['eventTime'],-15)}"
+                                      },
+                                      "resourceId": "@{variables('ResourceId')}"
+                                  },
+                                  "runAfter": {},
+                                  "type": "Compose"
+                              },
+                              "Filter_array_-_Delete_change_Event": {
+                                  "inputs": {
+                                      "from": "@body('API_Call_-_Find_change_events_for_ResourceID')['changes']",
+                                      "where": "@equals(item()['changeType'], 'Delete')"
+                                  },
+                                  "runAfter": {
+                                      "API_Call_-_Find_change_events_for_ResourceID": [
+                                          "Succeeded"
+                                      ]
+                                  },
+                                  "type": "Query"
+                              },
+                              "Set_variable_-_ResourceData_(Delete_action)": {
+                                  "inputs": {
+                                      "name": "ResourceData",
+                                      "value": "@body('API_Call_-_Find_change_detail_for_ResourceID')['beforeSnapshot']['content']"
+                                  },
+                                  "runAfter": {
+                                      "API_Call_-_Find_change_detail_for_ResourceID": [
+                                          "Succeeded"
+                                      ]
+                                  },
+                                  "type": "SetVariable"
+                              }
+                          },
+                          "runAfter": {},
+                          "type": "Scope"
+                      },
+                      "Set_variable_-_EventTypeAction_=_delete": {
+                          "inputs": {
+                              "name": "EventTypeAction",
+                              "value": "delete"
+                          },
+                          "runAfter": {
+                              "Condition_-_If_Resource_data_is_available": [
+                                  "Succeeded"
+                              ]
+                          },
+                          "type": "SetVariable"
+                      }
+                  },
+                  "case": "Microsoft.Resources.ResourceDeleteSuccess"
+              },
+              "Microsoft.Resources.ResourceWriteSuccess": {
+                  "actions": {
+                      "API_Call_-_Get_generic_resource_data": {
+                          "inputs": {
+                              "authentication": {
+                                  "audience": "https://management.azure.com",
+                                  "type": "ManagedServiceIdentity"
+                              },
+                              "headers": {
+                                  "Content-Type": "application/json"
+                              },
+                              "method": "GET",
+                              "queries": {
+                                  "api-version": "@{body('Filter_array_-_Provider_resource_type')[0]['apiVersions'][0]}"
+                              },
+                              "uri": "https://management.azure.com@{variables('ResourceId')}"
+                          },
+                          "runAfter": {
+                              "Filter_array_-_Provider_resource_type": [
+                                  "Succeeded"
+                              ]
+                          },
+                          "type": "Http"
+                      },
+                      "API_Call_-_Get_resource_provider_information": {
+                          "description": "Retrieving the provider information from API to obtain latest API version that should be used",
+                          "inputs": {
+                              "authentication": {
+                                  "audience": "https://management.azure.com",
+                                  "type": "ManagedServiceIdentity"
+                              },
+                              "headers": {
+                                  "Content-Type": "application/json"
+                              },
+                              "method": "GET",
+                              "queries": {
+                                  "api-version": "2015-01-01"
+                              },
+                              "uri": "https://management.azure.com/subscriptions/@{split(variables('PayloadData')?['data']['resourceUri'],'/')[2]}/providers/@{variables('PayloadData')['data']['resourceProvider']}"
+                          },
+                          "runAfter": {},
+                          "type": "Http"
+                      },
+                      "Filter_array_-_Provider_resource_type": {
+                          "inputs": {
+                              "from": "@body('API_Call_-_Get_resource_provider_information')['resourceTypes']",
+                              "where": "@equals(toLower(item()['resourceType']), toLower(split(variables('PayloadData')?['data']['resourceUri'], '/')[7]))"
+                          },
+                          "runAfter": {
+                              "API_Call_-_Get_resource_provider_information": [
+                                  "Succeeded"
+                              ]
+                          },
+                          "type": "Query"
+                      },
+                      "Set_variable_-_EventTypeAction_=_create_or_update": {
+                          "inputs": {
+                              "name": "EventTypeAction",
+                              "value": "create_or_update"
+                          },
+                          "runAfter": {
+                              "Set_variable_-_Resource_Data_(Create_or_Update)": [
+                                  "Succeeded"
+                              ]
+                          },
+                          "type": "SetVariable"
+                      },
+                      "Set_variable_-_Resource_Data_(Create_or_Update)": {
+                          "inputs": {
+                              "name": "ResourceData",
+                              "value": "@body('API_Call_-_Get_generic_resource_data')"
+                          },
+                          "runAfter": {
+                              "API_Call_-_Get_generic_resource_data": [
+                                  "Succeeded"
+                              ]
+                          },
+                          "type": "SetVariable"
+                      }
+                  },
+                  "case": "Microsoft.Resources.ResourceWriteSuccess"
+              }
+          },
+          "default": {
+              "actions": {
+                  "Terminate_-_Unmanaged_EventType": {
+                      "inputs": {
+                          "runStatus": "Cancelled"
+                      },
+                      "runAfter": {},
+                      "type": "Terminate"
+                  }
+              }
+          },
+          "expression": "@variables('ResourceEventType')",
+          "runAfter": {
+              "Determine_SNOW_target_ENV": [
+                  "Succeeded"
+              ]
+          },
+          "type": "Switch"
+      },
+      "Initialize_variable_-_EventJSON": {
+          "inputs": {
+              "variables": [
+                  {
+                      "name": "EventJSON",
+                      "type": "string"
+                  }
+              ]
+          },
+          "runAfter": {
+              "Initialize_variable_-_PreviousResourceData": [
+                  "Succeeded"
+              ]
+          },
+          "type": "InitializeVariable"
+      },
+      "Initialize_variable_-_EventPropData": {
+          "inputs": {
+              "variables": [
+                  {
+                      "name": "EventPropData",
+                      "type": "string"
+                  }
+              ]
+          },
+          "runAfter": {
+              "Initialize_variable_-_EventTypeAction": [
+                  "Succeeded"
+              ]
+          },
+          "type": "InitializeVariable"
+      },
+      "Initialize_variable_-_EventTypeAction": {
+          "inputs": {
+              "variables": [
+                  {
+                      "name": "EventTypeAction",
+                      "type": "string",
+                      "value": "create_or_update"
+                  }
+              ]
+          },
+          "runAfter": {
+              "Initialize_variable_-_EventJSON": [
+                  "Succeeded"
+              ]
+          },
+          "type": "InitializeVariable"
+      },
+      "Initialize_variable_-_PayloadData": {
+          "inputs": {
+              "variables": [
+                  {
+                      "name": "PayloadData",
+                      "type": "object",
+                      "value": "@triggerBody()?[0]"
+                  }
+              ]
+          },
+          "runAfter": {},
+          "type": "InitializeVariable"
+      },
+      "Initialize_variable_-_PreviousResourceData": {
+          "inputs": {
+              "variables": [
+                  {
+                      "name": "PreviousResourceData",
+                      "type": "object"
+                  }
+              ]
+          },
+          "runAfter": {
+              "Initialize_variable_-_ResourceData": [
+                  "Succeeded"
+              ]
+          },
+          "type": "InitializeVariable"
+      },
+      "Initialize_variable_-_ResourceData": {
+          "inputs": {
+              "variables": [
+                  {
+                      "name": "ResourceData",
+                      "type": "object"
+                  }
+              ]
+          },
+          "runAfter": {
+              "Initialize_variable_-_SubscriptionID": [
+                  "Succeeded"
+              ]
+          },
+          "type": "InitializeVariable"
+      },
+      "Initialize_variable_-_ResourceEventType": {
+          "inputs": {
+              "variables": [
+                  {
+                      "name": "ResourceEventType",
+                      "type": "string",
+                      "value": "@{replace(variables('PayloadData')?['eventType'],'Microsoft.Resources.ResourceActionSuccess','Microsoft.Resources.ResourceWriteSuccess')}"
+                  }
+              ]
+          },
+          "runAfter": {
+              "Initialize_variable_-_EventPropData": [
+                  "Succeeded"
+              ]
+          },
+          "type": "InitializeVariable"
+      },
+      "Initialize_variable_-_ResourceId": {
+          "inputs": {
+              "variables": [
+                  {
+                      "name": "ResourceId",
+                      "type": "string",
+                      "value": "@{variables('PayloadData')?.data.resourceUri}"
+                  }
+              ]
+          },
+          "runAfter": {
+              "Initialize_variable_-_PayloadData": [
+                  "Succeeded"
+              ]
+          },
+          "type": "InitializeVariable"
+      },
+      "Initialize_variable_-_SNOWEnvironmentCode": {
+          "inputs": {
+              "variables": [
+                  {
+                      "name": "SNOWEnvironmentCode",
+                      "type": "string",
+                      "value": "DEFAULT"
+                  }
+              ]
+          },
+          "runAfter": {
+              "Initialize_variable_-_SNOWTenantCode": [
+                  "Succeeded"
+              ]
+          },
+          "type": "InitializeVariable"
+      },
+      "Initialize_variable_-_SNOWTenantCode": {
+          "inputs": {
+              "variables": [
+                  {
+                      "name": "SNOWTenantCode",
+                      "type": "string",
+                      "value": "DEFAULT"
+                  }
+              ]
+          },
+          "runAfter": {
+              "Initialize_variable_-_ResourceEventType": [
+                  "Succeeded"
+              ]
+          },
+          "type": "InitializeVariable"
+      },
+      "Initialize_variable_-_SubscriptionID": {
+          "inputs": {
+              "variables": [
+                  {
+                      "name": "SubscriptionID",
+                      "type": "string",
+                      "value": "@{split(variables('ResourceId'),'/')[2]}"
+                  }
+              ]
+          },
+          "runAfter": {
+              "Initialize_variable_-_ResourceId": [
+                  "Succeeded"
+              ]
+          },
+          "type": "InitializeVariable"
+      },
+      "Set_variable_-_EventJSON": {
+          "inputs": {
+              "name": "EventJSON",
+              "value": "{\n\t\"payloadtype\":\"itsm-cmdb\",\n\t\"eventtype\":\"@{variables('EventTypeAction')}\",\n\t\"targetsnowenv\":\"@{variables('SNOWEnvironmentCode')}\",\n\t\"targetsnowfo\":\"@{variables('SNOWTenantCode')}\",\n\t\"resourceid\":\"@{variables('ResourceId')}\"\n}"
+          },
+          "runAfter": {
+              "Abort_if_Service_Provider_TAG_is_not_present": [
+                  "Succeeded"
+              ]
+          },
+          "type": "SetVariable"
+      }
+    },
+    "contentVersion": "1.0.0.0",
+    "outputs": {
+        "OUTPUT_SENTCMDB": {
+            "type": "String",
+            "value": "@{variables('ResourceId')}"
+        }
+    },
+    "parameters": {
+        "ListenerFunctionResourceID": {
+            "defaultValue": "[variables('ListenerFunctionResourceID')]",
+            "type": "String"
+        },
+        "ListenerFunctionUrl": {
+            "defaultValue": "[variables('ListenerFunctionUrl')]",
+            "type": "String"
+        },
+        "ServiceProviderManagedTag": {
+            "defaultValue": "[variables('ServiceProviderManagedTag')]",
+            "type": "String"
+        },
+        "DatabricksClusterTags": {
+            "defaultValue": "vendor",
+            "type": "String"
+        },
+        "DatabricksStorageTags": {
+            "defaultValue": "application",
+            "type": "String"
+        },
+        "SnowEnvOverideTag": {
+            "defaultValue": "[variables('SnowEnvOverideTag')]",
+            "type": "String"
+        },
+        "SnowFoOverideTag": {
+            "defaultValue": "[variables('SnowFoOverideTag')]",
+            "type": "String"
+        },
+        "DiagnosticRuleName": {
+            "defaultValue": "[variables('DiagnosticRuleName')]",
+            "type": "String"
+        }
+    },
+    "triggers": {
+        "manual": {
+            "inputs": {
+                "method": "POST",
+                "schema": {}
+            },
+            "kind": "Http",
+            "type": "Request"
+        }
+    }
+}

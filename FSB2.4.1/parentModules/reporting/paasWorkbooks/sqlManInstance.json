@@ -1,0 +1,324 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{subscriptionPicker}"
+              ],
+              "parameters": [
+                {
+                  "id": "f5f66862-c38c-4c25-98fa-ad1e7f463a0f",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "subscriptionPicker",
+                  "label": "Subscription",
+                  "type": 6,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "includeAll": false,
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all"
+                },
+                {
+                  "id": "b1ae8eeb-0570-482d-af41-aa81999ad44a",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "resourceGroupPicker",
+                  "label": "Resource Group",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| distinct name",
+                  "crossComponentResources": [
+                    "{subscriptionPicker}"
+                  ],
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "2a6e9715-65ac-4e99-8087-36d38c6df94b",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SqlMiPicker",
+                  "label": "SQL Managed Instance",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\r\n| where type == \"microsoft.sql/managedinstances\"\r\n| project id, name",
+                  "crossComponentResources": [
+                    "{subscriptionPicker}"
+                  ],
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "2a7b92f8-8f29-4a97-a7b0-f8101c701bb5",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "[parameter(tagPrefix)]ManagedPicker",
+                  "label": "Managed by [parameter(companyName)]",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "jsonData": "[\"Yes\", \"No\"]",
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all"
+                }
+              ],
+              "style": "above",
+              "queryType": 0,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "name": "parameters - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.sql/managedinstances\"\r\n| where id in~ ({SqlMiPicker})\r\n| where resourceGroup in~ ({resourceGroupPicker})\r\n| extend state = properties.state\r\n| extend cpuSize = properties.vCores\r\n| extend storageSize = properties.storageSizeInGB\r\n| extend [parameter(tagPrefix)]Managed = iif((tolower(tostring(tags)) has '\"[parameter(tagPrefixLc)]managed\":\"true\"'), \"Yes\", \"No\")\r\n| where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]ManagedPicker})\r\n| project id, name, state, cpuSize, storageSize, location, resourceGroup = id, subscriptionId, [parameter(tagPrefix)]Managed",
+              "size": 0,
+              "title": "Azure SQL Managed instances",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{subscriptionPicker}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "name",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "state",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Ready",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "warning",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "resourceGroup",
+                    "formatter": 14,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "Subscription",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "id",
+                    "label": "Name"
+                  },
+                  {
+                    "columnId": "state",
+                    "label": "State"
+                  },
+                  {
+                    "columnId": "cpuSize",
+                    "label": "CPU size"
+                  },
+                  {
+                    "columnId": "storageSize",
+                    "label": "Storage size"
+                  },
+                  {
+                    "columnId": "location",
+                    "label": "Location"
+                  },
+                  {
+                    "columnId": "resourceGroup",
+                    "label": "Resource group"
+                  },
+                  {
+                    "columnId": "subscriptionId",
+                    "label": "Subscription"
+                  },
+                  {
+                    "columnId": "[parameter(tagPrefix)]Managed",
+                    "label": "[parameter(tagPrefix)]Managed"
+                  }
+                ]
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "SqlMiPicker",
+              "comparison": "isNotEqualTo"
+            },
+            "name": "ResourceGraphQuery"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.sql/managedinstances/databases\"\r\n| where resourceGroup in~ ({resourceGroupPicker})\r\n| extend db_idx = indexof(id, \"/databases\")\r\n| extend sqlmi_id = substring(id, 0, db_idx)\r\n| where sqlmi_id in~ ({SqlMiPicker})\r\n| join kind=leftouter (\r\n    resources\r\n    | where type == \"microsoft.sql/managedinstances\"\r\n    | project sqlmi_id = id, sqlmi_tags = tags\r\n) on sqlmi_id\r\n| extend [parameter(tagPrefix)]Managed = iif((tolower(tostring(sqlmi_tags)) has '\"[parameter(tagPrefixLc)]managed\":\"true\"'), \"Yes\", \"No\")\r\n| where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]ManagedPicker})\r\n| project id, name, properties.status, sqlmi_id",
+              "size": 0,
+              "title": "Managed instance databases",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{subscriptionPicker}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "name",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "properties_status",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Online",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "warning",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "id",
+                    "label": "Database name"
+                  },
+                  {
+                    "columnId": "properties_status",
+                    "label": "Status"
+                  },
+                  {
+                    "columnId": "sqlmi_id",
+                    "label": "SQL Managed instance"
+                  }
+                ]
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "SqlMiPicker",
+              "comparison": "isNotEqualTo"
+            },
+            "name": "query - 2"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "#### No SQL Managed Instances are deployed in this environment yet"
+            },
+            "conditionalVisibility": {
+              "parameterName": "SqlMiPicker",
+              "comparison": "isNotEqualTo",
+              "value": "not set"
+            },
+            "name": "text - 8"
+          }
+        ]
+      },
+      "name": "group - 0"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

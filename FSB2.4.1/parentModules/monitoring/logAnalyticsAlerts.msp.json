@@ -1,0 +1,59 @@
+{
+  "alertRules": [
+    {
+      "alertName": "Add member to global Administrator role (Directory)",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Security - Part of standard set of log alerts - Category AZURE AD RESOURCES",
+      "alertSeverity": 2,
+      "query": "AuditLogs | where OperationName == \"Add member to role\" | where TargetResources contains \"62e90394-69f5-4237-9190-012177145e10\" | extend c = parse_json (InitiatedBy) | extend Caller = c.user.userPrincipalName | extend a = parse_json(TargetResources) | mvexpand a | extend Account_added_to_role = a.userPrincipalName | where Account_added_to_role contains \"@\" | project Caller=Caller,Role_name=\"Global Administrator\",Account_added_to_role=Account_added_to_role",
+      "evaluationFrequency": "PT30M",
+      "operator": "GreaterThan",
+      "windowSize": "PT30M",
+      "timeAggregation": "Count",
+      "threshold": 0
+    },
+    {
+      "alertName": "Add member to limited Administrator role Security Administrator (Directory)",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Security - Part of standard set of log alerts - Category AZURE AD RESOURCES",
+      "alertSeverity": 2,
+      "query": "AuditLogs | where OperationName == \"Add member to role\" | where TargetResources contains \"Security Administrator\" | extend c = parse_json (InitiatedBy) | extend Caller = c.user.userPrincipalName | extend a = parse_json(TargetResources) | mvexpand a | extend Account_added_to_role = a.userPrincipalName | where Account_added_to_role contains \"@\" | project Caller=Caller,Role_name=\"Security Administrator\",Account_added_to_role=Account_added_to_role",
+      "evaluationFrequency": "PT30M",
+      "operator": "GreaterThan",
+      "windowSize": "PT30M",
+      "timeAggregation": "Count",
+      "threshold": 0
+    },
+    {
+      "alertName": "Add member to Subscription Owner group",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Security - Part of standard set of log alerts - Category AZURE AD RESOURCES",
+      "alertSeverity": 2,
+      "query": "AuditLogs | where OperationName == \"Add member to group\" | where ((TargetResources contains \"-owner\") or (TargetResources contains \"-subscriptionowner\")) | extend c = parse_json (InitiatedBy) | extend Caller = c.user.userPrincipalName | extend a = parse_json(TargetResources) | extend Account_added_to_group = a.displayName | project Caller=Caller,Group_name=replace('\"','',tostring(a[0].modifiedProperties[1].newValue)),Account_added_to_group=a[0].userPrincipalName",
+      "evaluationFrequency": "PT30M",
+      "operator": "GreaterThan",
+      "windowSize": "PT30M",
+      "timeAggregation": "Count",
+      "threshold": 0
+    },
+    {
+      "alertName": "User login failed 5 Attempts with same IP address",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Security - Part of standard set of log alerts - Category AZURE ACTIVE DIRECTORY",
+      "alertSeverity": 0,
+      "query": "SigninLogs | where ResultDescription contains \"Invalid username or password\" | summarize IPCount=count() by IPAddress,ResultDescription | where IPCount > 4 | project Description=ResultDescription, Client_IP_address=IPAddress",
+      "evaluationFrequency": "PT15M",
+      "operator": "GreaterThan",
+      "windowSize": "PT15M",
+      "timeAggregation": "Count",
+      "threshold": 0
+    },
+    {
+      "alertName": "User login failed 5 Attempts with same user account",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Security - Part of standard set of log alerts - Category AZURE ACTIVE DIRECTORY",
+      "alertSeverity": 0,
+      "query": "SigninLogs | where ResultDescription contains \"Invalid username or password\" | summarize UserCount=count() by Identity,ResultDescription | where UserCount > 4 | project Description=ResultDescription, Account_name=Identity",
+      "evaluationFrequency": "PT15M",
+      "operator": "GreaterThan",
+      "windowSize": "PT15M",
+      "timeAggregation": "Count",
+      "threshold": 0
+    }
+  ]
+}

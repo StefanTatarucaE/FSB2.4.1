@@ -1,0 +1,49 @@
+{
+    "reportingTags": {},
+    "storageAccountKind": "StorageV2",
+    "storageAccountSku": "Standard_LRS",
+    "storageAccountAccessTier": "Hot",
+    "storageAccountAllowBlobPublicAccess": true,
+    "storageAccountNetworkAcls": {
+        "bypass": "AzureServices, Logging, Metrics",
+        "defaultAction": "Allow",
+        "ipRules": []
+    },
+    "storageAccountChangeFeed": {
+        "enabled": true,
+        "retentionInDays": 7
+    },
+    "storageAccountBlobSvcDeleteRetentionPolicy": {
+        "enabled": true,
+        "days": 7
+    },
+    "storageAccountIsHnsEnabled": false,
+    "storageAccountShouldCreateContainers": true,
+    "storageAccountContainerNames": [
+        {
+            "containerName": "artifacts",
+            "containerAccess": "Blob"
+        },
+        {
+            "containerName": "customerdoc",
+            "containerAccess": "None"
+        },
+        {
+            "containerName": "iamsubscriptionreport",
+            "containerAccess": "None"
+        },
+        {
+            "containerName": "incidentchangereport",
+            "containerAccess": "None"
+        },
+        {
+            "containerName": "offlinereports",
+            "containerAccess": "None"
+        }
+    ],
+    "release": "Release 2.4",
+    "releaseNotes": "https://dev.azure.com/atos-mpc-azure/dcs-azure-public/_wiki/wikis/dcs-azure-public.wiki/1466/Release-Notes",
+    "coreDashboardDisplayName": "CloudCoreReportingDashboard",
+    "osMgmtDashboardDisplayName": "VMOSManagementReportingDashboard",
+    "paasDashboardDisplayName": "PaaSServicesReportingDashboard"
+}

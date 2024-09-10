@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "blockLogAnalyticsAgentDefEffect": {
+            "value": "Deny"
+        },
+        "blockLogAnalyticsAgentDefName": {
+            "value": "blockloganalyticsagent.auditdeny.policy.def"
+        },
+        "blockLogAnalyticsAgentDefDisplayName": {
+            "value": " Prevent Log Analytics monitoring agent extension on all Virtual Machines and Scale sets auditdeny policy definition"
+        },
+        "blockLogAnalyticsAgentDefAssignmentName": {
+            "value": "blockloganalyticsagent.auditdeny.policy.def.assignment"
+        },
+        "blockLogAnalyticsAgentDefAssignmentDisplayName": {
+            "value": "Prevent Log Analytics monitoring agent extension on all Virtual Machines and Scale sets auditdeny policy definitionassignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

@@ -1,0 +1,81 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "kubernetesSettings": {
+            "value": {
+                "authorizedIpRangesEffect": "Audit",
+                "disableLocalAuthenticationEffect": "Audit",
+                "clusterCpuMemoryLimitNotExceedEffect": "Audit",
+                "excludedNamespaces": [
+                    "kube-system",
+                    "gatekeeper-system",
+                    "azure-arc"
+                ],
+                "namespaces": [],
+                "labelSelector": {},
+                "cpuLimit": "200m",
+                "memoryLimit": "1Gi",
+                "excludedContainers": [],
+                "containerNotShareProcessIdEffect": "Audit",
+                "containerAllowCapabilityEffect": "Audit",
+                "allowedCapabilities": [],
+                "requiredDropCapabilities": [],
+                "containerAllowImageEffect": "Audit",
+                "allowedContainerImagesRegex": "Audit",
+                "containerRunReadOnlyRootFileEffect": "Audit",
+                "podRunApprovedUserGroupEffect": "Audit",
+                "runAsUserRule": "MustRunAsNonRoot",
+                "runAsUserRanges": {
+                    "ranges": []
+                },
+                "runAsGroupRule": "RunAsAny",
+                "runAsGroupRanges": {
+                    "ranges": []
+                },
+                "supplementalGroupsRule": "RunAsAny",
+                "supplementalGroupsRanges": {
+                    "ranges": []
+                },
+                "fsGroupRule": "RunAsAny",
+                "fsGroupRanges": {
+                    "ranges": []
+                },
+                "podsUseApprovedHostNetworkPortRangeEffect": "Audit",
+                "allowHostNetwork": false,
+                "minPort": 0,
+                "maxPort": 0,
+                "podsListenOnlyAllowedPortEffect": "Audit",
+                "allowedServicePortsList": [
+                    "443",
+                    "80"
+                ],
+                "allowedExternalIpsEffect": "Audit",
+                "allowedExternalIps": [],
+                "accessibleOnlyOverHttpsEffect": "Audit",
+                "clusterShouldNotGrantCapSysAdminEffect": "Audit",
+                "upgradeNonVulnerableKubernetesVersionEffect": "Audit",
+                "resourceLogEnabledEffect": "AuditIfNotExists",
+                "requiredRetentionDays": "365",
+                "rbacShouldUsedEffect": "Audit",
+                "vulnerabilityFindingsResolvedEffect": "AuditIfNotExists",
+                "tempDiskAndCacheShouldEncryptedAtHostEffect": "Audit"
+            }
+        },
+        "kubernetesAuditDenySetName": {
+            "value": "kubernetes.auditdeny.policy.set"
+        },
+        "kubernetesAuditDenySetDisplayName": {
+            "value": "Kubernetes auditdeny policy set"
+        },
+        "kubernetesAuditDenySetAssignmentName": {
+            "value": "kubernetes.auditdeny.policy.set.assignment"
+        },
+        "kubernetesAuditDenySetAssignmentDisplayName": {
+            "value": "Kubernetes auditdeny policy set assignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

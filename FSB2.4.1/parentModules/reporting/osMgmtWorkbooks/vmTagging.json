@@ -1,0 +1,355 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{SubscriptionPicker}"
+        ],
+        "parameters": [
+          {
+            "id": "83ebaff2-4c26-449e-a2f9-e3a4d436027d",
+            "version": "KqlParameterItem/1.0",
+            "name": "SubscriptionPicker",
+            "label": "Subscription",
+            "type": 6,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": true,
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "faffa90f-356c-44f9-ae31-73988ed6361e",
+            "version": "KqlParameterItem/1.0",
+            "name": "VMPicker",
+            "label": "Virtual Machine",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where tolower(tostring(tags)) !has '\"databricks-instance-name\"'\r\n| distinct name",
+            "crossComponentResources": [
+              "{SubscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "value": [
+              "value::all"
+            ]
+          },
+          {
+            "id": "010c9537-4816-4ec2-b277-ab3c69542714",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]OsVersionPicker",
+            "label": "[parameter(tagPrefix)]OsVersion",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend [parameter(tagPrefix)]OsVersion = iif(isnull(tags.[parameter(tagPrefix)]OsVersion), \"Not set\", tostring(tags.[parameter(tagPrefix)]OsVersion))\r\n| project [parameter(tagPrefix)]OsVersion\r\n| distinct [parameter(tagPrefix)]OsVersion",
+            "crossComponentResources": [
+              "{SubscriptionPicker}"
+            ],
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "f4cb727b-e4c4-4594-9e23-1a4058a337de",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]ManagedPicker",
+            "label": "[parameter(tagPrefix)]Managed",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Not set\", \"Yes\", \"Tag value invalid\"]",
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "44a883e8-030d-41f2-b6ed-87efd917f93f",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]AntimalwarePicker",
+            "label": "[parameter(tagPrefix)]Antimalware",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Not set\", \"Yes\", \"Tag value invalid\"]",
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "fe206d09-400c-4f7f-ad96-5a0b0573882c",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]CompliancePicker",
+            "label": "[parameter(tagPrefix)]Compliance",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Not set\", \"Yes\", \"Tag value invalid\"]",
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "77847dbb-1134-4937-97cd-53d09483e90c",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]BackupPicker",
+            "label": "[parameter(tagPrefix)]Backup",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n|extend BackupTaglength = strlen(\"[parameter(tagPrefix)]Backup\")\r\n| extend [parameter(tagPrefix)]Backup = iff(tostring(tags) has '\"[parameter(tagPrefix)]Backup\":', substring((substring (tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]backup\")+BackupTaglength+3)),0,indexof(substring(tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]backup\")+BackupTaglength+3),'\"')), \"Not Set\")\r\n| extend [parameter(tagPrefix)]Backup = iif((([parameter(tagPrefix)]Backup!=\"\") and ([parameter(tagPrefix)]Backup !startswith \" \")), tostring([parameter(tagPrefix)]Backup), \"Tag value invalid\")\r\n| project [parameter(tagPrefix)]Backup\r\n| distinct [parameter(tagPrefix)]Backup\r\n",
+            "crossComponentResources": [
+              "{SubscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "selectAllValue": "",
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "07a18a12-91ec-420a-a045-345993fc7c4e",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]PatchingPicker",
+            "label": "[parameter(tagPrefix)]Patching",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n | extend PatchingTaglength = strlen(\"[parameter(tagPrefix)]Patching\")\r\n | extend [parameter(tagPrefix)]Patching = iff(tostring(tags) has '\"[parameter(tagPrefix)]Patching\":', substring((substring (tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]patching\")+PatchingTaglength+3)),0,indexof(substring(tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]patching\")+PatchingTaglength+3),'\"')), \"Not Set\")\r\n| extend [parameter(tagPrefix)]Patching = iif((([parameter(tagPrefix)]Patching!=\"\") and ([parameter(tagPrefix)]Patching !startswith \" \")), tostring([parameter(tagPrefix)]Patching), \"Tag value invalid\")\r\n| project [parameter(tagPrefix)]Patching\r\n| distinct [parameter(tagPrefix)]Patching",
+            "crossComponentResources": [
+              "{SubscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "selectAllValue": "",
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "900bed09-b2e3-4767-be7a-ba8cdf05ffba",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]EncryptionPicker",
+            "type": 2,
+            "description": "Filter on [parameter(tagPrefix)]Encryption tag",
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ]
+            },
+            "jsonData": "[\"Not set\", \"Yes\", \"Tag value invalid\"]",
+            "defaultValue": "value::all",
+            "label": "[parameter(tagPrefix)]Encryption"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]MaintenancePicker",
+            "label": "[parameter(tagPrefix)]Maintenance",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Not set\", \"Yes\", \"No\"]",
+            "defaultValue": "value::all",
+            "id": "3d0b1d07-ffad-4c81-ba44-989d1d8d1f16",
+            "value": [
+              "Not set"
+            ]
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 0"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where tolower(tostring(tags)) !has '\"databricks-instance-name\"'\r\n| extend [parameter(tagPrefix)]Managed = case(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"', \"Yes\",\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Managed\":', \"Tag value invalid\", \r\n    \"Not Set\")\r\n|extend BackupTaglength = strlen(\"[parameter(tagPrefix)]Backup\")\r\n| extend [parameter(tagPrefix)]Backup = iff(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Backup\":', substring((substring (tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]backup\")+BackupTaglength+3)),0,indexof(substring(tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]backup\")+BackupTaglength+3),'\"')), \r\n    \"Not Set\")\r\n| extend [parameter(tagPrefix)]Backup = iif((\r\n    ([parameter(tagPrefix)]Backup!=\"\") and ([parameter(tagPrefix)]Backup !startswith \" \")), tostring([parameter(tagPrefix)]Backup), \r\n    \"Tag value invalid\")\r\n| extend [parameter(tagPrefix)]Compliance = case(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Compliance\":\"true\"', \"Yes\",\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Compliance\":', \"Tag value invalid\", \r\n    \"Not Set\")\r\n| extend [parameter(tagPrefix)]Antimalware = case(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Antimalware\":\"true\"', \"Yes\",\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Antimalware\":', \"Tag value invalid\", \r\n    \"Not Set\")\r\n | extend PatchingTaglength = strlen(\"[parameter(tagPrefix)]Patching\")\r\n | extend [parameter(tagPrefix)]Patching = iff(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Patching\":', substring((substring (tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]patching\")+PatchingTaglength+3)),0,indexof(substring(tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]patching\")+PatchingTaglength+3),'\"')), \r\n    \"Not Set\")\r\n| extend [parameter(tagPrefix)]Patching = iif((\r\n    ([parameter(tagPrefix)]Patching!=\"\") and ([parameter(tagPrefix)]Patching !startswith \" \")), tostring([parameter(tagPrefix)]Patching), \r\n    \"Tag value invalid\")\r\n| extend [parameter(tagPrefix)]Encryption = case(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Encryption\":\"true\"', \"Yes\",\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Encryption\":', \"Tag value invalid\", \r\n    \"Not Set\")\r\n| extend [parameter(tagPrefix)]Maintenance = case(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Maintenance\":\"true\"', \"Yes\",\r\n    tostring(tags) has '\" [parameter(tagPrefix)]Maintenance \":', \"Tag value invalid\", \r\n    \"Not Set\")    \r\n| extend OS = iif(\r\n    (isnotnull(tags.[parameter(tagPrefix)]OsVersion)), tostring(tags.[parameter(tagPrefix)]OsVersion), \r\n    \"Not Set\")\r\n| where name in~ ({VMPicker}) \r\n| where OS in~ ({[parameter(tagPrefix)]OsVersionPicker})\r\n| where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]ManagedPicker})\r\n| where [parameter(tagPrefix)]Antimalware in~ ({[parameter(tagPrefix)]AntimalwarePicker})\r\n| where [parameter(tagPrefix)]Compliance in~ ({[parameter(tagPrefix)]CompliancePicker})\r\n| where [parameter(tagPrefix)]Patching in ({[parameter(tagPrefix)]PatchingPicker})\r\n| where [parameter(tagPrefix)]Backup in ({[parameter(tagPrefix)]BackupPicker})\r\n| where [parameter(tagPrefix)]Encryption in~ ({[parameter(tagPrefix)]EncryptionPicker})\r\n| where [parameter(tagPrefix)]Maintenance in~ ({[parameter(tagPrefix)]MaintenancePicker})\r\n| project id, name, subscriptionId, OS, [parameter(tagPrefix)]Managed, [parameter(tagPrefix)]Antimalware, [parameter(tagPrefix)]Compliance, [parameter(tagPrefix)]Backup, [parameter(tagPrefix)]Patching, [parameter(tagPrefix)]Encryption, [parameter(tagPrefix)]Maintenance, tags\r\n| order by tolower(name) asc \r\n| project-away name\r\n",
+        "size": 3,
+        "title": "Virtual Machine - Management tags overview",
+        "noDataMessage": "No data to display. Please check filters at the top",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{SubscriptionPicker}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "tags",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "60ch"
+              }
+            },
+            {
+              "columnMatch": "name",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "SubScription",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "VmName",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            }
+          ],
+          "labelSettings": [
+            {
+              "columnId": "id",
+              "label": "VM Name"
+            },
+            {
+              "columnId": "subscriptionId",
+              "label": "Subscription"
+            },
+            {
+              "columnId": "OS",
+              "label": "[parameter(tagPrefix)]OsVersion"
+            },
+            {
+              "columnId": "tags",
+              "label": "All tags overview"
+            }
+          ]
+        },
+        "sortBy": []
+      },
+      "conditionalVisibility": {
+        "parameterName": "VMPicker",
+        "comparison": "isNotEqualTo"
+      },
+      "name": "query - 0"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "#### No virtual machines are deployed in this environment yet or are available for selected filters"
+      },
+      "conditionalVisibility": {
+        "parameterName": "VMPicker",
+        "comparison": "isEqualTo"
+      },
+      "name": "text - 2"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

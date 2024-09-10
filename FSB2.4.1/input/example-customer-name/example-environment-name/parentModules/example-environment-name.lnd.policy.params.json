@@ -1,0 +1,1344 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "subscriptionType": {
+      "value": "lndz"
+    },
+    "deployAcrAuditDeny": {
+      "value": true
+    },
+    "deployUpdateManagerChange": {
+      "value": true
+    },
+    "acrAuditDenySettings": {
+      "value": {
+        "adminAccountDisabled": "Audit",
+        "anonymousPullDisabled": "Audit",
+        "cmkEncryptionEnabled": "Audit",
+        "exportPolicy": "Audit",
+        "networkRulesExist": "Audit",
+        "privateEndpointEnabled": "Audit",
+        "publicNetworkAccess": "Audit",
+        "skuSupportsPrivateEndpoints": "Audit",
+        "tokenDisabled": "Audit"
+      }
+    },
+    "deployAcrChange": {
+      "value": true
+    },
+    "acrChangeSettings": {
+      "value": {
+        "acrDisableTokenAccess": "Modify",
+        "acrDisableAnonymousAuthentication": "Modify",
+        "acrDisablePublicNetworkAccess": "Modify",
+        "acrDisableLocalAuthentication": "Modify"
+      }
+    },
+    "deployAllowedLocations": {
+      "value": true
+    },
+    "azureRegionsAllowed": {
+      "value": [
+        "global",
+        "northeurope",
+        "westeurope"
+      ]
+    },
+    "deployAllowedVmSku": {
+      "value": true
+    },
+    "allowedVmSkus": {
+      "value": [
+        "Standard_B2ms",
+        "Standard_DS1_v2",
+        "Standard_F2s_v2"
+      ]
+    },
+    "antiMalwareLinuxPolicyEffect": {
+      "value": "Deny"
+    },
+    "deployAntiMalwareLinux": {
+      "value": true
+    },
+    "deployAntiMalwareWindows": {
+      "value": true
+    },
+    "antiMalwareWindowsScheduledScanSettings": {
+      "value": {
+        "isEnabled": "false",
+        "scanType": "Quick",
+        "day": "7",
+        "time": "120"
+      }
+    },
+    "deployAscPricing": {
+      "value": true
+    },
+    "pricingTier": {
+      "value": {
+        "api": "Free",
+        "virtualMachinesTier": "Free",
+        "appServicesTier": "Free",
+        "sqlServersTier": "Free",
+        "sqlServerVirtualMachinesTier": "Free",
+        "storageAccountsTier": "Free",
+        "opensourcerelationaldatabases": "Free",
+        "arm": "Free",
+        "dns": "Free",
+        "containers": "Free",
+        "CosmosDbs": "Free",
+        "cloudPosture":"Free",
+        "cloudPostureExtensions":{
+          "sensitiveDataDiscovery": "True",
+          "containerRegistriesVulnerabilityAssessments": "True",
+          "agentlessDiscoveryForKubernetes": "True"
+        },
+        "keyVaultsTier": "Standard"
+      }
+    },
+    "virtualMachinesSubPlan": {
+      "value": "P2"
+    },
+    "deployAscQualysAgent": {
+      "value": true
+    },
+    "deployQualysWindowsPolicy": {
+      "value": true
+    },
+    "deployQualysLinuxPolicy": {
+      "value": true
+    },
+    "deployBlockResourceType": {
+      "value": true
+    },
+    "blockResourceTypes": {
+      "value": [
+        "Microsoft.Compute/snapshots",
+        "Microsoft.DesktopVirtualization/hostpools"
+      ]
+    },
+    "deployCis": {
+      "value": true
+    },
+    "deployIso2007": {
+      "value": true
+    },
+    "iso27001AuditDenySettings": {
+      "value": {
+        "includeArcMachines": "false",
+        "includeMetricsDiagnosticLogging": true,
+        "includeLogsDiagnosticLogging": true,
+        "listOfResourceTypesWithDiagnosticLogsEnabled": [
+          "Microsoft.AnalysisServices/servers",
+          "Microsoft.ApiManagement/service",
+          "Microsoft.Network/applicationGateways",
+          "Microsoft.Automation/automationAccounts",
+          "Microsoft.ContainerInstance/containerGroups",
+          "Microsoft.ContainerRegistry/registries",
+          "Microsoft.ContainerService/managedClusters",
+          "Microsoft.Batch/batchAccounts",
+          "Microsoft.Cdn/profiles/endpoints",
+          "Microsoft.CognitiveServices/accounts",
+          "Microsoft.DocumentDB/databaseAccounts",
+          "Microsoft.DataFactory/factories",
+          "Microsoft.DataLakeAnalytics/accounts",
+          "Microsoft.DataLakeStore/accounts",
+          "Microsoft.EventGrid/topics",
+          "Microsoft.EventHub/namespaces",
+          "Microsoft.Network/expressRouteCircuits",
+          "Microsoft.Network/azureFirewalls",
+          "Microsoft.HDInsight/clusters",
+          "Microsoft.Devices/IotHubs",
+          "Microsoft.KeyVault/vaults",
+          "Microsoft.Network/loadBalancers",
+          "Microsoft.Logic/integrationAccounts",
+          "Microsoft.Logic/workflows",
+          "Microsoft.DBforMySQL/servers",
+          "Microsoft.Network/networkInterfaces",
+          "Microsoft.Network/networkSecurityGroups",
+          "Microsoft.DBforPostgreSQL/servers",
+          "Microsoft.PowerBIDedicated/capacities",
+          "Microsoft.Network/publicIPAddresses",
+          "Microsoft.RecoveryServices/vaults",
+          "Microsoft.Cache/redis",
+          "Microsoft.Relay/namespaces",
+          "Microsoft.Search/searchServices",
+          "Microsoft.ServiceBus/namespaces",
+          "Microsoft.SignalRService/SignalR",
+          "Microsoft.Sql/servers/databases",
+          "Microsoft.Sql/servers/elasticPools",
+          "Microsoft.StreamAnalytics/streamingjobs",
+          "Microsoft.TimeSeriesInsights/environments",
+          "Microsoft.Network/trafficManagerProfiles",
+          "Microsoft.Compute/virtualMachines",
+          "Microsoft.Compute/virtualMachineScaleSets",
+          "Microsoft.Network/virtualNetworks",
+          "Microsoft.Network/virtualNetworkGateways"
+        ]
+      }
+    },
+    "deployNistR2": {
+      "value": false
+    },
+    "deployPci": {
+      "value": false
+    },
+    "deployRsgNameConvention": {
+      "value": true
+    },
+    "rsgNameConventionPolicyEffect": {
+      "value": "Audit"
+    },
+    "deploySecurityBenchmark": {
+      "value": true
+    },
+    "deployTagAuditDeny": {
+      "value": false
+    },
+    "tagAuditDenyPolicyEffect": {
+      "value": "Audit"
+    },
+    "tagNameToAudit": {
+      "value": "ExampleTag"
+    },
+    "deployAppGatewayAuditDeny": {
+      "value": true
+    },
+    "appGatewayAuditDenySettings": {
+      "value": {
+        "wafEnableEffect": "Audit",
+        "wafModeEffect": "Audit",
+        "modeRequirement": "Detection"
+      }
+    },
+    "deployAppServiceAuditDeny": {
+      "value": true
+    },
+    "appServiceAuditDenySettings": {
+      "value": {
+        "functionAppHttps": "Audit",
+        "appServiceAppsHttps": "Audit",
+        "appServiceFtpBasicAuthenticationDisabled": "AuditIfNotExists",
+        "appServiceUseVnet": "Audit",
+        "appServiceDisableTLS1": "Audit",
+        "remoteDebuggingForFunctionApp": "AuditIfNotExists",
+        "remoteDebuggingForWebApp": "AuditIfNotExists",
+        "appServiceEnableInternalEncryption": "Audit",
+        "appServiceEnvShouldNotBeReachableOverPublicInternet": "Audit",
+        "appServiceLatestVersion": "Audit",
+        "functionAppUseFileShare": "Audit",
+        "webAppUseFileShare": "Audit",
+        "enableResourceLogs": "AuditIfNotExists",
+        "denyCorsAccessFunctionApp": "AuditIfNotExists",
+        "denyCorsAccessWebApp": "AuditIfNotExists",
+        "appServiceSkuSupportsPrivateLink": "Audit",
+        "appServiceLatestTLS": "Audit",
+        "appServiceUsePrivateLink": "AuditIfNotExists",
+        "appServiceScmDisableLocalAuth": "AuditIfNotExists",
+        "appServiceSlotsDisableLocalAuth": "AuditIfNotExists",
+        "appServiceSlotsScmDisableLocalAuth": "AuditIfNotExists",
+        "appServiceShouldNotBeReachableOverPublicInternet": "Audit"
+      }
+    },
+    "deployAppServiceChange": {
+      "value": true
+    },
+    "appServiceChangeSettings": {
+      "value": {
+        "appServiceDisableFtpDeployments": "DeployIfNotExists",
+        "appServiceDisablePublicNetwork": "Disabled",
+        "appServiceDisableScmLocalAuthentication": "Disabled",
+        "appServiceDisableSlotsFtpLocalAuthentication": "Disabled",
+        "appServiceDisableSlotsScmLocalAuthentication": "Disabled"
+      }
+    },
+    "deployAzMySqlAuditDeny": {
+      "value": true
+    },
+    "azMySqlAuditDenySettings": {
+      "value": {
+        "enableSslConnection": "Audit",
+        "enableGeoRedundantBackup": "Audit",
+        "enableInfraEncryption": "Audit",
+        "useVirtualNetworkServiceEndpoint": "AuditIfNotExists",
+        "useCustomerManagedKeyMySql": "AuditIfNotExists",
+        "enablePrivateEndpointMySql": "AuditIfNotExists",
+        "disablePublicAccessFlexibleMySql": "Audit",
+        "disablePublicAccessMySql": "Audit"
+      }
+    },
+    "deployAzRedisAuditDeny": {
+      "value": true
+    },
+    "azRedisAuditDenySettings": {
+      "value": {
+        "disablePublicAccess": "Audit",
+        "useRedisPrivateLink": "AuditIfNotExists",
+        "enableSecureConnection": "Audit"
+      }
+    },
+    "deployAzSqlDbAuditDeny": {
+      "value": true
+    },
+    "azSqlDbAuditDenySettings": {
+      "value": {
+        "enableSqlTlsPolicy": "Audit",
+        "azureSqlDbAvoidGrsBackup": "Disabled",
+        "vulnerabilitySqlDatabase": "AuditIfNotExists",
+        "sqlDbAdvancedDataSecurity": "AuditIfNotExists",
+        "sqlDbEnsureServerTdeIsEncryptedWithYourOwnKey": "Audit",
+        "sqlDbAdOnlyEnabled": "Audit"
+      }
+    },
+    "deployAzSqlManagedInstanceAuditDeny": {
+      "value": true
+    },
+    "azSqlManagedInstanceAuditDenySettings": {
+      "value": {
+        "sqlManagedInstanceAdvancedDataSecurity": "AuditIfNotExists",
+        "sqlManagedInstanceAdOnlyEnabled": "Audit",
+        "sqlManagedInstanceBlockGrsBackupRedundancy": "Deny",
+        "sqlManagedInstanceEnsureServerTdeIsEncryptedWithYourOwnKey": "Audit",
+        "sqlManagedInstanceMiniumTlsVersionAudit": "Audit",
+        "sqlManagedInstanceVulnerabilityAssesment": "AuditIfNotExists"
+      }
+    },
+    "deployCosmosDbAuditDeny": {
+      "value": true
+    },
+    "cosmosDbAuditDenySettings": {
+      "value": {
+        "firewallRuleEnabledEffect": "Audit",
+        "useCustomerManagedKeyEffect": "Audit",
+        "allowedLocationEffect": "Audit",
+        "disablePublicNetworkAccessEffect": "Audit",
+        "throughputMaxEffect": "Audit",
+        "throughputMax": 1000000,
+        "listOfAllowedLocations": [
+          "westeurope"
+        ],
+        "localAuthenticationDisableEffect": "Audit",
+        "virtualNetworkServiceEndpointEffect": "Audit",
+        "usePrivateLinkEffect": "Audit"
+      }
+    },
+    "deployDatabricksAuditDeny": {
+      "value": true
+    },
+    "databricksAuditDenySettings": {
+      "value": {
+        "disablePublicNetworkAccessEffect": "Audit",
+        "disablePublicIpEffect": "Audit",
+        "enableWorkspaceResourceLogsEffect": "AuditIfNotExists"
+      }
+    },
+    "deployDataFactoryAuditDeny": {
+      "value": true
+    },
+    "dataFactoryAuditDenySettings": {
+      "value": {
+        "keyvaultForStoringSecrets": "Audit",
+        "sqlserverIntegrationJoinVn": "Audit",
+        "disablePublicNetworkAccess": "Audit",
+        "encryptWithCustomerManagedKey": "Audit",
+        "resourceTypeInAllowList": "Audit",
+        "allowedLinkedServiceResourceTypes": [
+          "AdlsGen2CosmosStructuredStream",
+          "AdobeExperiencePlatform",
+          "AdobeIntegration",
+          "AmazonRedshift",
+          "AmazonS3",
+          "AzureBlobFS",
+          "AzureBlobStorage",
+          "AzureDataExplorer",
+          "AzureDataLakeStore",
+          "AzureDataLakeStoreCosmosStructuredStream",
+          "AzureDataShare",
+          "AzureFileStorage",
+          "AzureKeyVault",
+          "AzureMariaDB",
+          "AzureMySql",
+          "AzurePostgreSql",
+          "AzureSearch",
+          "AzureSqlDatabase",
+          "AzureSqlDW",
+          "AzureSqlMI",
+          "AzureTableStorage",
+          "Cassandra",
+          "CommonDataServiceForApps",
+          "CosmosDb",
+          "CosmosDbMongoDbApi",
+          "Db2",
+          "DynamicsCrm",
+          "FileServer",
+          "FtpServer",
+          "GitHub",
+          "GoogleCloudStorage",
+          "Hdfs",
+          "Hive",
+          "HttpServer",
+          "Informix",
+          "Kusto",
+          "MicrosoftAccess",
+          "MySql",
+          "Netezza",
+          "Odata",
+          "Odbc",
+          "Office365",
+          "Oracle",
+          "PostgreSql",
+          "Salesforce",
+          "SalesforceServiceCloud",
+          "SapBw",
+          "SapHana",
+          "SapOpenHub",
+          "SapTable",
+          "Sftp",
+          "SharePointOnlineList",
+          "Snowflake",
+          "SqlServer",
+          "Sybase",
+          "Teradata",
+          "HDInsightOnDemand",
+          "HDInsight",
+          "AzureDataLakeAnalytics",
+          "AzureBatch",
+          "AzureFunction",
+          "AzureML",
+          "AzureMLService",
+          "MongoDb",
+          "GoogleBigQuery",
+          "Impala",
+          "ServiceNow",
+          "Dynamics",
+          "AzureDatabricks",
+          "AmazonMWS",
+          "SapCloudForCustomer",
+          "SapEcc",
+          "Web",
+          "MongoDbAtlas",
+          "HBase",
+          "Spark",
+          "Phoenix",
+          "PayPal",
+          "Marketo",
+          "Responsys",
+          "SalesforceMarketingCloud",
+          "Presto",
+          "Square",
+          "Xero",
+          "Jira",
+          "Magento",
+          "Shopify",
+          "Concur",
+          "Hubspot",
+          "Zoho",
+          "Eloqua",
+          "QuickBooks",
+          "Couchbase",
+          "Drill",
+          "Greenplum",
+          "MariaDB",
+          "Vertica",
+          "MongoDbV2",
+          "OracleServiceCloud",
+          "GoogleAdWords",
+          "RestService",
+          "DynamicsAX",
+          "AzureDataCatalog",
+          "AzureDatabricksDeltaLake"
+        ],
+        "gitrepositoryForSourceControl": "Audit",
+        "integrationRuntimeMaxCores": "Audit",
+        "maxCores": 32,
+        "usePrivateLink": "AuditIfNotExists",
+        "systemAssignedManagedIdentity": "Audit"
+      }
+    },
+    "deployMariaDbAuditDeny": {
+      "value": true
+    },
+    "mariaDbAuditDenySettings": {
+      "value": {
+        "geoRedundantBackupEnabledEffect": "Audit",
+        "useVirtualNetwokServiceEndPointEffect": "AuditIfNotExists",
+        "privateEndPointEnabledEffect": "AuditIfNotExists",
+        "mariadbPublicNetworkAccessDisableEffect": "Audit"
+      }
+    },
+    "deployPostgreSqlAuditDeny": {
+      "value": true
+    },
+    "postgreSqlAuditDenySettings": {
+      "value": {
+        "enableConnectionThrottlingEffect": "AuditIfNotExists",
+        "disconnectionLoggedEffect": "AuditIfNotExists",
+        "enforceSslConnectionEffect": "Audit",
+        "geoRedundantBackupEffect": "Audit",
+        "enableInfrastructureEncryptionEffect": "Audit",
+        "enableLogCheckpointsEffect": "Audit",
+        "enableLogConnectionEffect": "AuditIfNotExists",
+        "enableLogDurationEffect": "AuditIfNotExists",
+        "useVirtualNetworkServiceEndpointEffect": "AuditIfNotExists",
+        "usePostgreCustomerManagedkeyEffect": "AuditIfNotExists",
+        "enablePrivateEndpointEffect": "AuditIfNotExists",
+        "disablePublicAccessFlexiEffect": "Audit",
+        "disablePostgresPublicAccessEffect": "Audit"
+      }
+    },
+    "deployStorageAccountAuditDeny": {
+      "value": true
+    },
+    "storageAccountAuditDenySettings": {
+      "value": {
+        "allowedStorageSkusAudit": "Audit",
+        "auditForClassicStorage": "Audit",
+        "geoRedundantStorageAccountsAudit": "Audit",
+        "storageAccountAllowCrossTenantReplicationAudit": "Audit",
+        "storageAccountAllowSharedKeyAccessAudit": "Audit",
+        "storageAccountInfrastructureEncryptionEnabledAudit": "Audit",
+        "storageAccountKeysExpiredRestrict": "Audit",
+        "storageAccountPrivateEndpointEnabledAudit": "AuditIfNotExists",
+        "storageAccountSasPolicyRestrict": "Audit",
+        "storageEncryptionScopesShouldUseDoubleEncryptionAudit": "Audit",
+        "storageAccountListOfAllowedSkus": [
+          "Standard_LRS"
+        ],
+        "storageQueueCustomerManagedKeyEnabledAudit": "Audit",
+        "storageSyncIncomingTrafficPolicyAuditDeny": "Audit",
+        "storageSyncPrivateDnsZoneAuditIfNotExists": "Audit",
+        "storageSyncPrivateEndpointAuditIfNotExists": "AuditIfNotExists",
+        "storageTableCustomerManagedKeyEnabledAudit": "Audit",
+        "storageEncryptionScopesShouldUseCmkAudit": "Audit",
+        "virtualNetworkServiceEndpointStorageAccountAudit": "Audit"
+      }
+    },
+    "deployCosmosDbChange": {
+      "value": true
+    },
+    "cosmosDbChangeSettings": {
+      "value": {
+        "disableLocalAuthenticationEffect": "Modify",
+        "advancedThreatProtectionEffect": "DeployIfNotExists",
+        "disableMetadataWriteAccessEffect": "Disabled"
+      }
+    },
+    "deployDatafactoryChange": {
+      "value": true
+    },
+    "datafactoryChangeSetting": {
+      "value": "Modify"
+    },
+    "deployKubernetesChange": {
+      "value": true
+    },
+    "kubernetesChangeSettings": {
+      "value": {
+        "aksAADAdminEffect": "DeployIfNotExists",
+        "aksAdminGroupIds": [],
+        "aksMonitoringAddonEffect": "DeployIfNotExists"
+      }
+    },
+    "deployVmDependencyAgent": {
+      "value": true
+    },
+    "deployVmDependencyAgentSettings": {
+      "value": {
+        "vmEnableDependencyAgentLinuxDefEffect": "DeployIfNotExists",
+        "vmEnableDependencyAgentWinDefEffect": "DeployIfNotExists"
+      }
+    },
+    "deployVmssDependencyAgent": {
+      "value": true
+    },
+    "deployVmssDependencyAgentSettings": {
+      "value": {
+        "vmssEnableDependencyAgentLinuxDefEffect": "DeployIfNotExists",
+        "vmssEnableDependencyAgentWinDefEffect": "DeployIfNotExists"
+      }
+    },
+    "deployBlockLogAnalyticsAgentAuditDeny": {
+      "value": true
+    },
+    "blockLogAnalyticsAgentPolicyEffect": {
+      "value": "Audit"
+    },
+    "deployAzMonitorAgentLinuxChange": {
+      "value": true
+    },
+    "deployAzMonitorAgentLinuxSettings": {
+      "value": {
+        "scopeToSupportedImages": true,
+        "enableAmAgentLinuxVmDefEffect": "DeployIfNotExists",
+        "enableAmAgentLinuxVmssDefEffect": "DeployIfNotExists",
+        "dcrAssociationLinuxDefEffect": "DeployIfNotExists"
+      }
+    },
+    "deployAzMonitorAgentWindowsChange": {
+      "value": true
+    },
+    "deployAzMonitorAgentWindowsSettings": {
+      "value": {
+        "scopeToSupportedImages": true,
+        "enableAmAgentWindowsVmDefEffect": "DeployIfNotExists",
+        "enableAmAgentWindowsVmssDefEffect": "DeployIfNotExists",
+        "dcrAssociationWindowsDefEffect": "DeployIfNotExists"
+      }
+    },
+    "deployVmGuestConfigurationAgent": {
+      "value": true
+    },
+    "deployKubernetesAuditDeny": {
+      "value": true
+    },
+    "kubernetesAuditDenySettings": {
+      "value": {
+        "authorizedIpRangesEffect": "Audit",
+        "disableLocalAuthenticationEffect": "Audit",
+        "clusterCpuMemoryLimitNotExceedEffect": "Audit",
+        "excludedNamespaces": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc"
+        ],
+        "namespaces": [],
+        "labelSelector": {},
+        "cpuLimit": "200m",
+        "memoryLimit": "1Gi",
+        "excludedContainers": [],
+        "containerNotShareProcessIdEffect": "Audit",
+        "containerAllowCapabilityEffect": "Audit",
+        "allowedCapabilities": [],
+        "requiredDropCapabilities": [],
+        "containerAllowImageEffect": "Audit",
+        "allowedContainerImagesRegex": "Audit",
+        "containerRunReadOnlyRootFileEffect": "Audit",
+        "podRunApprovedUserGroupEffect": "Audit",
+        "runAsUserRule": "MustRunAsNonRoot",
+        "runAsUserRanges": {
+          "ranges": []
+        },
+        "runAsGroupRule": "RunAsAny",
+        "runAsGroupRanges": {
+          "ranges": []
+        },
+        "supplementalGroupsRule": "RunAsAny",
+        "supplementalGroupsRanges": {
+          "ranges": []
+        },
+        "fsGroupRule": "RunAsAny",
+        "fsGroupRanges": {
+          "ranges": []
+        },
+        "podsUseApprovedHostNetworkPortRangeEffect": "Audit",
+        "allowHostNetwork": false,
+        "minPort": 0,
+        "maxPort": 0,
+        "podsListenOnlyAllowedPortEffect": "Audit",
+        "allowedServicePortsList": [
+          "443",
+          "80"
+        ],
+        "allowedExternalIpsEffect": "Audit",
+        "allowedExternalIps": [],
+        "accessibleOnlyOverHttpsEffect": "Audit",
+        "clusterShouldNotGrantCapSysAdminEffect": "Audit",
+        "upgradeNonVulnerableKubernetesVersionEffect": "Audit",
+        "resourceLogEnabledEffect": "AuditIfNotExists",
+        "requiredRetentionDays": "365",
+        "rbacShouldUsedEffect": "Audit",
+        "vulnerabilityFindingsResolvedEffect": "AuditIfNotExists",
+        "tempDiskAndCacheShouldEncryptedAtHostEffect": "Audit"
+      }
+    },
+    "cisAuditDenySettings": {
+      "value": {
+        "virtualMachineExtensionsAllowed": [
+          "AzureDiskEncryption"
+        ],
+        "maximumDaysToRotate": 30,
+        "networkWatcherResourceGroup":"NetworkWatcherRG",
+        "storageAccountsMinimalTlsVersion":"Audit",
+        "maximumDaysToRotateKeys": "Audit",
+        "effectVirtualMachineExtensionsAllowed": "Audit",
+        "resourceLogsRequiredRetentionDays": "455",
+        "linuxPythonVersion":"3.8.0",
+        "linuxJavaVersion":"Java 17",
+        "linuxPhpVersion":"7.4",
+        "defenderForServersEnabled": "AuditIfNotExists",
+        "defenderForAppServiceEnabled": "AuditIfNotExists",
+        "defenderForSqlDbEnabled": "AuditIfNotExists",
+        "defenderForSqlServerEnabled": "AuditIfNotExists",
+        "defenderForStorageEnabled": "AuditIfNotExists",
+        "defenderForContainersEnabled": "AuditIfNotExists",
+        "defenderForKeyvaultsEnabled": "AuditIfNotExists",
+        "autoProvisionLaAgentEnabled": "AuditIfNotExists",
+        "subscriptionSecurityContact": "AuditIfNotExists",
+        "emailHighSeverityAlert": "AuditIfNotExists",
+        "secureTransferStorageAccount": "Audit",
+        "storagePublicAccessDisallowed": "Audit",
+        "storageAccountRestrictNetworkAccess": "Audit",
+        "storageAccountRestrictNetworkAccessVirtualNetworkRules": "Audit",
+        "storageAccountAllowTrustedMsServices": "Audit",
+        "storageAccountCmkForEncryption": "Audit",
+        "auditSqlEnabled": "AuditIfNotExists",
+        "tdeOnSqlEnabled": "AuditIfNotExists",
+        "sqlServerAuditLogRetention": "AuditIfNotExists",
+        "defenderForSqlOnUnprotectedSqlServersEnabled": "AuditIfNotExists",
+        "defenderForSqlOnUnprotectedSqlMiEnabled": "AuditIfNotExists",
+        "vulnerabilityAssessmentEnabledOnSqlServers": "AuditIfNotExists",
+        "vulnerabilityAssessmentEnabledOnMiInstances": "AuditIfNotExists",
+        "enforcedSslEnabledPostgresSql": "Audit",
+        "enabledLogCheckpointsPostgresSql": "AuditIfNotExists",
+        "enabledLogConnectionsPostgresSql": "AuditIfNotExists",
+        "enabledLogDisconnectionsPostgresSql": "AuditIfNotExists",
+        "enabledConnectionThrottlingPostgresSql": "AuditIfNotExists",
+        "azureAdAdminShouldbeProvisionForSqlServer": "AuditIfNotExists",
+        "sqlServersShouldUseCmkAtRest": "Audit",
+        "sqlMiShouldUseCmkAtRest": "Audit",
+        "storageAccountWithActivityLogsShouldUseCmk": "AuditIfNotExists",
+        "resourceLogsInKeyvaultsEnabled": "AuditIfNotExists",
+        "activityLogAlertForPolicyWrite": "AuditIfNotExists",
+        "activityLogAlertForPolicyDelete": "AuditIfNotExists",
+        "activityLogAlertForNsgWrite": "AuditIfNotExists",
+        "activityLogAlertForNsgDelete": "AuditIfNotExists",
+        "activityLogAlertForNsgRuleWrite": "AuditIfNotExists",
+        "activityLogAlertForNsgRuleDelete": "AuditIfNotExists",
+        "activityLogAlertForFirewallRulesWrite": "AuditIfNotExists",
+        "activityLogAlertForFirewallRulesDelete": "AuditIfNotExists",
+        "appServiceResourceLogsEnabled": "AuditIfNotExists",
+        "batchAccountsResourceLogsEnabled": "AuditIfNotExists",
+        "azureDatalakeStoreResourceLogsEnabled": "AuditIfNotExists",
+        "dataLakeAnalyticsResourceLogsEnabled": "AuditIfNotExists",
+        "eventHubsResourceLogsEnabled": "AuditIfNotExists",
+        "iotHubResourceLogsEnabled": "AuditIfNotExists",
+        "logicAppResourceLogsEnabled": "AuditIfNotExists",
+        "searchServicesResourceLogsEnabled": "AuditIfNotExists",
+        "serviceBusResourceLogsEnabled": "AuditIfNotExists",
+        "streamAnalyticsResourceLogsEnabled": "AuditIfNotExists",
+        "encryptDataFlowsBetweenComputeAndStorage": "AuditIfNotExists",
+        "keyVaultKeysShouldHaveExpiration": "Audit",
+        "keyVaultSecretsShouldHaveExpiration": "Audit",
+        "keyvaultPurgeProtectionEnabled": "Audit",
+        "functionAppsAuthenticationEnabled": "AuditIfNotExists",
+        "appServicesAuthenticationEnabled": "AuditIfNotExists",
+        "appServiceAccessibleOverHttps": "Audit",
+        "functionAppsLatestTlsVersion": "AuditIfNotExists",
+        "appServiceAppsLatestTlsVersion": "AuditIfNotExists",
+        "functionAppsClientCertificatesEnabled": "Audit",
+        "appServiceAppsClientCertificatesEnabled": "Audit",
+        "functionAppShouldUseManagedIdentity": "AuditIfNotExists",
+        "appServiceAppShouldUseManagedIdentity": "AuditIfNotExists",
+        "functionAppShouldUseLatestHttpVersion": "AuditIfNotExists",
+        "appServiceAppShouldUseLatestHttpVersion": "AuditIfNotExists",
+        "functionAppShouldRequireFtpsOnly": "AuditIfNotExists",
+        "appServiceAppShouldRequireFtpsOnly": "AuditIfNotExists",
+        "networkWatcherShouldBeEnabled": "NetworkWatcherRG",
+        "requiredAuditSettingsforSqlServers": "disabled",
+        "guestOwnerPermissionRemoved": "AuditIfNotExists",
+        "guestWritePermissionRemoved": "AuditIfNotExists",
+        "guestReadPermissionRemoved": "AuditIfNotExists",
+        "mfaWithWritePermissionEnabled": "AuditIfNotExists",
+        "mfaWithOwnerPermissionEnabled": "AuditIfNotExists",
+        "keyvaultSoftDeleteEnabled": "Audit",
+        "cosmosDbShouldHaveFirewallRules": "Audit",
+        "sqlPublicAccessShouldBeDisabled": "Audit",
+        "postgresSqlInfraEncryptionShouldBeEnabled": "Audit",
+        "storageAccountShouldHaveInfraEncryption": "Audit",
+        "enforceSslMySqlEnabled": "Audit",
+        "appServiceAppsPythonVersion": "AuditIfNotExists",
+        "managedDiskDoubleEncryptionEnabled": "Audit",
+        "appServiceSlotsPhpVersion": "AuditIfNotExists",
+        "appServiceJavaVersion": "AuditIfNotExists",
+        "auditCustomRbac": "Audit",
+        "vmManagementPortsShouldBeClosed": "AuditIfNotExists",
+        "postgresSqlPublicAccessShouldBeDisabled": "Audit",
+        "postgresFlexSqlPublicAccessShouldBeDisabled": "Audit",
+        "sqlVulnerabilityFindingsShouldBeResolved": "AuditIfNotExists",
+        "storageAccountsShouldUsePrivateLinks": "AuditIfNotExists",
+        "securityRulesDeleteAlertShouldExist": "AuditIfNotExists",
+        "nsgDeleteAlertShouldExist": "AuditIfNotExists",
+        "defenderForResourceManagerEnabled": "AuditIfNotExists",
+        "securitySolutionsAlertShouldExist": "AuditIfNotExists",
+        "azureKeyvaultShouldUsePrivateLink": "Audit",
+        "cosmosDbShouldUsePrivateLink": "Audit",
+        "defenderForDnsEnabled": "AuditIfNotExists",
+        "defenderForRelationalDatabasesEnabled": "AuditIfNotExists",
+        "endpointProtectionEnabled": "AuditIfNotExists",
+        "networkFlowLogsEnabled": "Audit",
+        "nsgFlowLogsEnabled": "Audit",
+        "allFlowLogsEnabled": "Audit",
+        "periodicUpdateCheckConfigured": "Audit",
+        "defenderForCosmosDbEnabled": "AuditIfNotExists",
+        "functionAppsJavaVersion": "AuditIfNotExists",
+        "appServiceSlotsPythonVersion": "AuditIfNotExists",
+        "appServicePhpVersion": "AuditIfNotExists",
+        "cosmosDbLocalAuthDisabled": "Audit",
+        "keyvaultShouldUseRbacModel": "Audit",
+        "securitySolutionsWriteAlertShouldExist": "AuditIfNotExists",
+        "nsgWriteAlertShouldExist": "AuditIfNotExists"
+      }
+    },
+    "mcsbAuditDenySettings": {
+      "value": {
+        "allowedContainerImagesLabelSelector":{},
+        "privilegedContainerLabelSelector":{},
+        "allowedServicePortsInKubernetesClusterLabelSelector":{},
+        "kubernetesClustersShouldBeAccessibleOnlyOverHttpsLabelSelector":{},
+        "noPrivilegeEscalationInKubernetesClusterLabelSelector":{},
+        "noSharingSensitiveHostNamespacesInKubernetesLabelSelector":{},
+        "readOnlyRootFileSystemInKubernetesClusterLabelSelector":{},
+        "allowedCapabilitiesInKubernetesClusterLabelSelector":{},
+        "allowedAppArmorProfilesInKubernetesClusterLabelSelector":{},
+        "allowedHostNetworkingAndPortsInKubernetesClusterLabelSelector":{},
+        "allowedHostPathVolumesInKubernetesClusterLabelSelector":{},
+        "memoryAndCpuLimitsInKubernetesClusterLabelSelector":{},
+        "mustRunAsNonRootLabelSelector":{},
+        "azureContainerRegistryVulnerabilityAssessmentEffect": "AuditIfNotExists",
+        "kubernetesRunningImagesVulnerabilityMdvmAssessmentEffect": "AuditIfNotExists",
+        "kubernetesClustersShouldNotUseTheDefaultNamespaceMonitoringLabelSelector":{},
+        "kubernetesClustersShouldDisableAutomountingApiCredentialsMonitoringLabelSelector":{},
+        "kubernetesClustersShouldNotGrantCapSysadminSecurityCapabilitiesMonitoringLabelSelector":{},
+        "linuxVirtualMachineShouldUseSignedAndTrustedBootComponentEffect": "AuditIfNotExists",
+        "installLogAnalyticsAgentOnVmMonitoringEffect": "AuditIfNotExists",
+        "installLogAnalyticsAgentOnVmssMonitoringEffect": "AuditIfNotExists",
+        "certificatesValidityPeriodMonitoringEffect": "disabled",
+        "certificatesValidityPeriodInMonths": 12,
+        "secretsExpirationSetEffect": "Disabled",
+        "keysExpirationSetEffect": "Disabled",
+        "azurePolicyforWindowsMonitoringEffect": "AuditIfNotExists",
+        "gcExtOnVmWithNoSamiMonitoringEffect": "AuditIfNotExists",
+        "windowsDefenderExploitGuardMonitoringEffect": "AuditIfNotExists",
+        "windowsGuestConfigBaselinesMonitoringEffect": "AuditIfNotExists",
+        "linuxGuestConfigBaselinesMonitoringEffect": "AuditIfNotExists",
+        "vmssSystemUpdatesMonitoringEffect": "AuditIfNotExists",
+        "vmssEndpointProtectionMonitoringEffect": "AuditIfNotExists",
+        "vmssOsVulnerabilitiesMonitoringEffect": "AuditIfNotExists",
+        "systemUpdatesMonitoringEffect": "AuditIfNotExists",
+        "systemUpdatesV2MonitoringEffect": "AuditIfNotExists",
+        "systemUpdatesAutoAssessmentModeEffect": "Audit",
+        "systemConfigurationsMonitoringEffect": "AuditIfNotExists",
+        "endpointProtectionMonitoringEffect": "AuditIfNotExists",
+        "diskEncryptionMonitoringEffect": "AuditIfNotExists",
+        "gcLinuxDiskEncryptionMonitoringEffect": "AuditIfNotExists",
+        "gcWindowsDiskEncryptionMonitoringEffect": "AuditIfNotExists",
+        "networkSecurityGroupsOnSubnetsMonitoringEffect": "Disabled",
+        "networkSecurityGroupsOnVirtualMachinesMonitoringEffect": "AuditIfNotExists",
+        "networkSecurityGroupsOnInternalVirtualMachinesMonitoringEffect": "AuditIfNotExists",
+        "nextGenerationFirewallMonitoringEffect": "AuditIfNotExists",
+        "serverVulnerabilityAssessmentEffect": "AuditIfNotExists",
+        "jitNetworkAccessMonitoringEffect": "AuditIfNotExists",
+        "adaptiveApplicationControlsMonitoringEffect": "AuditIfNotExists",
+        "adaptiveApplicationControlsUpdateMonitoringEffect": "AuditIfNotExists",
+        "sqlDbEncryptionMonitoringEffect": "AuditIfNotExists",
+        "sqlServerAuditingMonitoringEffect": "AuditIfNotExists",
+        "encryptionOfAutomationAccountMonitoringEffect": "Audit",
+        "diagnosticsLogsInBatchAccountMonitoringEffect": "AuditIfNotExists",
+        "diagnosticsLogsInBatchAccountRetentionDays": "1",
+        "classicComputeVmsMonitoringEffect": "Audit",
+        "classicStorageAccountsMonitoringEffect": "Audit",
+        "diagnosticsLogsInDataLakeAnalyticsMonitoringEffect": "AuditIfNotExists",
+        "diagnosticsLogsInDataLakeAnalyticsRetentionDays": "1",
+        "diagnosticsLogsInDataLakeStoreMonitoringEffect": "AuditIfNotExists",
+        "diagnosticsLogsInDataLakeStoreRetentionDays": "1",
+        "diagnosticsLogsInEventHubMonitoringEffect": "AuditIfNotExists",
+        "diagnosticsLogsInEventHubRetentionDays": "1",
+        "diagnosticsLogsInKeyVaultMonitoringEffect": "AuditIfNotExists",
+        "diagnosticsLogsInKeyVaultRetentionDays": "1",
+        "diagnosticsLogsInKubernetesMonitoringEffect": "AuditIfNotExists",
+        "diagnosticsLogsInKubernetesRetentionDays": "1",
+        "diagnosticsLogsInLogicAppsMonitoringEffect": "AuditIfNotExists",
+        "diagnosticsLogsInLogicAppsRetentionDays": "1",
+        "diagnosticsLogsInRedisCacheMonitoringEffect": "Audit",
+        "diagnosticsLogsInSearchServiceMonitoringEffect": "AuditIfNotExists",
+        "diagnosticsLogsInSearchServiceRetentionDays": "1",
+        "aadAuthenticationInServiceFabricMonitoringEffect": "Audit",
+        "clusterProtectionLevelInServiceFabricMonitoringEffect": "Audit",
+        "diagnosticsLogsInServiceBusMonitoringEffect": "AuditIfNotExists",
+        "diagnosticsLogsInServiceBusRetentionDays": "1",
+        "aadAuthenticationInSqlServerMonitoringEffect": "AuditIfNotExists",
+        "secureTransferToStorageAccountMonitoringEffect": "Audit",
+        "diagnosticsLogsInStreamAnalyticsMonitoringEffect": "AuditIfNotExists",
+        "diagnosticsLogsInStreamAnalyticsRetentionDays": "1",
+        "useRbacRulesMonitoringEffect": "Audit",
+        "disableUnrestrictedNetworkToStorageAccountMonitoringEffect": "Disabled",
+        "sqlDbVulnerabilityAssesmentMonitoringEffect": "AuditIfNotExists",
+        "serverSqlDbVulnerabilityAssesmentMonitoringEffect": "AuditIfNotExists",
+        "identityDesignateLessThanOwnersMonitoringEffect": "AuditIfNotExists",
+        "identityDesignateMoreThanOneOwnerMonitoringEffect": "AuditIfNotExists",
+        "identityEnableMfaForOwnerPermissionsMonitoringEffect": "AuditIfNotExists",
+        "identityEnableMfaForWritePermissionsMonitoringEffect": "AuditIfNotExists",
+        "identityEnableMfaForReadPermissionsMonitoringEffect": "AuditIfNotExists",
+        "identityRemoveExternalAccountWithOwnerPermissionsMonitoringEffect": "AuditIfNotExists",
+        "identityRemoveExternalAccountWithWritePermissionsMonitoringEffect": "AuditIfNotExists",
+        "identityRemoveExternalAccountWithReadPermissionsMonitoringEffect": "AuditIfNotExists",
+        "functionAppDisableRemoteDebuggingMonitoringEffect": "AuditIfNotExists",
+        "webAppDisableRemoteDebuggingMonitoringEffect": "AuditIfNotExists",
+        "functionAppEnforceHttpsMonitoringEffectV2": "Audit",
+        "webAppEnforceHttpsMonitoringEffectV2": "Audit",
+        "functionAppRestrictCorsAccessMonitoringEffect": "AuditIfNotExists",
+        "webAppRestrictCorsAccessMonitoringEffect": "AuditIfNotExists",
+        "vnetEnableDdoSProtectionMonitoringEffect": "AuditIfNotExists",
+        "diagnosticsLogsInIotHubMonitoringEffect": "AuditIfNotExists",
+        "diagnosticsLogsInIotHubRetentionDays": "1",
+        "sqlServerAdvancedDataSecurityMonitoringEffect": "AuditIfNotExists",
+        "arcEnabledSqlServerDefenderStatusEffect": "Audit",
+        "sqlManagedInstanceAdvancedDataSecurityMonitoringEffect": "AuditIfNotExists",
+        "kubernetesServiceRbacEnabledMonitoringEffect": "Audit",
+        "kubernetesServiceAuthorizedIpRangesEnabledMonitoringEffect": "Audit",
+        "vulnerabilityAssessmentOnManagedInstanceMonitoringEffect": "AuditIfNotExists",
+        "vulnerabilityAssessmentOnServerMonitoringEffect": "AuditIfNotExists",
+        "adaptiveNetworkHardeningsMonitoringEffect": "AuditIfNotExists",
+        "restrictAccessToManagementPortsMonitoringEffect": "AuditIfNotExists",
+        "disableIpForwardingMonitoringEffect": "AuditIfNotExists",
+        "ensureServerTdeIsEncryptedWithYourOwnKeyWithDenyMonitoringEffect": "Disabled",
+        "ensureManagedInstanceTdeIsEncryptedWithYourOwnKeyWithDenyMonitoringEffect": "Disabled",
+        "containerBenchmarkMonitoringEffect": "AuditIfNotExists",
+        "ascDependencyAgentAuditWindowsEffect": "AuditIfNotExists",
+        "ascDependencyAgentAuditLinuxEffect": "AuditIfNotExists",
+        "azureFirewallEffect": "AuditIfNotExists",
+        "arcWindowsMonitoringEffect": "AuditIfNotExists",
+        "arcLinuxMonitoringEffect": "AuditIfNotExists",
+        "keyVaultsAdvancedDataSecurityMonitoringEffect": "AuditIfNotExists",
+        "sqlServersAdvancedDataSecurityMonitoringEffect": "AuditIfNotExists",
+        "sqlServersVirtualMachinesAdvancedDataSecurityMonitoringEffect": "AuditIfNotExists",
+        "appServicesAdvancedThreatProtectionMonitoringEffect": "AuditIfNotExists",
+        "containersAdvancedThreatProtectionMonitoringEffect": "AuditIfNotExists",
+        "virtualMachinesAdvancedThreatProtectionMonitoringEffect": "AuditIfNotExists",
+        "azurePolicyAddonStatusEffect": "Audit",
+        "arcEnabledKubernetesClustersShouldHaveAzurePolicyExtensionInstalledEffect": "AuditIfNotExists",
+        "excludedImagesInKubernetesCluster": [],
+        "allowedContainerImagesInKubernetesClusterEffect": "Audit",
+        "allowedContainerImagesInKubernetesClusterRegex": "^(.+){0}$",
+        "allowedContainerImagesNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc",
+          "azuredefender",
+          "mdc"
+        ],
+        "privilegedContainersShouldBeAvoidedEffect": "Audit",
+        "privilegedContainerNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc",
+          "azuredefender",
+          "mdc"
+        ],
+        "allowedServicePortsInKubernetesClusterEffect": "Audit",
+        "allowedservicePortsInKubernetesClusterPorts": [],
+        "allowedServicePortsInKubernetesClusterNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc"
+        ],
+        "noPrivilegeEscalationInKubernetesClusterEffect": "Audit",
+        "noPrivilegeEscalationInKubernetesClusterNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc"
+        ],
+        "noSharingSensitiveHostNamespacesInKubernetesEffect": "Audit",
+        "noSharingSensitiveHostNamespacesInKubernetesNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc"
+        ],
+        "readOnlyRootFileSystemInKubernetesClusterEffect": "Audit",
+        "readOnlyRootFileSystemInKubernetesClusterNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc",
+          "azuredefender",
+          "mdc"
+        ],
+        "allowedCapabilitiesInKubernetesClusterEffect": "Audit",
+        "allowedCapabilitiesInKubernetesClusterNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc",
+          "azuredefender",
+          "mdc"
+        ],
+        "allowedCapabilitiesInKubernetesClusterList": [],
+        "dropCapabilitiesInKubernetesClusterList": [],
+        "allowedAppArmorProfilesInKubernetesClusterEffect": "Audit",
+        "allowedAppArmorProfilesInKubernetesClusterNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc",
+          "azuredefender",
+          "mdc"
+        ],
+        "allowedAppArmorProfilesInKubernetesClusterList": [
+          "runtime/default"
+        ],
+        "allowedHostNetworkingAndPortsInKubernetesClusterEffect": "Audit",
+        "allowedHostNetworkingAndPortsInKubernetesClusterNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc"
+        ],
+        "allowHostNetworkingInKubernetesCluster": false,
+        "allowedHostMinPortInKubernetesCluster": 0,
+        "allowedHostMaxPortInKubernetesCluster": 0,
+        "allowedHostPathVolumesInKubernetesClusterEffect": "Audit",
+        "allowedHostPathVolumesInKubernetesClusterNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc",
+          "azuredefender",
+          "mdc"
+        ],
+        "allowedHostPathVolumesInKubernetesClusterList": {
+          "paths": []
+        },
+        "memoryAndCpuLimitsInKubernetesClusterEffect": "Audit",
+        "memoryInKubernetesClusterLimit": "64Gi",
+        "cpuInKubernetesClusterLimit": "32",
+        "memoryAndCpuLimitsInKubernetesClusterNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc",
+          "azuredefender",
+          "mdc"
+        ],
+        "blockVulnerableImagesInKubernetesClusterEffect": "Disabled",
+        "blockVulnerableImagesInKubernetesClusterNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc"
+        ],
+        "blockVulnerableImagesExcludedImages": [],
+        "blockVulnerableImagesSeverityThresholdForExcludingNotPatchableFindings": "None",
+        "blockVulnerableImagesExcludeFindingIDs": [],
+        "severity": {
+          "High": 0,
+          "Medium": 0,
+          "Low": 0
+        },
+        "mustRunAsNonRootNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc",
+          "azuredefender",
+          "mdc"
+        ],
+        "mustRunAsNonRootNamespaceEffect": "Audit",
+        "arcEnabledKubernetesClustersShouldHaveAzureDefendersExtensionInstalled": "AuditIfNotExists",
+        "azureKubernetesServiceClustersShouldHaveSecurityProfileEnabled": "Audit",
+        "containerRegistryVulnerabilityAssessmentEffect": "AuditIfNotExists",
+        "kubernetesRunningImagesVulnerabilityAssessmentEffect": "AuditIfNotExists",
+        "disallowPublicBlobAccessEffect": "audit",
+        "azureBackupShouldBeEnabledForVirtualMachinesMonitoringEffect": "AuditIfNotExists",
+        "managedIdentityShouldBeUsedInYourFunctionAppMonitoringEffect": "AuditIfNotExists",
+        "georedundantBackupShouldBeEnabledForAzureDatabaseForMariadbMonitoringEffect": "Audit",
+        "managedIdentityShouldBeUsedInYourWebAppMonitoringEffect": "AuditIfNotExists",
+        "geoRedundantBackupShouldBeEnabledForAzureDatabaseForPostgresqlMonitoringEffect": "Audit",
+        "ensureWebAppHasClientCertificatesIncomingClientCertificatesSetToOnMonitoringEffect": "Audit",
+        "geoRedundantBackupShouldBeEnabledForAzureDatabaseForMysqlMonitoringEffect": "Audit",
+        "diagnosticLogsInAppServicesShouldBeEnabledMonitoringEffect": "AuditIfNotExists",
+        "enforceSslConnectionShouldBeEnabledForPostgresqlDatabaseServersMonitoringEffect": "Audit",
+        "enforceSslConnectionShouldBeEnabledForMysqlDatabaseServersMonitoringEffect": "Audit",
+        "latestTlsVersionShouldBeUsedInYourWebAppMonitoringEffect": "AuditIfNotExists",
+        "latestTlsVersionShouldBeUsedInYourFunctionAppMonitoringEffect": "AuditIfNotExists",
+        "privateEndpointShouldBeEnabledForPostgresqlServersMonitoringEffect": "AuditIfNotExists",
+        "privateEndpointShouldBeEnabledForMariadbServersMonitoringEffect": "AuditIfNotExists",
+        "privateEndpointShouldBeEnabledForMysqlServersMonitoringEffect": "AuditIfNotExists",
+        "sqlServersShouldBeConfiguredWithAuditingRetentionDaysGreaterThan90DaysMonitoringEffect": "AuditIfNotExists",
+        "ftpsOnlyShouldBeRequiredInYourFunctionAppMonitoringEffect": "AuditIfNotExists",
+        "ftpsShouldBeRequiredInYourWebAppMonitoringEffect": "AuditIfNotExists",
+        "functionAppsShouldHaveClientCertificatesEnabledMonitoringEffect": "Audit",
+        "cognitiveServicesAccountsShouldEnableDataEncryptionWithACustomerManagedKeyMonitoringEffect": "Disabled",
+        "azureCosmosDbAccountsShouldUseCustomerManagedKeysToEncryptDataAtRestMonitoringEffect": "disabled",
+        "azureCosmosDbAccountsShouldHaveLocalAuthenticationMethodsDisabledMonitoringEffect": "Audit",
+        "keyVaultsShouldHavePurgeProtectionEnabledMonitoringEffect": "Audit",
+        "keyVaultsShouldHaveSoftDeleteEnabledMonitoringEffect": "Audit",
+        "azureCacheForRedisShouldUsePrivateEndpointMonitoringEffect": "AuditIfNotExists",
+        "storageAccountsShouldUseCustomerManagedKeyForEncryptionMonitoringEffect": "Disabled",
+        "storageAccountsShouldRestrictNetworkAccessUsingVirtualNetworkRulesMonitoringEffect": "Audit",
+        "containerRegistriesShouldBeEncryptedWithACustomerManagedKeyMonitoringEffect": "Disabled",
+        "containerRegistriesShouldNotAllowUnrestrictedNetworkAccessMonitoringEffect": "Audit",
+        "containerRegistriesShouldUsePrivateLinkMonitoringEffect": "Audit",
+        "appConfigurationShouldUsePrivateLinkMonitoringEffect": "AuditIfNotExists",
+        "azureEventGridDomainsShouldUsePrivateLinkMonitoringEffect": "Audit",
+        "azureEventGridTopicsShouldUsePrivateLinkMonitoringEffect": "Audit",
+        "azureSignalRServiceShouldUsePrivateLinkMonitoringEffect": "Audit",
+        "azureMachineLearningWorkspacesShouldBeEncryptedWithACustomerManagedKeyMonitoringEffect": "Disabled",
+        "azureMachineLearningWorkspacesShouldUsePrivateLinkMonitoringEffect": "Audit",
+        "webApplicationFirewallShouldBeEnabledForAzureFrontDoorServiceServiceMonitoringEffect": "Audit",
+        "webApplicationFirewallShouldBeEnabledForApplicationGatewayMonitoringEffect": "Audit",
+        "publicNetworkAccessShouldBeDisabledForMariaDbServersMonitoringEffect": "Audit",
+        "publicNetworkAccessShouldBeDisabledForMySqlServersMonitoringEffect": "Audit",
+        "bringYourOwnKeyDataProtectionShouldBeEnabledForMySqlServersMonitoringEffect": "Disabled",
+        "publicNetworkAccessShouldBeDisabledForPostgreSqlServersMonitoringEffect": "Audit",
+        "bringYourOwnKeyDataProtectionShouldBeEnabledForPostgreSqlServersMonitoringEffect": "Disabled",
+        "vmImageBuilderTemplatesShouldUsePrivateLinkMonitoringEffect": "Audit",
+        "firewallShouldBeEnabledOnKeyVaultMonitoringEffect": "Audit",
+        "privateEndpointShouldBeConfiguredForKeyVaultMonitoringEffect": "Audit",
+        "azureSpringCloudShouldUseNetworkInjectionMonitoringEffect": "Audit",
+        "subscriptionsShouldHaveAContactEmailAddressForSecurityIssuesMonitoringEffect": "AuditIfNotExists",
+        "autoProvisioningOfTheLogAnalyticsAgentShouldBeEnabledOnYourSubscriptionMonitoringEffect": "AuditIfNotExists",
+        "emailNotificationForHighSeverityAlertsShouldBeEnabledMonitoringEffect": "AuditIfNotExists",
+        "emailNotificationToSubscriptionOwnerForHighSeverityAlertsShouldBeEnabledMonitoringEffect": "AuditIfNotExists",
+        "storageAccountShouldUseAPrivateLinkConnectionMonitoringEffect": "AuditIfNotExists",
+        "authenticationToLinuxMachinesShouldRequireSshKeysMonitoringEffect": "AuditIfNotExists",
+        "privateEndpointConnectionsOnAzureSqlDatabaseShouldBeEnabledMonitoringEffect": "Audit",
+        "publicNetworkAccessOnAzureSqlDatabaseShouldBeDisabledMonitoringEffect": "Audit",
+        "kubernetesClustersShouldBeAccessibleOnlyOverHttpsMonitoringEffect": "Audit",
+        "kubernetesClustersShouldBeAccessibleOnlyOverHttpsExcludedNamespaces": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc"
+        ],
+        "kubernetesClustersShouldBeAccessibleOnlyOverHttpsNamespaces": [],
+        "windowsWebServersShouldBeConfiguredToUseSecureCommunicationProtocolsMonitoringEffect": "AuditIfNotExists",
+        "windowsWebServersShouldBeConfiguredToUseSecureCommunicationProtocolsIncludeArcMachines": "true",
+        "windowsWebServersShouldBeConfiguredToUseSecureCommunicationProtocolsMinimumTLSVersion": "1.2",
+        "cognitiveServicesAccountsShouldRestrictNetworkAccessMonitoringEffect": "Audit",
+        "publicNetworkAccessShouldBeDisabledForCognitiveServicesAccountsMonitoringEffect": "Audit",
+        "apiManagementServicesShouldUseAVirtualNetworkMonitoringEffect": "Audit",
+        "apiManagementServicesShouldUseAVirtualNetworkEvaluatedSkuNames": [
+          "Developer",
+          "Premium"
+        ],
+        "azureCosmosDbaccountsShouldHaveFirewallRulesMonitoringEffect": "Audit",
+        "networkWatcherShouldBeEnabledMonitoringEffect": "AuditIfNotExists",
+        "networkWatcherShouldBeEnabledResourceGroupName": "NetworkWatcherRG",
+        "azureDefenderForResourceManagerShouldBeEnabledMonitoringEffect": "AuditIfNotExists",
+        "azureDefenderForDnsShouldBeEnabledMonitoringEffect": "AuditIfNotExists",
+        "azureDefenderForOpenSourceRelationalDatabasesShouldBeEnabledMonitoringEffect": "AuditIfNotExists",
+        "microsoftDefenderCspmShouldBeEnabledMonitoringEffect": "Disabled",
+        "KubernetesClustersShouldNotUseTheDefaultNamespaceMonitoringEffect": "Audit",
+        "KubernetesClustersShouldDisableAutomountingApiCredentialsMonitoringEffect": "Audit",
+        "KubernetesClustersShouldDisableAutomountingApiCredentialsMonitoringNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc",
+          "azuredefender",
+          "mdc"
+        ],
+        "KubernetesClustersShouldNotGrantCapsysadminSecurityCapabilitiesMonitoringEffect": "Audit",
+        "KubernetesClustersShouldNotGrantCapsysadminSecurityCapabilitiesMonitoringNamespaceExclusion": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc",
+          "azuredefender",
+          "mdc"
+        ],
+        "vtpmShouldBeEnabledOnSupportedVirtualMachinesMonitoringEffect": "Audit",
+        "secureBootShouldBeEnabledOnSupportedWindowsVirtualMachinesMonitoringEffect": "Audit",
+        "guestAttestationExtensionShouldBeInstalledOnSupportedLinuxVirtualMachinesMonitoringEffect": "AuditIfNotExists",
+        "guestAttestationExtensionShouldBeInstalledOnSupportedLinuxVirtualMachinesScaleSetsMonitoringEffect": "AuditIfNotExists",
+        "guestAttestationExtensionShouldBeInstalledOnSupportedWindowsVirtualMachinesMonitoringEffect": "AuditIfNotExists",
+        "guestAttestationExtensionShouldBeInstalledOnSupportedWindowsVirtualMachinesScaleSetsMonitoringEffect": "AuditIfNotExists",
+        "installEndpointProtectionMonitoringEffect": "AuditIfNotExists",
+        "endpointProtectionHealthIssuesMonitoringEffect": "AuditIfNotExists"
+      }
+    },
+    "pciAuditDenySettings": {
+      "value": {
+        "includeArcMachines": "false",
+        "listOfResourceTypesWithDiagnosticLogsEnabled": [
+          "Microsoft.AnalysisServices/servers",
+          "Microsoft.ApiManagement/service",
+          "Microsoft.Network/applicationGateways",
+          "Microsoft.Automation/automationAccounts",
+          "Microsoft.ContainerInstance/containerGroups",
+          "Microsoft.ContainerRegistry/registries",
+          "Microsoft.ContainerService/managedClusters",
+          "Microsoft.Batch/batchAccounts",
+          "Microsoft.Cdn/profiles/endpoints",
+          "Microsoft.CognitiveServices/accounts",
+          "Microsoft.DocumentDB/databaseAccounts",
+          "Microsoft.DataFactory/factories",
+          "Microsoft.DataLakeAnalytics/accounts",
+          "Microsoft.DataLakeStore/accounts",
+          "Microsoft.EventGrid/topics",
+          "Microsoft.EventHub/namespaces",
+          "Microsoft.Network/expressRouteCircuits",
+          "Microsoft.Network/azureFirewalls",
+          "Microsoft.HDInsight/clusters",
+          "Microsoft.Devices/IotHubs",
+          "Microsoft.KeyVault/vaults",
+          "Microsoft.Network/loadBalancers",
+          "Microsoft.Logic/integrationAccounts",
+          "Microsoft.Logic/workflows",
+          "Microsoft.DBforMySQL/servers",
+          "Microsoft.Network/networkInterfaces",
+          "Microsoft.Network/networkSecurityGroups",
+          "Microsoft.DBforPostgreSQL/servers",
+          "Microsoft.PowerBIDedicated/capacities",
+          "Microsoft.Network/publicIPAddresses",
+          "Microsoft.RecoveryServices/vaults",
+          "Microsoft.Cache/redis",
+          "Microsoft.Relay/namespaces",
+          "Microsoft.Search/searchServices",
+          "Microsoft.ServiceBus/namespaces",
+          "Microsoft.SignalRService/SignalR",
+          "Microsoft.Sql/servers/databases",
+          "Microsoft.Sql/servers/elasticPools",
+          "Microsoft.StreamAnalytics/streamingjobs",
+          "Microsoft.TimeSeriesInsights/environments",
+          "Microsoft.Network/trafficManagerProfiles",
+          "Microsoft.Compute/virtualMachines",
+          "Microsoft.Compute/virtualMachineScaleSets",
+          "Microsoft.Network/virtualNetworks",
+          "Microsoft.Network/virtualNetworkGateways"
+        ]
+      }
+    },
+    "nistAuditDenySettings": {
+      "value": {
+        "includeArcMachines": "false",
+        "membersToExcludeInLocalAdministratorsGroup": "",
+        "membersToIncludeInLocalAdministratorsGroup": "",
+        "networkWatcherResourceGroupName": "NetworkWatcherRG",
+        "logAnalyticsWorkspaceIdForVmAgents": "",
+        "minimumTlsVersionForWindowsServers": "1.2",
+        "storageAccountRestrictNetworkAccess": "Audit",
+        "machineLearningWorkspacesPrivateLink": "Audit",
+        "vmImageBuilderPrivateLink": "Audit",
+        "keyVaultPrivateLink": "Audit",
+        "springCloudNetworkInjection": "Audit",
+        "evaluatedSkuNamesSpringCloud": [
+          "Standard"
+        ],
+        "cognitiveSearchPrivateLink": "Audit",
+        "serviceFabricShouldUseAzureAd": "Audit",
+        "cognitiveSearchLocalAuthenticationDisabled": "Audit",
+        "vmMigratedToNewArm": "Audit",
+        "storaceAccountMigratedToNewArm": "Audit",
+        "evaluatedSkuNamesApiMgmt": [
+          "Developer",
+          "Premium"
+        ],
+        "cosmosDbFirewallRules": "Audit",
+        "acrUnrestrictedNetworkAccess": "Audit",
+        "storageAccountShouldRestrictNetworkAccessVirtualRules": "Audit",
+        "keyvaultsDisablePublicNetworkAccess": "Audit",
+        "sqlDbShouldDisablePublicNetworkAccess": "Audit",
+        "cognitiveSearchAccountsRestrictNetworkAccess": "Audit",
+        "cognitiveServiceAccountsDisablePublicNetworkAccess": "Audit",
+        "storageAccountPublicAccessDisallowed": "audit",
+        "cognitiveSearchDisablePublicNetworkAccess": "Audit",
+        "requiredRetentionDays": "365",
+        "requiredAuditSettingForSqlServer": "enabled",
+        "kubernetesOnlyAllowedImages": "audit",
+        "kubernetesExcludedNamespaces": [
+          "kube-system",
+          "gatekeeper-system",
+          "azure-arc"
+        ],
+        "kubernetesNamespaces": [],
+        "kubernetesLabelSelector": {},
+        "allowedContainerImagesRegex": "^(.+){0}$",
+        "kubernetesExcludedContainers": [],
+        "kubernetesDisallowPrivilegedContainers": "audit",
+        "kubernetesAllowedPorts": "audit",
+        "kubernetesAllowedServicePortsList": [],
+        "kubernetesResourceLimitsExceeded": "audit",
+        "kubernetesCpuLimit": "0",
+        "kubernetesMemoryLimit": "0",
+        "kubernetesApprovedUserAndGroupsId": "audit",
+        "kubernetesRunAsUserRule": "MustRunAsNonRoot",
+        "kubernetesRunAsUserRanges": {
+          "ranges": []
+        },
+        "kubernetesRunAsGroupRule": "RunAsAny",
+        "kubernetesRunAsGroupRanges": {
+          "ranges": []
+        },
+        "kubernetesSupplementalGroupsRule": "RunAsAny",
+        "kubernetesSupplementalGroupsRanges": {
+          "ranges": []
+        },
+        "kubernetesFsGroupRule": "RunAsAny",
+        "kubernetesFsGroupRanges": {
+          "ranges": []
+        },
+        "kubernetesContainerNotAllowPrivilegeEscalation": "audit",
+        "kubernetesNotShareHostProcesOrIpc": "audit",
+        "kubernetesRunWithReadOnlyFs": "audit",
+        "kubernetesOnlyAllowedCapabilities": "audit",
+        "kubernetesAllowedCapabilities": [],
+        "kubernetesRequiredDropCapabilities": [],
+        "kubernetesOnlyAppArmorProfiles": "audit",
+        "kubernetesAllowedAppArmorProfiles": [],
+        "kubernetesClusterPodsApprovedHostNetworkAndPortRanges": "audit",
+        "kubernetesAllowHostNetwork": false,
+        "kubernetesMinPortRange": 0,
+        "kubernetesMaxPortRange": 0,
+        "kubernetesHostPadVolumes": "audit",
+        "kubernetesAllowedHostPaths": {
+          "paths": []
+        },
+        "keyVaultMaximumValidityInMonths": 12,
+        "maximumCertificateValidity": "audit",
+        "keyvaultSecretExpirationDate": "Audit",
+        "keyvaultKeysExpirationDate": "Audit",
+        "keyvaultPurgeProtectionEnabled": "Audit",
+        "keyvaultSoftDeleteEnabled": "Audit",
+        "wafEnabledAzureFrontDoor": "Audit",
+        "wafEnabledAppGateway": "Audit",
+        "kubernetesAccessibleOverHttps": "audit",
+        "hdinsightUseEncryptionInTransit": "Audit",
+        "azureCacheForRedisSecureConnection": "Audit",
+        "secureTransferToStorageAccountEnabled": "Audit",
+        "azureDataBoxJobsShouldUseCmk": "Audit",
+        "azureDataBoxCmkSupportedSku": [
+          "DataBox",
+          "DataBoxHeavy"
+        ],
+        "dataFactoryShouldUseCmk": "Audit",
+        "hdInsightShouldUseCmk": "Audit",
+        "hdInsightEncryptionAtRest": "Audit",
+        "savedQueriesSavedInStorageAccount": "audit",
+        "cognitiveSearchShouldUseCmk": "Audit",
+        "cosmosDbShouldUseCmk": "audit",
+        "acrShouldUseCmk": "Audit",
+        "machineLearningWorkspacesShouldUseCmk": "Audit",
+        "dataExplorerShouldUseCmk": "Audit",
+        "containerInstanceContainerGroupShouldUseCmk": "Audit",
+        "iotHubDeviceShouldUseCmk": "Audit",
+        "streamAnalyticsJobsShouldUseCmk": "audit",
+        "botServiceShouldUseCmk": "audit",
+        "storageAccountEncryptionScopesShouldUseCmk": "Audit",
+        "hpcCacheAccountsShouldUseCmk": "Audit",
+        "automationAccountsShouldUseCmk": "Audit",
+        "recoveryVaultShouldUseCmkForBackedUpData": "Audit",
+        "recoveryVaultEnableDoubleEncryption": true,
+        "logicAppIntegrationShouldBeEncrypted": "Audit",
+        "azureBatchShouldUseCmk": "Audit",
+        "azureMonitorLogClustersShouldUseCmk": "audit",
+        "synapseWorkSpaceShouldUseCmk": "Audit",
+        "kubernetesOsAndDataDiskShouldUseCmk": "Audit",
+        "managedDiskShouldUseCmkAndPmk": "Audit",
+        "osAndDataDiskShouldUseCmk": "Audit",
+        "serviceFabricClusterClusterProtectionLevelSet": "Audit",
+        "dataExplorerShouldEnableDoubleEncryption": "Audit",
+        "dataBoxJobsShouldEnableDoubleEncryption": "Audit",
+        "dataBoxsupportedSku": [
+          "DataBox",
+          "DataBoxHeavy"
+        ],
+        "automationAccountVariablesShouldBeEncrypted": "Audit",
+        "stackEdgeDevicesShouldUseDoubleEncryption": "audit",
+        "monitorClusterLogsShouldDoubleEncryption": "audit",
+        "databaseForMySqlInfrastructureEncryption": "Audit",
+        "postgresSqlInfrastructureEncryption": "Audit",
+        "storageAccountsInfrastructureEncryption": "Audit",
+        "diskEncryptionEnabledOnDataExplorer": "Audit",
+        "kubernetesTempCacheDiskEncryptionAtHost": "Audit",
+        "vmAndVmssEncryptionAtHost": "Audit",
+        "windowsDefenderNotAvailableMachineState": "Compliant",
+        "networkSecurityConfigureEncryptionTypesAllowedForKerberos": "2147483644",
+        "networkSecurityLanManagerAuthenticationLevel": "5",
+        "networkSecurityLdapClientSigningRequirements": "1",
+        "networkSecurityMinimumSessionSecurityForNtlmsSpBasedIncludingSecureRpcclients": "537395200",
+        "networkSecurityMinimumSessionSecurityForNtlmsSpBasedIncludingSecureRpcServers": "537395200"
+      }
+    }
+  }
+}

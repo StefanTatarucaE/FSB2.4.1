@@ -1,0 +1,31 @@
+{
+    "resourceType": "Microsoft.Automation/automationAccounts/runbooks",
+    "functionName": "",
+    "advancedFilters": [
+        {
+            "operator": "StringBeginsWith",
+            "key": "data.operationName",
+            "Values": [
+                "Microsoft.Compute/virtualMachines/write",
+                "Microsoft.Resources/tags/write"
+            ]
+        },
+        {
+            "operator": "StringContains",
+            "key": "data.authorization.scope",
+            "Values": [
+                "Microsoft.Compute/virtualMachines"
+            ]
+        },
+        {
+            "operator": "StringBeginsWith",
+            "key": "data.authorization.action",
+            "Values": [
+                "Microsoft.Resources/tags/write"
+            ]
+        }
+    ],
+    "includedEventType": [
+        "Microsoft.Resources.ResourceWriteSuccess"
+    ]
+}

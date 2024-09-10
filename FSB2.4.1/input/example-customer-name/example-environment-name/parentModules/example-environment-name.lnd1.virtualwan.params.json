@@ -1,0 +1,186 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateDnsZoneName": {
+            "value": "elzprivatedns.com"
+        },
+        "deploySpokePrivateDnsVirtualNetworkLink": {
+            "value": false
+        },
+        "enableSpokePrivateDnsZoneAutoRegistration": {
+          "value": false
+        },
+        "disableBgpRoutePropagation":{
+            "value": false
+        },
+        "subscriptionType": {
+            "value": "lndz"
+        },
+        "additionalNetworkingTags": {
+            "value": {}
+        },
+        "allowBranchToBranchTraffic": {
+            "value": true
+        },
+        "allowVnetToVnetTraffic": {
+            "value": true
+        },
+        "disableVpnEncryption": {
+            "value": true
+        },
+        "vnetAddressPrefixes": {
+            "value": [
+                "10.5.0.0/16"
+            ]
+        },
+        "subnets": {
+            "value": [
+                {
+                    "name": "front",
+                    "addressPrefix": "10.5.1.0/24",
+                    "useNamingConventionModule": true,
+                    "securityRules": [
+                        {
+                            "name": "ELZA-Allow-Own-Subnet-Inbound",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "10.5.1.0/24",
+                                "destinationAddressPrefix": "10.5.1.0/24",
+                                "access": "Allow",
+                                "priority": 4000,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "ELZA-Allow-Own-Subnet-Outbound",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "10.5.1.0/24",
+                                "destinationAddressPrefix": "10.5.1.0/24",
+                                "access": "Allow",
+                                "priority": 4000,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "middle",
+                    "addressPrefix": "10.5.2.0/24",
+                    "useNamingConventionModule": true,
+                    "securityRules": [
+                        {
+                            "name": "ELZA-Allow-Own-Subnet-Inbound",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "10.5.2.0/24",
+                                "destinationAddressPrefix": "10.5.2.0/24",
+                                "access": "Allow",
+                                "priority": 4000,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "ELZA-Allow-Own-Subnet-Outbound",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "10.5.2.0/24",
+                                "destinationAddressPrefix": "10.5.2.0/24",
+                                "access": "Allow",
+                                "priority": 4000,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "back",
+                    "addressPrefix": "10.5.3.0/24",
+                    "useNamingConventionModule": true,
+                    "securityRules": [
+                        {
+                            "name": "ELZA-Allow-Own-Subnet-Inbound",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "10.5.3.0/24",
+                                "destinationAddressPrefix": "10.5.3.0/24",
+                                "access": "Allow",
+                                "priority": 4000,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "ELZA-Allow-Own-Subnet-Outbound",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "10.5.3.0/24",
+                                "destinationAddressPrefix": "10.5.3.0/24",
+                                "access": "Allow",
+                                "priority": 4000,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "routes": {
+            "value": [
+                {
+                    "name": "lnd1DefaultRoute",
+                    "properties": {
+                        "addressPrefix": "0.0.0.0/0",
+                        "nextHopIpAddress": "10.x.x.x",
+                        "nextHopType": "VirtualAppliance"
+                    }
+                }
+            ]
+        },
+        "allowHubToRemoteVnetTransit": {
+            "value": true
+        },
+        "allowRemoteVnetToUseHubVnetGateways": {
+            "value": true
+        },
+        "enableInternetSecurity": {
+            "value": false
+        }
+    }
+}

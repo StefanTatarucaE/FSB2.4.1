@@ -1,0 +1,37 @@
+{
+    "resourceType": "Microsoft.Logic/workflows",
+    "functionName": "",
+    "advancedFilters": [
+        {
+            "operator": "StringBeginsWith",
+            "key": "data.operationName",
+            "Values": [
+                "Microsoft.ContainerService/managedClusters/write",
+                "Microsoft.ContainerService/managedClusters/delete",
+                "Microsoft.DBforMariaDB/servers/write",
+                "Microsoft.DBforMariaDB/servers/delete",
+                "Microsoft.DBforPostgreSQL/servers/write",
+                "Microsoft.DBforPostgreSQL/servers/delete",
+                "Microsoft.DBforMySQL/servers/write",
+                "Microsoft.DBforMySQL/servers/delete",
+                "Microsoft.ContainerRegistry/registries/write",
+                "Microsoft.ContainerRegistry/registries/delete",
+                "Microsoft.KeyVault/vaults/write",
+                "Microsoft.KeyVault/vaults/delete",
+                "Microsoft.Databricks/workspaces/write",
+                "Microsoft.Databricks/workspaces/delete",
+                "Microsoft.DataFactory/factories/write",
+                "Microsoft.DataFactory/factories/delete",
+                "Microsoft.Network/bastionHosts/write",
+                "Microsoft.Network/bastionHosts/delete",
+                "Microsoft.AnalysisServices/servers/write",
+                "Microsoft.AnalysisServices/servers/delete"
+            ]
+        }
+    ],
+    "includedEventType": [
+        "Microsoft.Resources.ResourceDeleteSuccess",
+        "Microsoft.Resources.ResourceWriteSuccess",
+        "Microsoft.Resources.ResourceActionSuccess"
+    ]
+}

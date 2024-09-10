@@ -1,0 +1,891 @@
+{
+  "0": {
+    "order": 0,
+    "parts": {
+      "0": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "colSpan": 4,
+          "rowSpan": 3
+        },
+        "metadata": {
+          "inputs": [],
+          "type": "Extension/HubsExtension/PartType/MarkdownPart",
+          "settings": {
+            "content": {
+              "settings": {
+                "content": "\tFirst time using this dashboard? \n\tLeft:  Instruction Manual \n\tRight: VM Tagging Manual\n[<img width=\"80\" style=\"float: center;margin-left: 50px;margin-top:0px;margin-bottom:8px\" position=\"center\" src=\"https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-Cloud.svg\"/>](https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-VM-OS-Management-Reporting-Dashboard-Manual.pdf)[<img width=\"80\" style=\"float: center;margin-left: 50px;margin-top:0px;margin-bottom:8px\" position=\"center\" src=\"https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-PDF.svg\"/>](https://portal.azure.com/#blade/Microsoft_Azure_Storage/ContainerMenuBlade/overview/storageAccountId/%2Fsubscriptions%2F[parameter(subscription)]%2FresourceGroups%2F[parameter(resourceGroup)]%2Fproviders%2FMicrosoft.Storage%2FstorageAccounts%2F[parameter(storageAccountName)]/path/customerdoc)",
+                "title": "Getting Started with VM OS Reporting",
+                "subtitle": "",
+                "markdownSource": 1
+              }
+            }
+          }
+        }
+      },
+      "1": {
+        "position": {
+          "x": 4,
+          "y": 0,
+          "colSpan": 6,
+          "rowSpan": 3
+        },
+        "metadata": {
+          "inputs": [],
+          "type": "Extension/HubsExtension/PartType/MarkdownPart",
+          "settings": {
+            "content": {
+              "settings": {
+                "content": "<img width=\"450\" style=\"float: center;margin-left: 20px;margin-top:8px;margin-bottom:14px\" position=\"center\" src=\"https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-main-logo.jpg\"/>\n\n<div style=\"padding-left:4.00em;\">[parameter(productName)] - VM OS Management Reporting dashboard </div>",
+                "title": "",
+                "subtitle": "",
+                "markdownSource": 1,
+                "markdownUri": "https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-main-logo.jpg"
+              }
+            }
+          }
+        }
+      },
+      "2": {
+        "position": {
+          "x": 0,
+          "y": 8,
+          "colSpan": 4,
+          "rowSpan": 4
+        },
+        "metadata": {
+          "inputs": [],
+          "type": "Extension/HubsExtension/PartType/MarkdownPart",
+          "settings": {
+            "content": {
+              "settings": {
+                "content": "\n\tLeft:  Self Service Restore\n\tRight: How to take app-consistent backup (Linux)\n\t    \t\n[<img width=\"80\" style=\"float: center;margin-left: 50px;margin-top:10px;margin-bottom:14px\" position=\"center\" src=\"https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-Backup.svg\"/>](https://docs.microsoft.com/en-us/azure/backup/about-azure-vm-restore)[<img width=\"80\" style=\"float: center;margin-left: 50px;margin-top:10px;margin-bottom:14px\" position=\"center\" src=\"https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-Stopwatch.svg\"/>](https://docs.microsoft.com/en-us/azure/backup/backup-azure-linux-app-consistent)",
+                "title": "Backup/Restore documentation",
+                "subtitle": "",
+                "markdownSource": 1
+              }
+            }
+          }
+        }
+      },
+      "3": {
+        "position": {
+          "x": 0,
+          "y": 3,
+          "colSpan": 14,
+          "rowSpan": 5
+        },
+        "metadata": {
+          "inputs": [
+            {
+              "name": "partTitle",
+              "value": "Available Virtual Machines",
+              "isOptional": true
+            },
+            {
+              "name": "chartType",
+              "isOptional": true
+            },
+            {
+              "name": "isShared",
+              "isOptional": true
+            },
+            {
+              "name": "formatResults",
+              "value": true,
+              "isOptional": true
+            },
+            {
+              "name": "query",
+              "value": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| extend osDiskId = tolower(tostring(properties.storageProfile.osDisk.managedDisk.id))\r\n| join (\r\n	resources\r\n	| where type == \"microsoft.compute/disks\"\r\n	| extend osDiskId = tolower(tostring(id))\r\n	) on osDiskId\r\n| extend OSType = properties.storageProfile.osDisk.osType\r\n| extend SKU = properties.storageProfile.imageReference.sku\r\n| extend VMSize = properties.hardwareProfile.vmSize\r\n| extend OSDiskEncryption = case( properties1.encryption.type == \"EncryptionAtRestWithPlatformKey\", \"SSE with PMK\",\r\n	case ( properties1.encryption.type == \"EncryptionAtRestWithCustomerKey\", \"SSE with CMK\", \r\n	case ( properties1.encryption.type == \"EncryptionAtRestWithPlatformAndCustomerKeys\", \"SSE with PMK and CMK\", \"No Encryption at Rest\" )))\r\n| extend osDiskADE = case((properties1.encryptionSettingsCollection.enabled == true),\"Yes\",\"No\")\r\n| extend diskEncryptionState = case(\r\n    (properties.securityProfile.encryptionAtHost == true), strcat(OSDiskEncryption,\", EAH enabled\"),\r\n    (properties1.encryptionSettingsCollection.enabled == true), strcat(OSDiskEncryption,\", ADE enabled\"),\r\n    OSDiskEncryption)\r\n| project id, name, location, resourceGroup, subscriptionId, OSType, SKU, VMSize, diskEncryptionState",
+              "isOptional": true
+            },
+            {
+              "name": "queryId",
+              "isOptional": true
+            }
+          ],
+          "type": "Extension/HubsExtension/PartType/ArgQueryGridTile",
+          "settings": {}
+        }
+      },
+      "4": {
+        "position": {
+          "x": 6,
+          "y": 8,
+          "colSpan": 2,
+          "rowSpan": 2
+        },
+        "metadata": {
+          "inputs": [
+            {
+              "name": "ComponentId",
+              "value": {
+                "Name": "Azure Monitor",
+                "ResourceId": "Azure Monitor",
+                "LinkedApplicationType": -2
+              }
+            },
+            {
+              "name": "ResourceIds",
+              "value": [
+                "Azure Monitor"
+              ],
+              "isOptional": true
+            },
+            {
+              "name": "Type",
+              "value": "workbook",
+              "isOptional": true
+            },
+            {
+              "name": "TimeContext",
+              "isOptional": true
+            },
+            {
+              "name": "ConfigurationId",
+              "value": "[parameter(workbookResourceIdAvailability)]",
+              "isOptional": true
+            },
+            {
+              "name": "ViewerMode",
+              "value": false,
+              "isOptional": true
+            },
+            {
+              "name": "GalleryResourceType",
+              "value": "Azure Monitor",
+              "isOptional": true
+            },
+            {
+              "name": "NotebookParams",
+              "isOptional": true
+            },
+            {
+              "name": "Location",
+              "value": "[parameter(location)]",
+              "isOptional": true
+            },
+            {
+              "name": "Version",
+              "value": "1.0",
+              "isOptional": true
+            }
+          ],
+          "type": "Extension/AppInsightsExtension/PartType/NotebookPinnedPart",
+          "viewState": {
+            "content": {
+              "configurationId": "[parameter(workbookResourceIdAvailability)]"
+            }
+          }
+        }
+      },
+      "5": {
+        "position": {
+          "x": 8,
+          "y": 8,
+          "colSpan": 2,
+          "rowSpan": 2
+        },
+        "metadata": {
+          "inputs": [
+            {
+              "name": "ComponentId",
+              "value": {
+                "Name": "Azure Monitor",
+                "ResourceId": "Azure Monitor",
+                "LinkedApplicationType": -2
+              }
+            },
+            {
+              "name": "ResourceIds",
+              "value": [
+                "Azure Monitor"
+              ],
+              "isOptional": true
+            },
+            {
+              "name": "Type",
+              "value": "workbook",
+              "isOptional": true
+            },
+            {
+              "name": "TimeContext",
+              "isOptional": true
+            },
+            {
+              "name": "ConfigurationId",
+              "value": "community-Workbooks/Virtual Machines - Performance Analysis/Performance Analysis for a Group of VMs",
+              "isOptional": true
+            },
+            {
+              "name": "ViewerMode",
+              "value": false,
+              "isOptional": true
+            },
+            {
+              "name": "GalleryResourceType",
+              "value": "Azure Monitor",
+              "isOptional": true
+            },
+            {
+              "name": "NotebookParams",
+              "isOptional": true
+            },
+            {
+              "name": "Location",
+              "value": "[parameter(location)]",
+              "isOptional": true
+            },
+            {
+              "name": "Version",
+              "value": "1.0",
+              "isOptional": true
+            }
+          ],
+          "type": "Extension/AppInsightsExtension/PartType/NotebookPinnedPart",
+          "viewState": {
+            "content": {
+              "configurationId": "community-Workbooks/Virtual Machines - Performance Analysis/Performance Analysis for a Group of VMs"
+            }
+          }
+        }
+      },
+       "6": {
+        "position": {
+          "x": 10,
+          "y": 8,
+          "colSpan": 2,
+          "rowSpan": 2
+        },
+        "metadata": {
+          "inputs": [],
+          "type": "Extension/HubsExtension/PartType/MarkdownPart",
+          "settings": {
+            "content": {
+              "settings": {
+                "content": "[<img width=\"75\" style=\"float: center;margin-left: 30px;margin-top:3px;margin-bottom:14px\" position=\"center\" src=\"https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-Defender.svg\"/>](https://portal.azure.com/#blade/Microsoft_Azure_Security/SecurityMenuBlade/26)",
+                "title": "Security Posture",
+                "subtitle": "",
+                "markdownSource": 1
+              }
+            }
+          }
+        }
+      },
+      "7": {
+        "position": {
+          "x": 4,
+          "y": 8,
+          "colSpan": 2,
+          "rowSpan": 2
+        },
+        "metadata": {
+          "inputs": [],
+          "type": "Extension/HubsExtension/PartType/MarkdownPart",
+          "settings": {
+            "content": {
+              "settings": {
+                "content": "[<img width=\"75\" style=\"float: center;margin-left: 30px;margin-top:3px;margin-bottom:14px\" position=\"center\" src=\"https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-Backup.svg\"/>](https://portal.azure.com/#blade/Microsoft_Azure_DataProtection/BackupCenterMenuBlade/backupReportsConfigure)",
+                "title": "Backup Center",
+                "subtitle": "",
+                "markdownSource": 1
+              }
+            }
+          }
+        }
+      },
+      "8": {
+        "position": {
+          "x": 4,
+          "y": 10,
+          "colSpan": 2,
+          "rowSpan": 2
+        },
+        "metadata": {
+          "inputs": [
+            {
+              "name": "ComponentId",
+              "value": {
+                "Name": "Azure Monitor",
+                "ResourceId": "Azure Monitor",
+                "LinkedApplicationType": -2
+              }
+            },
+            {
+              "name": "ResourceIds",
+              "value": [
+                "Azure Monitor"
+              ],
+              "isOptional": true
+            },
+            {
+              "name": "Type",
+              "value": "workbook",
+              "isOptional": true
+            },
+            {
+              "name": "TimeContext",
+              "isOptional": true
+            },
+            {
+              "name": "ConfigurationId",
+              "value": "[parameter(workbookResourceIdBackup)]",
+              "isOptional": true
+            },
+            {
+              "name": "ViewerMode",
+              "value": false,
+              "isOptional": true
+            },
+            {
+              "name": "GalleryResourceType",
+              "value": "Azure Monitor",
+              "isOptional": true
+            },
+            {
+              "name": "NotebookParams",
+              "isOptional": true
+            },
+            {
+              "name": "Location",
+              "value": "[parameter(location)]",
+              "isOptional": true
+            },
+            {
+              "name": "Version",
+              "value": "1.0",
+              "isOptional": true
+            }
+          ],
+          "type": "Extension/AppInsightsExtension/PartType/NotebookPinnedPart",
+          "viewState": {
+            "content": {
+              "configurationId": "[parameter(workbookResourceIdBackup)]"
+            }
+          }
+        }
+      },
+      "9": {
+        "position": {
+          "x": 8,
+          "y": 10,
+          "colSpan": 2,
+          "rowSpan": 2
+        },
+        "metadata": {
+          "inputs": [
+            {
+              "name": "ComponentId",
+              "value": {
+                "Name": "Azure Monitor",
+                "ResourceId": "Azure Monitor",
+                "LinkedApplicationType": -2
+              }
+            },
+            {
+              "name": "ResourceIds",
+              "value": [
+                "Azure Monitor"
+              ],
+              "isOptional": true
+            },
+            {
+              "name": "Type",
+              "value": "workbook",
+              "isOptional": true
+            },
+            {
+              "name": "TimeContext",
+              "isOptional": true
+            },
+            {
+              "name": "ConfigurationId",
+              "value": "[parameter(workbookResourceIdAntimalware)]",
+              "isOptional": true
+            },
+            {
+              "name": "ViewerMode",
+              "value": false,
+              "isOptional": true
+            },
+            {
+              "name": "GalleryResourceType",
+              "value": "Azure Monitor",
+              "isOptional": true
+            },
+            {
+              "name": "NotebookParams",
+              "isOptional": true
+            },
+            {
+              "name": "Location",
+              "value": "[parameter(location)]",
+              "isOptional": true
+            },
+            {
+              "name": "Version",
+              "value": "1.0",
+              "isOptional": true
+            }
+          ],
+          "type": "Extension/AppInsightsExtension/PartType/NotebookPinnedPart",
+          "viewState": {
+            "content": {
+              "configurationId": "[parameter(workbookResourceIdAntimalware)]"
+            }
+          }
+        }
+      },
+      "10": {
+        "position": {
+          "x": 6,
+          "y": 10,
+          "colSpan": 2,
+          "rowSpan": 2
+        },
+        "metadata": {
+          "inputs": [
+            {
+              "name": "ComponentId",
+              "value": {
+                "Name": "Azure Monitor",
+                "ResourceId": "Azure Monitor",
+                "LinkedApplicationType": -2
+              }
+            },
+            {
+              "name": "ResourceIds",
+              "value": [
+                "Azure Monitor"
+              ],
+              "isOptional": true
+            },
+            {
+              "name": "Type",
+              "value": "workbook",
+              "isOptional": true
+            },
+            {
+              "name": "TimeContext",
+              "isOptional": true
+            },
+            {
+              "name": "ConfigurationId",
+              "value": "[parameter(workbookResourceIdOsTagging)]",
+              "isOptional": true
+            },
+            {
+              "name": "ViewerMode",
+              "value": false,
+              "isOptional": true
+            },
+            {
+              "name": "GalleryResourceType",
+              "value": "Azure Monitor",
+              "isOptional": true
+            },
+            {
+              "name": "NotebookParams",
+              "isOptional": true
+            },
+            {
+              "name": "Location",
+              "value": "[parameter(location)]",
+              "isOptional": true
+            },
+            {
+              "name": "Version",
+              "value": "1.0",
+              "isOptional": true
+            }
+          ],
+          "type": "Extension/AppInsightsExtension/PartType/NotebookPinnedPart",
+          "viewState": {
+            "content": {
+              "configurationId": "[parameter(workbookResourceIdOsTagging)]"
+            }
+          }
+        }
+      },
+      "11": {
+        "position": {
+          "x": 12,
+          "y": 8,
+          "colSpan": 2,
+          "rowSpan": 2
+        },
+        "metadata": {
+          "inputs": [
+            {
+              "name": "ComponentId",
+              "value": {
+                "Name": "Azure Monitor",
+                "ResourceId": "Azure Monitor",
+                "LinkedApplicationType": -2
+              }
+            },
+            {
+              "name": "ResourceIds",
+              "value": [
+                "Azure Monitor"
+              ],
+              "isOptional": true
+            },
+            {
+              "name": "Type",
+              "value": "workbook",
+              "isOptional": true
+            },
+            {
+              "name": "TimeContext",
+              "isOptional": true
+            },
+            {
+              "name": "ConfigurationId",
+              "value": "[parameter(workbookResourceIdOsImgGallery)]",
+              "isOptional": true
+            },
+            {
+              "name": "ViewerMode",
+              "value": false,
+              "isOptional": true
+            },
+            {
+              "name": "GalleryResourceType",
+              "value": "Azure Monitor",
+              "isOptional": true
+            },
+            {
+              "name": "NotebookParams",
+              "isOptional": true
+            },
+            {
+              "name": "Location",
+              "value": "[parameter(location)]",
+              "isOptional": true
+            },
+            {
+              "name": "Version",
+              "value": "1.0",
+              "isOptional": true
+            }
+          ],
+          "type": "Extension/AppInsightsExtension/PartType/NotebookPinnedPart",
+          "viewState": {
+            "content": {
+              "configurationId": "[parameter(workbookResourceIdOsImgGallery)]"
+            }
+          }
+        }
+      },
+      "12": {
+        "position": {
+          "x": 10,
+          "y": 10,
+          "colSpan": 2,
+          "rowSpan": 2
+        },
+        "metadata": {
+          "inputs": [
+            {
+              "name": "ComponentId",
+              "value": {
+                "Name": "Azure Monitor",
+                "ResourceId": "Azure Monitor",
+                "LinkedApplicationType": -2
+              }
+            },
+            {
+              "name": "ResourceIds",
+              "value": [
+                "Azure Monitor"
+              ],
+              "isOptional": true
+            },
+            {
+              "name": "Type",
+              "value": "workbook",
+              "isOptional": true
+            },
+            {
+              "name": "TimeContext",
+              "isOptional": true
+            },
+            {
+              "name": "ConfigurationId",
+              "value": "[parameter(workbookResourceIdOSAvailabilitySet)]",
+              "isOptional": true
+            },
+            {
+              "name": "ViewerMode",
+              "value": false,
+              "isOptional": true
+            },
+            {
+              "name": "GalleryResourceType",
+              "value": "Azure Monitor",
+              "isOptional": true
+            },
+            {
+              "name": "NotebookParams",
+              "isOptional": true
+            },
+            {
+              "name": "Location",
+              "value": "[parameter(location)]",
+              "isOptional": true
+            },
+            {
+              "name": "Version",
+              "value": "1.0",
+              "isOptional": true
+            }
+          ],
+          "type": "Extension/AppInsightsExtension/PartType/NotebookPinnedPart",
+          "viewState": {
+            "content": {
+              "configurationId": "[parameter(workbookResourceIdOSAvailabilitySet)]"
+            }
+          }
+        }
+      },
+      "13": {
+        "position": {
+          "x": 12,
+          "y": 10,
+          "colSpan": 2,
+          "rowSpan": 2
+        },
+        "metadata": {
+          "inputs": [
+            {
+              "name": "ComponentId",
+              "value": {
+                "Name": "Azure Monitor",
+                "ResourceId": "Azure Monitor",
+                "LinkedApplicationType": -2
+              }
+            },
+            {
+              "name": "ResourceIds",
+              "value": [
+                "Azure Monitor"
+              ],
+              "isOptional": true
+            },
+            {
+              "name": "Type",
+              "value": "workbook",
+              "isOptional": true
+            },
+            {
+              "name": "TimeContext",
+              "isOptional": true
+            },
+            {
+              "name": "ConfigurationId",
+              "value": "[parameter(workbookResourceIdOsScaleSets)]",
+              "isOptional": true
+            },
+            {
+              "name": "ViewerMode",
+              "value": false,
+              "isOptional": true
+            },
+            {
+              "name": "GalleryResourceType",
+              "value": "Azure Monitor",
+              "isOptional": true
+            },
+            {
+              "name": "NotebookParams",
+              "isOptional": true
+            },
+            {
+              "name": "Location",
+              "value": "[parameter(location)]",
+              "isOptional": true
+            },
+            {
+              "name": "Version",
+              "value": "1.0",
+              "isOptional": true
+            }
+          ],
+          "type": "Extension/AppInsightsExtension/PartType/NotebookPinnedPart",
+          "viewState": {
+            "content": {
+              "configurationId": "[parameter(workbookResourceIdOsScaleSets)]"
+            }
+          }
+        }
+      },
+      "14": {
+        "position": {
+          "x": 0,
+          "y": 12,
+          "colSpan": 2,
+          "rowSpan": 2
+        },
+        "metadata": {
+          "inputs": [
+            {
+              "name": "ComponentId",
+              "value": {
+                "Name": "Azure Monitor",
+                "ResourceId": "Azure Monitor",
+                "LinkedApplicationType": -2
+              }
+            },
+            {
+              "name": "ResourceIds",
+              "value": [
+                "Azure Monitor"
+              ],
+              "isOptional": true
+            },
+            {
+              "name": "Type",
+              "value": "workbook",
+              "isOptional": true
+            },
+            {
+              "name": "TimeContext",
+              "isOptional": true
+            },
+            {
+              "name": "ConfigurationId",
+              "value": "[parameter(workbookResourceIdDiskEncryption)]",
+              "isOptional": true
+            },
+            {
+              "name": "ViewerMode",
+              "value": false,
+              "isOptional": true
+            },
+            {
+              "name": "GalleryResourceType",
+              "value": "Azure Monitor",
+              "isOptional": true
+            },
+            {
+              "name": "NotebookParams",
+              "isOptional": true
+            },
+            {
+              "name": "Location",
+              "value": "[parameter(location)]",
+              "isOptional": true
+            },
+            {
+              "name": "Version",
+              "value": "1.0",
+              "isOptional": true
+            }
+          ],
+          "type": "Extension/AppInsightsExtension/PartType/NotebookPinnedPart",
+          "viewState": {
+            "content": {
+              "configurationId": "[parameter(workbookResourceIdDiskEncryption)]"
+            }
+          }
+        }
+      },
+      "15": {
+        "position": {
+          "x": 10,
+          "y": 0,
+          "colSpan": 4,
+          "rowSpan": 3
+        },
+        "metadata": {
+          "inputs": [],
+          "type": "Extension/HubsExtension/PartType/MarkdownPart",
+          "settings": {
+            "content": {
+              "settings": {
+                "content": "[<img width=\"80\" style=\"float: center;margin-left: 50px;margin-top:10px;margin-bottom:14px\" position=\"center\" src=\"https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-Monitor.svg\"/>](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/https%3a%2f%2fraw.githubusercontent.com%2fGLB-CES-PublicCloudAzure%2fELZ-azure-public%2fmain%2fVM_templates%2fdeploytemplate.json/createUIDefinitionUri/https%3a%2f%2fraw.githubusercontent.com%2fGLB-CES-PublicCloudAzure%2fELZ-azure-public%2fmain%2fVM_templates%2fcreateUIDefinition.json \"UI definition\")\n[<img width=\"80\" style=\"float: center;margin-left: 50px;margin-top:10px;margin-bottom:14px\" position=\"center\" src=\"https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-Navigation.svg\"/>](https://github.com/GLB-CES-PublicCloudAzure/ELZ-azure-public/tree/main/VM_templates \"VM templates\")\n\n\t\t\t\tUI\t\t\t  VM templates\n",
+                "title": "Deploy VM",
+                "subtitle": "Deploy Virtual Machine to be [parameter(companyName)] Managed",
+                "markdownSource": 1
+              }
+            }
+          }
+        }
+      },
+      "16": {
+        "position": {
+          "x": 2,
+          "y": 12,
+          "colSpan": 2,
+          "rowSpan": 2
+        },
+        "metadata": {
+          "inputs": [
+            {
+              "name": "ComponentId",
+              "value": {
+                "Name": "Azure Monitor",
+                "ResourceId": "Azure Monitor",
+                "LinkedApplicationType": -2
+              }
+            },
+            {
+              "name": "ResourceIds",
+              "value": [
+                "Azure Monitor"
+              ],
+              "isOptional": true
+            },
+            {
+              "name": "Type",
+              "value": "workbook",
+              "isOptional": true
+            },
+            {
+              "name": "TimeContext",
+              "isOptional": true
+            },
+            {
+              "name": "ConfigurationId",
+              "value": "[parameter(workbookResourceIdStorageAccounts)]",
+              "isOptional": true
+            },
+            {
+              "name": "ViewerMode",
+              "value": false,
+              "isOptional": true
+            },
+            {
+              "name": "GalleryResourceType",
+              "value": "Azure Monitor",
+              "isOptional": true
+            },
+            {
+              "name": "NotebookParams",
+              "isOptional": true
+            },
+            {
+              "name": "Location",
+              "value": "[parameter(location)]",
+              "isOptional": true
+            },
+            {
+              "name": "Version",
+              "value": "1.0",
+              "isOptional": true
+            }
+          ],
+          "type": "Extension/AppInsightsExtension/PartType/NotebookPinnedPart",
+          "viewState": {
+            "content": {
+              "configurationId": "[parameter(workbookResourceIdStorageAccounts)]"
+            }
+          }
+        }
+      }
+    }
+  }
+}

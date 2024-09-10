@@ -1,0 +1,158 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "runbooks": {
+            "value": [
+                {
+                    "name": "OSMGMT-Create-OfflineReports-OSmgmt",
+                    "filename": "Create-OfflineReports-OSmgmt.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create offline reports for OS management, timerbased",
+                    "scheduleName": "OSMGMT-Create-OfflineReports-OSmgmt",
+                    "startTime": "00:00",
+                    "interval": "24",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "OSMGMT-Create-RemediationTaskAntiMalware",
+                    "filename": "Create-RemediationTaskAntiMalware.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create Remediation Task for non-compliant subscription and install AntiMalware agent",
+                    "scheduleName": "OSMGMT-Create-RemediationTaskAntiMalware",
+                    "startTime": "PT35M",
+                    "interval": "12",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "OSMGMT-Create-RemediationTaskASCQualysAgent",
+                    "filename": "Create-RemediationTaskASCQualysAgent.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create Remediation Task for non-compliant DINE policies for ASC Qualys Agent.",
+                    "scheduleName": "OSMGMT-Create-RemediationTaskASCQualysAgent",
+                    "startTime": "PT35M",
+                    "interval": "1",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "OSMGMT-Create-RemediationTaskUpdateManager",
+                    "filename": "Create-RemediationTaskUpdateManager.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create Remediation Task for non-compliant DINE & Modify policies for Update Manager.",
+                    "scheduleName": "OSMGMT-Create-RemediationTaskUpdateManager",
+                    "startTime": "PT35M",
+                    "interval": "1",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "OSMGMT-Create-RemediationTaskBackupPolicy",
+                    "filename": "Create-RemediationTaskBackupPolicy.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create Remediation Task for non-compliant DINE policies for Backup VM",
+                    "scheduleName": "OSMGMT-Create-RemediationTaskBackupPolicy",
+                    "startTime": "PT1H",
+                    "interval": "12",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "OSMGMT-Create-RemediationTaskDependencyAgent",
+                    "filename": "Create-RemediationTaskDependencyAgent.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create Remediation Task for non-compliant DINE policies for Dependency Agent",
+                    "scheduleName": "OSMGMT-Create-RemediationTaskDependencyAgent",
+                    "startTime": "PT1H",
+                    "interval": "12",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "OSMGMT-Create-RemediationTaskDependencyAgent-ScaleSet",
+                    "filename": "Create-RemediationTaskDependencyAgent-ScaleSet.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create Remediation Task for non-compliant DINE policies for Dependency Agent",
+                    "scheduleName": "OSMGMT-Create-RemediationTaskDependencyAgent-ScaleSet",
+                    "startTime": "PT1H",
+                    "interval": "12",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "OSMGMT-Create-RemediationTaskGuestConfigAgent",
+                    "filename": "Create-RemediationTaskGuestconfigAgent.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create Remediation Task for non-compliant DINE policies for the Guest Configuration Agent",
+                    "scheduleName": "OSMGMT-Create-RemediationTaskGuestConfigAgent",
+                    "startTime": "PT1H",
+                    "interval": "12",
+                    "frequency": "Hour"
+                },
+                {
+                  "name": "OSMGMT-Create-RemediationTaskAzureMonitorAgent",
+                  "filename": "Create-RemediationTaskAzureMonitorAgent.ps1",
+                  "version": "1.0.0.0",
+                  "type": "PowerShell",
+                  "description": "Runbook - Create Remediation Task for non-compliant subscription and install Azure Monitor Agent on VMs and VM Scalesets",
+                  "scheduleName": "OSMGMT-Create-RemediationTaskAzureMonitorAgent",
+                  "startTime" : "PT35M",
+                  "interval": "12", 
+                  "frequency": "Hour"
+                },
+                {
+                    "name": "OSMGMT-Update-EventGridAutomationWebhook",
+                    "filename": "Update-EventGridAutomationWebhook.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Update EventGrid Automation Webhook endpoint",
+                    "scheduleName": "OSMGMT-Update-EventGridAutomationWebhook",
+                    "startTime": "PT3H",
+                    "interval": "1",
+                    "frequency": "month"
+                },
+                {
+                    "name": "OSMGMT-Execute-VMEncryption",
+                    "filename": "Execute-VMEncryption.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Execute VM Encryption Automation, eventdriven.",
+                    "tag": true,
+                    "tagValue": "RunbookOsDiskEncrypt"
+                },
+                {
+                    "name": "OSMGMT-Remove-BackupForNonTaggedVMs",
+                    "filename": "Remove-BackupForNonTaggedVMs.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Runbook for removing VMs that are not tagged with the Backup tag from a Recovery Services Vault.",
+                    "scheduleName": "OSMGMT-Remove-BackupForNonTaggedVMs",
+                    "startTime": "PT3H",
+                    "interval": "24",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "OSMGMT-Remove-LegacyLogAnalyticsAgent",
+                    "filename": "Remove-LegacyLogAnalyticsAgent.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Remove the legacy log analytics monitoring agent from VM and VM Scale sets. Can be scheduled daily.",
+                    "scheduleName": "OSMGMT-Remove-LegacyLogAnalyticsAgent",
+                    "startTime": "10:00",
+                    "interval": "24",
+                    "frequency": "Hour",
+                    "scheduleIsEnabled": false
+                }
+            ]
+        },
+        "modules": {
+            "value": []
+        }
+    }
+}

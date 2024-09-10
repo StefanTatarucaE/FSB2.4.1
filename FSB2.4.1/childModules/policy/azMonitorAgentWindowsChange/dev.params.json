@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "scopeToSupportedImages": {
+            "value": false
+        },
+        "dataCollectionRuleResourceId": {
+            "value": "/subscriptions/80005cf6-dc03-4329-bbfe-bd61a19e6ef2/resourceGroups/dv2-mgmt-d-rsg-monitoring/providers/Microsoft.Insights/dataCollectionRules/dv2-mgmt-d-dcr-windows"
+        },
+        "managementSubscriptionId": {
+            "value": "80005cf6-dc03-4329-bbfe-bd61a19e6ef2"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        },
+        "enableAmAgentWindowsVmDefName": {
+            "value": "vm-enableamagentwin-change-policy-def"
+        },
+        "enableAmAgentWindowsVmDefDisplayName": {
+            "value": "Enable Azure Monitor Agent for Windows Virtual Machines change policy definition"
+        },
+        "enableAmAgentWinowsVmDefEffect": {
+            "value": "DeployIfNotExists"
+        },
+        "enableAmAgentWindowsVmssDefName": {
+            "value": "vmss-enableamagentwin-change-policy-def"
+        },
+        "enableAmAgentWindowsVmssDefDisplayName": {
+            "value": "Enable Azure Monitor Agent for Windows Virtual Machine Scale Sets change policy definition"
+        },
+        "enableAmAgentWinowsVmssDefEffect": {
+            "value": "DeployIfNotExists"
+        },
+        "dcrAssociationWindowsDefName": {
+            "value": "dcr-amagent-association-win-change-policy-def"
+        },
+        "dcrAssociationWindowsDefDisplayName": {
+            "value": "DCR - Azure Monitor Agent association windows change policy definition"
+        },
+        "dcrAssociationWindowsDefEffect": {
+            "value": "DeployIfNotExists"
+        },
+        "enableAmAgentWindowsSetName": {
+            "value": "amagent-windows-change-policy-set"
+        },
+        "enableAmAgentWindowsSetDisplayName": {
+            "value": "Azure Monitor Agent Windows change policy initiative"
+        },
+        "enableAmAgentWindowsSetAssignmentName": {
+            "value": "amagent-windows-change-policy-set-assignment"
+        },
+        "enableAmAgentWindowsSetAssignmentDisplayName": {
+            "value": "Azure Monitor Agent Windows change policy initiative assignment"
+        }
+    }
+  }

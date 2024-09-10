@@ -1,0 +1,1444 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "## Azure Data Factory Overview"
+      },
+      "name": "text - 1"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "bfe50469-7469-4c4d-a33e-0edbb43546c4",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subscription",
+            "type": 6,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "limitSelectTo": 100,
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": false,
+              "showDefault": false
+            }
+          },
+          {
+            "id": "d6bd06f8-8e83-4c08-ab51-53b49d7107f1",
+            "version": "KqlParameterItem/1.0",
+            "name": "Location",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type =~ 'microsoft.datafactory/factories'\r\n| project location\r\n| distinct location",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "b21bf65e-0ea9-4437-a5ea-ab022a9ff08a",
+            "version": "KqlParameterItem/1.0",
+            "name": "ResourceGroup",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type =~ 'microsoft.datafactory/factories'\r\n| project resourceGroup\r\n| distinct resourceGroup",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "value": [
+              "value::all"
+            ]
+          },
+          {
+            "id": "0b7efb8f-6afa-485c-bdfd-e2ecbf11af44",
+            "version": "KqlParameterItem/1.0",
+            "name": "PublicNetworkAccess",
+            "label": "Public Network Access",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Enabled\", \"Disabled\"]",
+            "defaultValue": "value::all",
+            "value": [
+              "value::all"
+            ]
+          },
+          {
+            "id": "6301693a-7f20-4ff6-9270-eb50e553a7a9",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]Managed",
+            "label": "Managed by [parameter(companyName)]",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Yes\", \"No\"]",
+            "defaultValue": "value::all",
+            "value": [
+              "value::all"
+            ]
+          },
+          {
+            "id": "55b8c1a2-1c0f-417a-b4a4-dd0aa859374b",
+            "version": "KqlParameterItem/1.0",
+            "name": "ADFAvailability",
+            "type": 1,
+            "isHiddenWhenLocked": true,
+            "criteriaData": [
+              {
+                "criteriaContext": {
+                  "leftOperand": "Location",
+                  "operator": "is Empty",
+                  "rightValType": "param",
+                  "resultValType": "static",
+                  "resultVal": "ADFUnAvailable"
+                }
+              },
+              {
+                "criteriaContext": {
+                  "leftOperand": "Location",
+                  "operator": "isNotNull",
+                  "rightValType": "param",
+                  "resultValType": "static",
+                  "resultVal": "ADFAvailable"
+                }
+              },
+              {
+                "criteriaContext": {
+                  "operator": "Default",
+                  "rightValType": "param",
+                  "resultValType": "param"
+                }
+              }
+            ]
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "parameters - 1"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "#### No Azure Data Factories are deployed in this environment yet"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isNotEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "text - 41"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Resources\r\n| where type =~ 'microsoft.datafactory/factories'\r\n| extend [parameter(tagPrefix)]Managed=iif((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"Yes\", \"No\")\r\n| extend PublicNetworkAccess = tostring(properties.publicNetworkAccess)\r\n| extend Subscription = subscriptionId\r\n| extend Location = location\r\n| extend ResourceGroup = resourceGroup\r\n| where [parameter(tagPrefix)]Managed in ({[parameter(tagPrefix)]Managed})\r\n| where ResourceGroup in ({ResourceGroup})\r\n| where PublicNetworkAccess in ({PublicNetworkAccess})\r\n| project Name=id, Subscription, Location, ResourceGroup, PublicNetworkAccess, [parameter(tagPrefix)]Managed\r\n",
+        "size": 1,
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscription}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Subscription",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            }
+          ]
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "name",
+        "comparison": "isEqualTo",
+        "value": "@"
+      },
+      "name": "query - 2"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{Subscription}"
+        ],
+        "parameters": [
+          {
+            "id": "a319b0b2-a06e-4033-8f3a-631a8fa94fc8",
+            "version": "KqlParameterItem/1.0",
+            "name": "LAWorkspace",
+            "type": 5,
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| where (tostring(tags) has ('\"[parameter(tagValuePrefix)]LogAnalytics\"')) or (tostring(tags) has ('\"[parameter(tagValuePrefix)]Monitoring\"'))\r\n| project id",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "isHiddenWhenLocked": true,
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::1"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "value": "value::1"
+          },
+          {
+            "id": "0819a0c7-4307-4fd7-94f3-3e577c85bd09",
+            "version": "KqlParameterItem/1.0",
+            "name": "ManagedLAWorkspace",
+            "type": 1,
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| where (tostring(tags) has ('\"[parameter(tagValuePrefix)]LogAnalytics\"')) or (tostring(tags) has ('\"[parameter(tagValuePrefix)]Monitoring\"'))\r\n| project name",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "isHiddenWhenLocked": true,
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 37"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AzureMetrics \r\n| where ResourceProvider =~ \"MICROSOFT.DATAFACTORY\"\r\n| extend name = ResourceId\r\n| extend [parameter(tagPrefix)]Workspace = 'Yes'\r\n| project name, [parameter(tagPrefix)]Workspace\r\n| distinct name, [parameter(tagPrefix)]Workspace\r\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 2592000000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LAWorkspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "name",
+        "comparison": "isEqualTo",
+        "value": "@"
+      },
+      "name": "query - 38"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"28aea5e6-819d-4966-9f49-10354507c0c5\",\"mergeType\":\"leftouter\",\"leftTable\":\"query - 2\",\"rightTable\":\"query - 38\",\"leftColumn\":\"Name\",\"rightColumn\":\"name\"}],\"projectRename\":[{\"originalName\":\"[query - 2].Name\",\"mergedName\":\"Name\",\"fromId\":\"28aea5e6-819d-4966-9f49-10354507c0c5\"},{\"originalName\":\"[query - 2].Subscription\",\"mergedName\":\"Subscription\",\"fromId\":\"28aea5e6-819d-4966-9f49-10354507c0c5\"},{\"originalName\":\"[query - 2].Location\",\"mergedName\":\"Location\",\"fromId\":\"28aea5e6-819d-4966-9f49-10354507c0c5\"},{\"originalName\":\"[query - 2].ResourceGroup\",\"mergedName\":\"ResourceGroup\",\"fromId\":\"28aea5e6-819d-4966-9f49-10354507c0c5\"},{\"originalName\":\"[query - 2].PublicNetworkAccess\",\"mergedName\":\"PublicNetworkAccess\",\"fromId\":\"28aea5e6-819d-4966-9f49-10354507c0c5\"},{\"originalName\":\"[query - 2].[parameter(tagPrefix)]Managed\",\"mergedName\":\"[parameter(tagPrefix)]Managed\",\"fromId\":\"28aea5e6-819d-4966-9f49-10354507c0c5\"},{\"originalName\":\"[query - 38].name\",\"mergedName\":\"name\",\"fromId\":\"28aea5e6-819d-4966-9f49-10354507c0c5\"},{\"originalName\":\"[query - 38].[parameter(tagPrefix)]Workspace\",\"mergedName\":\"[parameter(tagPrefix)] Managed Workspace\",\"fromId\":\"28aea5e6-819d-4966-9f49-10354507c0c5\"},{\"originalName\":\"[Added column]\",\"mergedName\":\"Log Analytics Workspace\",\"fromId\":null,\"isNewItem\":true,\"newItemData\":[{\"criteriaContext\":{\"leftOperand\":\"[parameter(tagPrefix)] Managed Workspace\",\"operator\":\"==\",\"rightValType\":\"static\",\"rightVal\":\"Yes\",\"resultValType\":\"static\",\"resultVal\":\"Connected to [parameter(companyName)] Monitored Log Analytics Workspace\"}},{\"criteriaContext\":{\"leftOperand\":\"[parameter(tagPrefix)] Managed Workspace\",\"operator\":\"!=\",\"rightValType\":\"static\",\"rightVal\":\"Yes\",\"resultValType\":\"static\",\"resultVal\":\"Not connected to [parameter(companyName)] Monitored Log Analytics Workspace or no data logged yet\"}},{\"criteriaContext\":{\"operator\":\"Default\",\"rightValType\":\"column\",\"resultValType\":\"column\"}}]}]}",
+        "size": 0,
+        "noDataMessage": "There are no Azure Data Factories with the selected filters",
+        "queryType": 7,
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Subscription",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "name",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "[parameter(tagPrefix)] Managed Workspace",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Log Analytics Workspace",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Not",
+                    "representation": "2",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ],
+                "customColumnWidthSetting": "72.2857ch"
+              }
+            }
+          ],
+          "labelSettings": [
+            {
+              "columnId": "Log Analytics Workspace",
+              "label": "Remark"
+            }
+          ]
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "query - 39"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## Azure Data Factory Analytics"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "text - 3"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "##### The Log Analytics Workspace that is provided by [parameter(productName)] (in the management subscription) is the only workspace that is available for the Azure Data Factory Analytics part of this report.",
+        "style": "info"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "text - 36"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": " **Log Analytics Workspace:**    * {ManagedLAWorkspace}*\r\n\r\n "
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "text - 40"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "value::all"
+        ],
+        "parameters": [
+          {
+            "id": "e01ea878-f43a-4a34-8e4c-26b69be102d6",
+            "version": "KqlParameterItem/1.0",
+            "name": "LogAnalyticsWorkspace",
+            "label": "Log Analytics Workspace",
+            "type": 1,
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| where (tostring(tags) has ('\"[parameter(tagValuePrefix)]LogAnalytics\"')) or (tostring(tags) has ('\"[parameter(tagValuePrefix)]Monitoring\"'))\r\n| project name",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "isHiddenWhenLocked": true,
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "1210d5a2-0bb8-46fa-a80e-3829afb9021b",
+            "version": "KqlParameterItem/1.0",
+            "name": "TimeRange",
+            "type": 4,
+            "isRequired": true,
+            "value": {
+              "durationMs": 1209600000
+            },
+            "typeSettings": {
+              "selectableValues": [
+                {
+                  "durationMs": 1800000
+                },
+                {
+                  "durationMs": 3600000
+                },
+                {
+                  "durationMs": 14400000
+                },
+                {
+                  "durationMs": 43200000
+                },
+                {
+                  "durationMs": 86400000
+                },
+                {
+                  "durationMs": 172800000
+                },
+                {
+                  "durationMs": 259200000
+                },
+                {
+                  "durationMs": 604800000
+                },
+                {
+                  "durationMs": 1209600000
+                },
+                {
+                  "durationMs": 2419200000
+                },
+                {
+                  "durationMs": 2592000000
+                },
+                {
+                  "durationMs": 5184000000
+                },
+                {
+                  "durationMs": 7776000000
+                }
+              ]
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "label": "Selected  Time Range"
+          },
+          {
+            "id": "058806d9-799e-4877-92a5-29fd3e5864ba",
+            "version": "KqlParameterItem/1.0",
+            "name": "Workspace",
+            "type": 5,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| where (tostring(tags) has ('\"[parameter(tagValuePrefix)]LogAnalytics\"')) or (tostring(tags) has ('\"[parameter(tagValuePrefix)]Monitoring\"'))\r\n| project id",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "isHiddenWhenLocked": true,
+            "typeSettings": {
+              "resourceTypeFilter": {
+                "microsoft.operationalinsights/workspaces": true
+              },
+              "limitSelectTo": 100,
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "parameters - 5"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "#### ADF RUNS - 1) PIPELINE RUNS BY DATA FACTORY"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "text - 6",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### ADF RUNS - 2) ACTIVITY RUNS BY DATA FACTORY"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "text - 9",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "ADFPipelineRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status != \"InProgress\"\r\n| extend name = tostring(split(ResourceId,\"/\")[8])\r\n| summarize count(RunId) by name\r\n| render piechart",
+        "size": 2,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "visualization": "piechart"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 4",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "ADFActivityRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status != \"InProgress\"\r\n| extend name = tostring(split(ResourceId,\"/\")[8])\r\n| summarize count(ActivityRunId) by name\r\n| render piechart",
+        "size": 2,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 8",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let data = ADFPipelineRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status != \"InProgress\";\r\n\r\ndata\r\n| summarize Count = count() by ResourceId, Status, PipelineName\r\n| join kind = inner ( data \r\n| make-series Trend = count()  default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ResourceId, Status, PipelineName\r\n| project-away TimeGenerated) on ResourceId, Status, PipelineName\r\n| project ResourceId, Count, Trend, Status, PipelineName\r\n| order by Count desc;",
+        "size": 0,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "ResourceId",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "25.4286ch"
+              }
+            },
+            {
+              "columnMatch": "Count",
+              "formatter": 4,
+              "formatOptions": {
+                "palette": "blue",
+                "customColumnWidthSetting": "12ch"
+              }
+            },
+            {
+              "columnMatch": "Trend",
+              "formatter": 9,
+              "formatOptions": {
+                "palette": "blue",
+                "customColumnWidthSetting": "182px"
+              }
+            },
+            {
+              "columnMatch": "Status",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Queued",
+                    "representation": "pending",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Succeeded",
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Failed",
+                    "representation": "failed",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ],
+                "customColumnWidthSetting": "15.2857ch"
+              }
+            },
+            {
+              "columnMatch": "PipelineName",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "19ch"
+              }
+            }
+          ],
+          "filter": true
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 7",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let data = ADFActivityRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status != \"InProgress\";\r\n\r\ndata\r\n| summarize Count = count() by ResourceId, Status, ActivityName\r\n| join kind = inner ( data \r\n| make-series Trend = count()  default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ResourceId, Status, ActivityName\r\n| project-away TimeGenerated) on ResourceId, Status, ActivityName\r\n| project ResourceId, Count, Trend, Status, ActivityName\r\n| order by Count desc;\r\n\r\n",
+        "size": 0,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Count",
+              "formatter": 4,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            },
+            {
+              "columnMatch": "Trend",
+              "formatter": 9,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            },
+            {
+              "columnMatch": "Status",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Failed",
+                    "representation": "failed",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Succeeded",
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Queued",
+                    "representation": "pending",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              },
+              "numberFormat": {
+                "unit": 0,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            }
+          ],
+          "filter": true
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 16",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### ADF RUNS - 3) TRIGGER RUNS BY DATA FACTORY"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "text - 10"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "ADFTriggerRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status != \"InProgress\" and Status != \"Waiting\"\r\n| extend name = tostring(split(ResourceId,\"/\")[8])\r\n| summarize count() by name\r\n| render piechart",
+        "size": 2,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 11",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": ""
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "text - 15",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let data = ADFTriggerRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status != \"Running\" and Status !contains \"Waiting\";\r\n\r\ndata\r\n| summarize Count = count() by ResourceId, Status, TriggerName\r\n| join kind = inner ( data \r\n| make-series Trend = count()  default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ResourceId, Status, TriggerName\r\n| project-away TimeGenerated) on ResourceId, Status, TriggerName\r\n| project ResourceId, Count, Trend, Status, TriggerName\r\n| order by Count desc;\r\n\r\n",
+        "size": 0,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Count",
+              "formatter": 4,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            },
+            {
+              "columnMatch": "Trend",
+              "formatter": 9,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            },
+            {
+              "columnMatch": "Status",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Failed",
+                    "representation": "failed",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Succeeded",
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Queued",
+                    "representation": "pending",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            }
+          ],
+          "filter": true
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 14",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": ""
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "text - 18"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### ADF ERRORS - 1) TOP 10 PIPELINE ERRORS BY DATA FACTORY"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "text - 17",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### ADF ERRORS - 2) TOP 10 ACTIVITY ERRORS BY DATA FACTORY"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "text - 21",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "ADFPipelineRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status == \"Failed\"\r\n| extend name = tostring(split(ResourceId,\"/\")[8])\r\n| summarize ErrorCount = count() by name\r\n| top 10 by ErrorCount\r\n| render piechart",
+        "size": 2,
+        "color": "redBright",
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 19",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "ADFActivityRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status == \"Failed\"\r\n| extend name = tostring(split(ResourceId,\"/\")[8])\r\n| summarize ErrorCount = count() by name\r\n| top 10 by ErrorCount\r\n| render piechart",
+        "size": 2,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 22",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let data = ADFPipelineRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status == \"Failed\";\r\n\r\ndata\r\n| summarize Count = count() by ResourceId, FailureType, PipelineName\r\n| join kind = inner ( data \r\n| make-series Trend = count()  default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ResourceId, FailureType, PipelineName\r\n| project-away TimeGenerated) on ResourceId, FailureType, PipelineName\r\n| project ResourceId, Count, Trend, FailureType, PipelineName\r\n| order by Count desc;\r\n\r\n",
+        "size": 0,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Count",
+              "formatter": 4,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            },
+            {
+              "columnMatch": "Trend",
+              "formatter": 9,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            }
+          ],
+          "filter": true
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 20",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let data = ADFActivityRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status == \"Failed\";\r\n\r\ndata\r\n| summarize Count = count() by ResourceId, FailureType, ActivityName\r\n| join kind = inner ( data \r\n| make-series Trend = count()  default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ResourceId, FailureType, ActivityName\r\n| project-away TimeGenerated) on ResourceId, FailureType, ActivityName\r\n| project ResourceId, Count, Trend, FailureType, ActivityName\r\n| order by Count desc;\r\n\r\n",
+        "size": 0,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Count",
+              "formatter": 4,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            },
+            {
+              "columnMatch": "Trend",
+              "formatter": 9,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            }
+          ],
+          "filter": true
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 23",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### ADF ERRORS - 3) TOP 10 TRIGGER ERRORS BY DATA FACTORY"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "text - 24"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "ADFTriggerRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status == \"Failed\"\r\n| extend name = tostring(split(ResourceId,\"/\")[8])\r\n| summarize ErrorCount = count() by name\r\n| top 10 by ErrorCount\r\n| render piechart",
+        "size": 2,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 23",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": ""
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "text - 25",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let data = ADFTriggerRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status == \"Failed\";\r\n\r\ndata\r\n| summarize Count = count() by ResourceId, TriggerName\r\n| join kind = inner ( data \r\n| make-series Trend = count()  default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ResourceId, TriggerName\r\n| project-away TimeGenerated) on ResourceId, TriggerName\r\n| project ResourceId, Count, Trend, TriggerName\r\n| order by Count desc;\r\n\r\n",
+        "size": 0,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Count",
+              "formatter": 4,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            },
+            {
+              "columnMatch": "Trend",
+              "formatter": 9,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            }
+          ],
+          "filter": true
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 24",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": ""
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "text - 27"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### ADF STATISTICS - 1) ACTIVITY RUNS BY TYPE"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "text - 26",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### ADF STATISTICS - 2) TRIGGER RUNS BY TYPE"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "text - 30",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "ADFActivityRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status != \"InProgress\"\r\n| summarize Count = count() by ActivityType\r\n| render piechart",
+        "size": 2,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 28",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "ADFTriggerRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status != \"InProgress\" and Status !contains \"Waiting\"\r\n| summarize Count = count() by TriggerType\r\n| render piechart",
+        "size": 2,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 31",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let data = ADFActivityRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status != \"InProgress\";\r\n\r\ndata\r\n| summarize Count = count() by ResourceId, ActivityType\r\n| project ResourceId, ActivityType, Count\r\n| order by Count desc;",
+        "size": 0,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Count",
+              "formatter": 4,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            }
+          ],
+          "filter": true
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 29",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let data = ADFTriggerRun\r\n| where TimeGenerated {TimeRange};\r\n\r\ndata\r\n| summarize Count = count() by ResourceId, TriggerType, Status\r\n| project ResourceId, TriggerType, Status, Count\r\n| order by Count desc;",
+        "size": 0,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Status",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Succeeded",
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Failed",
+                    "representation": "failed",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Waiting",
+                    "representation": "pending",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "Count",
+              "formatter": 4,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            }
+          ],
+          "filter": true
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "customWidth": "50",
+      "name": "query - 32",
+      "styleSettings": {
+        "maxWidth": "50"
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### ADF STATISTICS - 3) MAX PIPELINE RUNS DURATION"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "text - 33"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "ADFPipelineRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status != \"InProgress\" \r\n| extend DurationInMinutes = round((End - Start)/1m, 2)\r\n| summarize max(DurationInMinutes) by PipelineName \r\n| top 3 by max_DurationInMinutes",
+        "size": 0,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "visualization": "categoricalbar"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "query - 34"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let data = ADFPipelineRun\r\n| where TimeGenerated {TimeRange}\r\n| where Status != \"InProgress\"\r\n| extend DurationInMinutes = round((End - Start)/1m, 2) ;\r\n\r\ndata\r\n| summarize Duration_Minutes = max(DurationInMinutes) by PipelineName \r\n| join kind = inner ( data \r\n| make-series Trend = max(DurationInMinutes)  default = 0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by PipelineName\r\n| project-away TimeGenerated) on PipelineName\r\n| project PipelineName, Duration_Minutes, Trend\r\n| order by Duration_Minutes desc;\r\n\r\n\r\n\r\n",
+        "size": 0,
+        "noDataMessage": "The query returned no results. Please select another Time Range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Trend",
+              "formatter": 9,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            }
+          ],
+          "filter": true
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "ADFAvailability",
+        "comparison": "isEqualTo",
+        "value": "ADFAvailable"
+      },
+      "name": "query - 35"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "fromTemplateId": "community-Workbooks/Virtual Machines/Availability",
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

@@ -1,0 +1,169 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "nistSettings": {
+            "value": {
+                "includeArcMachines": "false",
+                "membersToExcludeInLocalAdministratorsGroup": "",
+                "membersToIncludeInLocalAdministratorsGroup": "",
+                "networkWatcherResourceGroupName": "NetworkWatcherRG",
+                "logAnalyticsWorkspaceIdForVmAgents": "",
+                "minimumTlsVersionForWindowsServers": "1.2",
+                "storageAccountRestrictNetworkAccess": "Audit",
+                "machineLearningWorkspacesPrivateLink": "Audit",
+                "vmImageBuilderPrivateLink": "Audit",
+                "keyVaultPrivateLink": "Audit",
+                "springCloudNetworkInjection": "Audit",
+                "evaluatedSkuNamesSpringCloud": [
+                    "Standard"
+                ],
+                "cognitiveSearchPrivateLink": "Audit",
+                "serviceFabricShouldUseAzureAd": "Audit",
+                "cognitiveSearchLocalAuthenticationDisabled": "Audit",
+                "vmMigratedToNewArm": "Audit",
+                "storaceAccountMigratedToNewArm": "Audit",
+                "evaluatedSkuNamesApiMgmt": [
+                    "Developer",
+                    "Premium"
+                ],
+                "cosmosDbFirewallRules": "Audit",
+                "acrUnrestrictedNetworkAccess": "Audit",
+                "storageAccountShouldRestrictNetworkAccessVirtualRules": "Audit",
+                "keyvaultsDisablePublicNetworkAccess": "Audit",
+                "sqlDbShouldDisablePublicNetworkAccess": "Audit",
+                "cognitiveSearchAccountsRestrictNetworkAccess": "Audit",
+                "cognitiveServiceAccountsDisablePublicNetworkAccess": "Audit",
+                "storageAccountPublicAccessDisallowed": "audit",
+                "cognitiveSearchDisablePublicNetworkAccess": "Audit",
+                "requiredRetentionDays": "365",
+                "requiredAuditSettingForSqlServer": "enabled",
+                "kubernetesOnlyAllowedImages": "audit",
+                "kubernetesExcludedNamespaces": [
+                    "kube-system",
+                    "gatekeeper-system",
+                    "azure-arc"
+                ],
+                "kubernetesNamespaces": [],
+                "kubernetesLabelSelector": {},
+                "allowedContainerImagesRegex": "^(.+){0}$",
+                "kubernetesExcludedContainers": [],
+                "kubernetesDisallowPrivilegedContainers": "audit",
+                "kubernetesAllowedPorts": "audit",
+                "kubernetesAllowedServicePortsList": [],
+                "kubernetesResourceLimitsExceeded": "audit",
+                "kubernetesCpuLimit": "0",
+                "kubernetesMemoryLimit": "0",
+                "kubernetesApprovedUserAndGroupsId": "audit",
+                "kubernetesRunAsUserRule": "MustRunAsNonRoot",
+                "kubernetesRunAsUserRanges": {
+                    "ranges": []
+                },
+                "kubernetesRunAsGroupRule": "RunAsAny",
+                "kubernetesRunAsGroupRanges": {
+                    "ranges": []
+                },
+                "kubernetesSupplementalGroupsRule": "RunAsAny",
+                "kubernetesSupplementalGroupsRanges": {
+                    "ranges": []
+                },
+                "kubernetesFsGroupRule": "RunAsAny",
+                "kubernetesFsGroupRanges": {
+                    "ranges": []
+                },
+                "kubernetesContainerNotAllowPrivilegeEscalation": "audit",
+                "kubernetesNotShareHostProcesOrIpc": "audit",
+                "kubernetesRunWithReadOnlyFs": "audit",
+                "kubernetesOnlyAllowedCapabilities": "audit",
+                "kubernetesAllowedCapabilities": [],
+                "kubernetesRequiredDropCapabilities": [],
+                "kubernetesOnlyAppArmorProfiles": "audit",
+                "kubernetesAllowedAppArmorProfiles": [],
+                "kubernetesClusterPodsApprovedHostNetworkAndPortRanges": "audit",
+                "kubernetesAllowHostNetwork": false,
+                "kubernetesMinPortRange": 0,
+                "kubernetesMaxPortRange": 0,
+                "kubernetesHostPadVolumes": "audit",
+                "kubernetesAllowedHostPaths": {
+                    "paths": []
+                },
+                "keyVaultMaximumValidityInMonths": 12,
+                "maximumCertificateValidity": "audit",
+                "keyvaultSecretExpirationDate": "Audit",
+                "keyvaultKeysExpirationDate": "Audit",
+                "keyvaultPurgeProtectionEnabled": "Audit",
+                "keyvaultSoftDeleteEnabled": "Audit",
+                "wafEnabledAzureFrontDoor": "Audit",
+                "wafEnabledAppGateway": "Audit",
+                "kubernetesAccessibleOverHttps": "audit",
+                "hdinsightUseEncryptionInTransit": "Audit",
+                "azureCacheForRedisSecureConnection": "Audit",
+                "secureTransferToStorageAccountEnabled": "Audit",
+                "azureDataBoxJobsShouldUseCmk": "Audit",
+                "azureDataBoxCmkSupportedSku": [
+                    "DataBox",
+                    "DataBoxHeavy"
+                ],
+                "dataFactoryShouldUseCmk": "Audit",
+                "hdInsightShouldUseCmk": "Audit",
+                "hdInsightEncryptionAtRest": "Audit",
+                "savedQueriesSavedInStorageAccount": "audit",
+                "cognitiveSearchShouldUseCmk": "Audit",
+                "cosmosDbShouldUseCmk": "audit",
+                "acrShouldUseCmk": "Audit",
+                "machineLearningWorkspacesShouldUseCmk": "Audit",
+                "dataExplorerShouldUseCmk": "Audit",
+                "containerInstanceContainerGroupShouldUseCmk": "Audit",
+                "iotHubDeviceShouldUseCmk": "Audit",
+                "streamAnalyticsJobsShouldUseCmk": "audit",
+                "botServiceShouldUseCmk": "audit",
+                "storageAccountEncryptionScopesShouldUseCmk": "Audit",
+                "hpcCacheAccountsShouldUseCmk": "Audit",
+                "automationAccountsShouldUseCmk": "Audit",
+                "recoveryVaultShouldUseCmkForBackedUpData": "Audit",
+                "recoveryVaultEnableDoubleEncryption": true,
+                "logicAppIntegrationShouldBeEncrypted": "Audit",
+                "azureBatchShouldUseCmk": "Audit",
+                "azureMonitorLogClustersShouldUseCmk": "audit",
+                "synapseWorkSpaceShouldUseCmk": "Audit",
+                "kubernetesOsAndDataDiskShouldUseCmk": "Audit",
+                "managedDiskShouldUseCmkAndPmk": "Audit",
+                "osAndDataDiskShouldUseCmk": "Audit",
+                "serviceFabricClusterClusterProtectionLevelSet": "Audit",
+                "dataExplorerShouldEnableDoubleEncryption": "Audit",
+                "dataBoxJobsShouldEnableDoubleEncryption": "Audit",
+                "dataBoxsupportedSku": [
+                    "DataBox",
+                    "DataBoxHeavy"
+                ],
+                "automationAccountVariablesShouldBeEncrypted": "Audit",
+                "stackEdgeDevicesShouldUseDoubleEncryption": "audit",
+                "monitorClusterLogsShouldDoubleEncryption": "audit",
+                "databaseForMySqlInfrastructureEncryption": "Audit",
+                "postgresSqlInfrastructureEncryption": "Audit",
+                "storageAccountsInfrastructureEncryption": "Audit",
+                "diskEncryptionEnabledOnDataExplorer": "Audit",
+                "kubernetesTempCacheDiskEncryptionAtHost": "Audit",
+                "vmAndVmssEncryptionAtHost": "Audit",
+                "windowsDefenderNotAvailableMachineState": "Compliant",
+                "networkSecurityConfigureEncryptionTypesAllowedForKerberos": "2147483644",
+                "networkSecurityLanManagerAuthenticationLevel": "5",
+                "networkSecurityLdapClientSigningRequirements": "1",
+                "networkSecurityMinimumSessionSecurityForNtlmsSpBasedIncludingSecureRpcclients": "537395200",
+                "networkSecurityMinimumSessionSecurityForNtlmsSpBasedIncludingSecureRpcServers": "537395200"
+            }
+        },
+        "nistR2AuditDenySetAssignmentName": {
+            "value": "nistr2.auditdeny.policy.set"
+        },
+        "nistR2AuditDenySetAssignmentDisplayName": {
+            "value": "Nist 800-171 r2 auditdeny policy set"
+        },
+        "nistPolicyDefinitionId": {
+            "value": "/providers/Microsoft.Authorization/policySetDefinitions/03055927-78bd-4236-86c0-f36125a10dc9"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

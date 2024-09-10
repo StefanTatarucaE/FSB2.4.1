@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "aaa-cnty-t-eune-vpn-hub"
+        },
+        "location": {
+            "value": "West Europe"
+        },
+        "tags": {
+            "value": {
+                "EvidenManaged": "true"
+            }
+        },
+        "gatewayType": {
+            "value": "Vpn"
+        },
+        "sku": {
+            "value": "VpnGw1"
+        },
+        "virtualNetworkName": {
+            "value": "aaa-cnty-t-eune-vnet-hub"
+        },
+        "publicIpName": {
+            "value": "aaa-cnty-t-eune-pip-gw-hub"
+        },
+        "vpnGatewayGeneration": {
+            "value": "Generation1"
+        },
+        "vpnType": {
+            "value": "RouteBased"
+        },
+        "privateIPAllocationMethod":{
+            "value": "Dynamic"
+        }
+    }
+  }

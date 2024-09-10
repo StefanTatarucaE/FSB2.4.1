@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "acrDisableLocalAuthentication": {
+      "value": "Modify"
+    },
+    "acrDisableTokenAccess": {
+      "value": "Modify"
+    },
+    "acrDisableAnonymousAuthentication": {
+      "value": "Modify"
+    },
+    "acrDisablePublicNetworkAccess": {
+      "value": "Modify"
+    },
+    "acrDisableLocalAuthenticationDefName": {
+      "value": "acr.disablelocalauth.change.policy.def"
+    },
+    "acrDisableLocalAuthenticationDefDisplayName": {
+      "value": "Acr disable local auth change policy definition"
+    },
+    "acrDisableTokenAccessDefName": {
+      "value": "acr.disabletokenaccess.change.policy.def"
+    },
+    "acrDisableTokenAccessDefDisplayName": {
+      "value": "Acr disable token access change policy definition"
+    },
+    "acrDisableAnonymousAuthenticationDefName": {
+      "value": "acr.disableanonymousauthaccess.change.policy.def"
+    },
+    "acrDisableAnonymousAuthenticationDefDisplayName": {
+      "value": "Acr disable anonymous auth access change policy definition"
+    },
+    "acrDisablePublicNetworkAccessDefName": {
+      "value": "acr.disablepublicnwaccess.change.policy.def"
+    },
+    "acrDisablePublicNetworkAccessDefDisplayName": {
+      "value": "Acr disable public network access change policy definition"
+    },
+    "acrDisableSetName": {
+      "value": "acr.change.policy.set"
+    },
+    "acrDisableSetDisplayName": {
+      "value": "This initiative configures governance and security policies to Azure Container Registry"
+    },
+    "acrDisableSetAssignmentName": {
+      "value": "acr.change.policy.set.assignment"
+    },
+    "acrDisableSetAssignmentDisplayName": {
+      "value": "Acr change policy set assignment"
+    },
+    "policyMetadata": {
+      "value": "EvidenELZ"
+    },
+    "policyRuleTag": {
+      "value": "EvidenManaged"
+    }
+  }
+}

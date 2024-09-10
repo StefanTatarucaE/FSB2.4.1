@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "actionGroupName": {
+      "value": "cu1-mgmt-d-actiongroup-itsm"
+    },
+    "actionGroupShortName": {
+      "value": "ELZAZ-ITSM"
+    },
+    "tags": {
+      "value": {
+        "EvidenManaged": "true"
+      }
+    },
+    "logicAppReceivers": {
+      "value": [
+        {
+          "callbackUrl": "https://prod-40.westeurope.logic.azure.com:443/workflows/b7e7af6f23ac4919b637247a3a88fb06/triggers/manual/paths/invoke?api-version=2018-07-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=6g_15s3_BcZb0MYVagPiwS0afIZjoMdID3R5MhKjGEQ",
+          "name": "ITSM integration",
+          "resourceId": "/subscriptions/54c0f1b6-842e-4d1c-884f-9c1ae0db98d9/resourceGroups/cu1-sub1-d-rsg-monitoring/providers/Microsoft.Logic/workflows/cu1-sub1-d-logicapp-itsm",
+          "useCommonAlertSchema": "True"
+        }
+      ]
+    }
+  }
+}

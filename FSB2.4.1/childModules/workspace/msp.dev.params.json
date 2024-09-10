@@ -1,0 +1,90 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspaceName": {
+            "value": "ats-msp1-d-loganalytics-msp"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "skuName": {
+            "value": "PerGB2018"
+        },
+        "retentionInDays": {
+            "value": 31
+        },
+        "publicNetworkAccess": {
+            "value": {
+                "forIngestion": "Enabled",
+                "forQuery": "Enabled"
+            }
+        },
+        "tags": {
+            "value": {
+                "EvidenManaged": "true"
+            }
+        },
+        "dataSources": {
+            "value": []
+        },
+        "solutions": {
+            "value": [
+                {
+                    "name": "SecurityCenterFree",
+                    "publisher": "Microsoft",
+                    "product": "OMSGallery/SecurityCenterFree",
+                    "promotionCode": ""
+                },
+                {
+                    "name": "AgentHealthAssessment",
+                    "publisher": "Microsoft",
+                    "product": "OMSGallery/AgentHealthAssessment",
+                    "promotionCode": ""
+                },
+                {
+                    "name": "AzureActivity",
+                    "publisher": "Microsoft",
+                    "product": "OMSGallery/AzureActivity",
+                    "promotionCode": ""
+                },
+                {
+                    "name": "AlertManagement",
+                    "publisher": "Microsoft",
+                    "product": "OMSGallery/AlertManagement",
+                    "promotionCode": ""
+                },
+                {
+                    "name": "NetworkMonitoring",
+                    "publisher": "Microsoft",
+                    "product": "OMSGallery/NetworkMonitoring",
+                    "promotionCode": ""
+                },
+                {
+                    "name": "ADAssessment",
+                    "publisher": "Microsoft",
+                    "product": "OMSGallery/ADAssessment",
+                    "promotionCode": ""
+                },
+                {
+                    "name": "AzureSQLAnalytics",
+                    "publisher": "Microsoft",
+                    "product": "OMSGallery/AzureSQLAnalytics",
+                    "promotionCode": ""
+                },
+                {
+                    "name": "KeyVaultAnalytics",
+                    "publisher": "Microsoft",
+                    "product": "OMSGallery/KeyVaultAnalytics",
+                    "promotionCode": ""
+                },
+                {
+                    "name": "VMInsights",
+                    "publisher": "Microsoft",
+                    "product": "OMSGallery/VMInsights",
+                    "promotionCode": ""
+                }
+            ]
+        }
+    }
+}

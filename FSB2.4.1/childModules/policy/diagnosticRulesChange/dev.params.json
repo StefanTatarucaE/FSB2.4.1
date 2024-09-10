@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceResourceID": {
+      "value": "/subscriptions/54c0f1b6-842e-4d1c-884f-9c1ae0db98d9/resourcegroups/cu1-sub1-d-rsg-monitoring/providers/microsoft.operationalinsights/workspaces/cu1-sub1-d-loganalytics"
+    },
+    "deploymentScope": {
+      "value": "core"
+    },
+    "policyRuleTag": {
+      "value": "EvidenManaged"
+    },
+    "policyMetadata": {
+      "value": "EvidenELZ"
+    }
+  }
+}

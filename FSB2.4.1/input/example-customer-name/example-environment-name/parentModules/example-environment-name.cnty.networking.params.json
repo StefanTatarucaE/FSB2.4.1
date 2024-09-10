@@ -1,0 +1,315 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionType": {
+            "value": "cnty"
+        },
+        "additionalNetworkingTags": {
+            "value": {}
+        },
+        "legacyNaming": {
+            "value": false
+        },
+        "deployFirewallTlsPrerequisites": {
+            "value": false
+        },
+        "deployDdos": {
+            "value": false
+        },
+        "vnetAddressPrefixes": {
+            "value": [
+                "10.4.0.0/16"
+            ]
+        },
+        "dnsServers": {
+            "value": []
+        },
+        "subnets": {
+            "value": [
+                {
+                    "name": "network",
+                    "addressPrefix": "10.4.0.0/24",
+                    "useNamingConventionModule": true,
+                    "securityRules": [
+                        {
+                            "name": "BLOCK_ALL_TCP",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "*",
+                                "access": "Deny",
+                                "priority": 4000,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "BLOCK_ALL_UDP",
+                            "properties": {
+                                "protocol": "UDP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "*",
+                                "access": "Deny",
+                                "priority": 3995,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "AzureFirewallSubnet",
+                    "addressPrefix": "10.4.3.0/26",
+                    "useNamingConventionModule": true
+                },
+                {
+                    "name": "GatewaySubnet",
+                    "addressPrefix": "10.4.4.0/26",
+                    "useNamingConventionModule": true
+                },
+                {
+                    "name": "AzureBastionSubnet",
+                    "addressPrefix": "10.4.5.0/26",
+                    "useNamingConventionModule": true,
+                    "securityRules": [
+                        {
+                            "name": "Allow_HTTPS_Inbound",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "Internet",
+                                "destinationAddressPrefix": "*",
+                                "access": "Allow",
+                                "priority": 110,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "Allow_GatewayManager_Inbound",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "GatewayManager",
+                                "destinationAddressPrefix": "*",
+                                "access": "Allow",
+                                "priority": 120,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "Allow_AzureLoadBalancer_Inbound",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "AzureLoadBalancer",
+                                "destinationAddressPrefix": "*",
+                                "access": "Allow",
+                                "priority": 130,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "Allow_BastionHost_Communication_inside_vNet",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 140,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [
+                                    "8080",
+                                    "5701"
+                                ],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "Allow_SSH_and_RDP_Outbound",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 110,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [
+                                    "22",
+                                    "3389"
+                                ],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "Allow_443_to_AzureCloud_Outbound",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "AzureCloud",
+                                "access": "Allow",
+                                "priority": 120,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "AllowBastion_DataPlane_Outbound",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 130,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [
+                                    "5701",
+                                    "8080"
+                                ],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "Allow_Session_and_Certificate_Validation",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "80",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "Internet",
+                                "access": "Allow",
+                                "priority": 140,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "routes": {
+            "value": [
+                {
+                    "name": "gw-to-fw-to-lnd1-vnet-spoke",
+                    "properties": {
+                        "addressPrefix": "10.5.0.0/16",
+                        "nextHopIpAddress": "10.4.3.4",
+                        "nextHopType": "VirtualAppliance"
+                    }
+                },
+                {
+                    "name": "gw-to-fw-to-lnd2-vnet-spoke",
+                    "properties": {
+                        "addressPrefix": "10.6.0.0/16",
+                        "nextHopIpAddress": "10.4.3.4",
+                        "nextHopType": "VirtualAppliance"
+                    }
+                }
+            ]
+        },
+        "disableBgpRoutePropagation": {
+            "value": false
+        },
+        "deployPrivateDnsZone": {
+            "value": true
+        },
+        "privateDnsZoneName": {
+            "value": "elzprivatednszone.com"
+        },
+        "enableHubPrivateDnsZoneAutoRegistration": {
+            "value": false
+        },
+        "deployHubPrivateDnsVirtualNetworkLink": {
+            "value": true
+        },
+        "deployVpnGateway":{
+            "value": false
+        },
+        "vpnGatewayIpconfig": {
+            "value": {
+                "skuName": "Standard",
+                "skuTier": "Regional",
+                "zones": [],
+                "idleTimeoutInMinutes": 4,
+                "publicIpAddressVersion": "IPv4",
+                "publicIpAllocationMethod": "Static",
+                "privateIPAllocationMethod": "Dynamic"
+            }
+        },
+        "vpnGatewayConfig": {
+            "value": {
+                "sku": "VpnGw1",
+                "vpnType": "RouteBased",
+                "gatewayType": "Vpn",
+                "vpnGatewayGeneration": "Generation1"
+            }
+        },
+        "deployBastionHost": {
+            "value": false
+        },
+        "bastionHostIpConfig": {
+            "value": {
+                "skuName": "Standard",
+                "skuTier": "Regional",
+                "zones": [],
+                "idleTimeoutInMinutes": 4,
+                "publicIpAddressVersion": "IPv4",
+                "publicIpAllocationMethod": "Static",
+                "privateIPAllocationMethod": "Dynamic"
+            }
+        },
+        "bastionHostConfig": {
+            "value": {
+                "sku": "Basic",
+                "enableFileCopy": true,
+                "scaleUnits": 2,
+                "enableShareableLink": true,
+                "disableCopyPaste": false,
+                "enableIpConnect": true,
+                "enableTunneling": true
+            }
+        }
+    }
+}

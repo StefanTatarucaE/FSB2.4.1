@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "guestConfigChangeWinDefName": {
+      "value": "guestconfig-win-change-policy-def"
+    },
+    "guestConfigChangeWinDefDisplayName": {
+      "value": "Install Guest Configuration agent for Windows OS"
+    },
+    "guestConfigChangeLinuxDefName": {
+      "value": "guestconfig-linux-change-policy-def"
+    },
+    "guestConfigChangeLinuxDefDisplayName": {
+      "value": "Install Guest Configuration agent for Linux OS"
+    },
+    "guestConfigChangeSetName": {
+      "value": "guestconfig-change-policy-set"
+    },
+    "guestConfigChangeSetDisplayName": {
+      "value": "Guest Configuration agent policy set"
+    },
+    "guestConfigChangeAssignmentName": {
+      "value": "sub1-d-guestconfig-change-policy-set-assignment"
+    },
+    "guestConfigChangeAssignmentDisplayName": {
+      "value": "Install Guest Configuration agent for both Windows and Linux"
+    },
+    "policyMetadata": {
+      "value": "EvidenELZ"
+    },
+    "policyRuleTag": {
+      "value": "EvidenManaged"
+    }
+  }
+}

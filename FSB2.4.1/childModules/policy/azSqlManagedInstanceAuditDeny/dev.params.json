@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azSqlManagedInstanceSettings": {
+            "value": {
+                "sqlManagedInstanceAdvancedDataSecurity": "AuditIfNotExists",
+                "sqlManagedInstanceAdOnlyEnabled": "Audit",
+                "sqlManagedInstanceBlockGrsBackupRedundancy": "Deny",
+                "sqlManagedInstanceEnsureServerTdeIsEncryptedWithYourOwnKey": "Audit",
+                "sqlManagedInstanceMiniumTlsVersionAudit": "Audit",
+                "sqlManagedInstanceVulnerabilityAssesment": "AuditIfNotExists"
+            }
+        },
+        "azSqlManagedInstanceAuditDenySetName": {
+            "value": "azsqlmanagedinstance.auditdeny.policy.set"
+        },
+        "azSqlManagedInstanceAuditDenySetDisplayName": {
+            "value": "Sql managed instance auditdeny policy set"
+        },
+        "azSqlManagedInstanceAuditDenySetAssignmentName": {
+            "value": "azsqlmanagedinstance.auditdeny.policy.set.assignment"
+        },
+        "azSqlManagedInstanceAuditDenySetAssignmentDisplayName": {
+		    "value": "Sql managed instance auditdeny policy set assignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

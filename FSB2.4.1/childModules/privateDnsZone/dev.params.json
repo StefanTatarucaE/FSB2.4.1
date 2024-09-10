@@ -1,0 +1,113 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateDnsZoneName": {
+            "value": "dcsprivatednszone.com"
+        },
+        "tags": {
+            "value": {
+                "tag1": "value1",
+                "tag2": "value2"
+            }
+        },
+        "aRecordSet" : {
+            "value": [
+                {
+                    "createRecordA": false,
+                    "name": "arecordname",
+                    "ipv4Address": [
+                        {
+                            "ipv4Address": "10.10.10.10"
+                        }
+                    ],
+                    "ttl": 3600
+                }
+            ]
+        },
+        "cnameRecordSet": {
+            "value": [
+                {
+                    "createRecordCname": false,
+                    "name": "cnamerecordname",
+                    "cname": "contoso.com",
+                    "ttl": 3600
+                }
+            ]
+        },
+        "mxRecordSet": {
+            "value": [
+                {
+                    "createRecordMx": false,
+                    "name": "mxrecord",
+                    "exchange":[
+                        {
+                            "exchange": "mail.myexchangeserver.com",
+                            "preference": 11
+                        }
+                    ],
+                    "ttl":3600
+                }
+            ]
+        },
+        "ptrRecordSet": {
+            "value": [
+                {
+                    "createRecordPtr": false,
+                    "name": "@",
+                    "ttl": 3600,
+                    "ptrValue": [
+                        {
+                            "ptrdname": "test.com"
+                        }
+                    ]
+                }
+            ]
+        },
+        "srvRecordSet": {
+            "value": [
+                {
+                    "createRecordSrv": false,
+                    "name": "@",
+                    "ttl": 3600,
+                    "srvValue": [
+                        {
+                            "port": 8080,
+                            "priority": 0,
+                            "target": "sip.contoso.com",
+                            "weight": 5
+                        }
+                    ]
+                }
+            ]
+        },
+        "txtRecordSet": {
+            "value": [
+                {
+                    "createRecordTxt": false,
+                    "name": "@",
+                    "ttl": 3600,
+                    "txtValue": [
+                        {
+                            "value": ["Have a nice day."]
+                        }
+                    ]
+                }
+            ]
+        },
+        "aaaaRecordSet": {
+            "value": [
+                {
+                    "createRecordAaaa": false,
+                    "name": "aaaarecordname",
+                    "ipv6Address": [
+                        {
+                            "ipv6Address": "2001:db8::1:0:0:1"
+                        }
+                    ],
+                    "ttl": 3600
+                }
+            ]
+        }    
+    }
+}

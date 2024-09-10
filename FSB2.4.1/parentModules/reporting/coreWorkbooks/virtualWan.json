@@ -1,0 +1,1443 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "## Virtual WAN Report"
+      },
+      "name": "text - 0"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "f650f0bc-dd38-45db-8837-7133061a3784",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subscription",
+            "type": 6,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "isHiddenWhenLocked": true,
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": true,
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "value": [
+              "value::all"
+            ]
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "Parameters"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 11,
+            "content": {
+              "version": "LinkItem/1.0",
+              "style": "tabs",
+              "links": [
+                {
+                  "id": "9bd71767-c001-4a9e-bf43-259f90ede76a",
+                  "cellValue": "SubSelectedView",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Overview",
+                  "subTarget": "vWANOverview",
+                  "preText": "Databases",
+                  "style": "link"
+                },
+                {
+                  "id": "1423153e-96ce-49f9-a367-1d385ac48cf0",
+                  "cellValue": "SubSelectedView",
+                  "linkTarget": "parameter",
+                  "linkLabel": "VPN Gateways",
+                  "subTarget": "vWANVPN",
+                  "preText": "Storage Accounts",
+                  "style": "link"
+                },
+                {
+                  "id": "6aabdebe-5691-45b9-beb5-36f0d0957f1f",
+                  "cellValue": "SubSelectedView",
+                  "linkTarget": "parameter",
+                  "linkLabel": "VPN Sites",
+                  "subTarget": "vWANVPNSites",
+                  "style": "link"
+                },
+                {
+                  "id": "a1b022b1-d70b-4fc8-a972-5a7b116e82c4",
+                  "cellValue": "SubSelectedView",
+                  "linkTarget": "parameter",
+                  "linkLabel": "ExpressRoute Gateways",
+                  "subTarget": "vWANExpressRoute",
+                  "style": "link"
+                }
+              ]
+            },
+            "name": "vWANMenu"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.network/virtualwans\"\r\n| extend RG = substring(id, 0, indexof(id, '/providers'))\r\n| extend allowBranchToBranchTraffic = properties.allowBranchToBranchTraffic\r\n| extend allowVnetToVnetTraffic = properties.allowVnetToVnetTraffic\r\n| extend tagLength = strlen(\"[parameter(tagPrefix)]Purpose\")\r\n| extend [parameter(tagPrefix)]ManagedTagValue = iff(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Managed\":', substring((substring (tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]managed\")+tagLength+3)),0,indexof(substring(tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]managed\")+tagLength+3),'\"')), \r\n    \"-\")\r\n| extend [parameter(tagPrefix)]Managed = iif(([parameter(tagValuePrefix)]ManagedTagValue contains \"true\"), \"Yes\", iif(([parameter(tagValuePrefix)]ManagedTagValue contains \"[parameter(tagValuePrefixLc)]\"), \"Yes\", iif(([parameter(tagValuePrefix)]ManagedTagValue startswith \"customer\"), \"Yes\", \"No\")))\r\n| extend [parameter(tagPrefix)]Purpose = iff(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Purpose\":', substring((substring (tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]purpose\")+tagLength+3)),0,indexof(substring(tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]purpose\")+tagLength+3),'\"')), \r\n    \"-\")\r\n| extend [parameter(tagPrefix)]Purpose = iif((\r\n    ([parameter(tagPrefix)]Purpose!=\"\") and ([parameter(tagPrefix)]Purpose !startswith \" \")), tostring([parameter(tagPrefix)]Purpose), \r\n    \"Tag value invalid\")\r\n| extend name = split(id,\"/\")[-1]\r\n| extend vwanid = replace(@\"/\", @\"%2f\",tostring(id))\r\n| extend topology = strcat(\"https://portal.azure.com/#view/Microsoft_Azure_FlowLog/DependencyGraphViewModel/id/\", vwanid, \"/resourceType/microsoft.network%2Fvirtualwans\")\r\n| project name, id, location, subscriptionId, RG, allowBranchToBranchTraffic, allowVnetToVnetTraffic, [parameter(tagPrefix)]Purpose, [parameter(tagPrefix)]Managed, topology",
+              "size": 4,
+              "title": "Virtual WAN Overviews - Select a Virtual WAN Name in the first column to view Virtual WAN Hubs",
+              "noDataMessage": "No Virtual WAN deployed.",
+              "exportFieldName": "id",
+              "exportParameterName": "ResourceID",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "name",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "location",
+                    "formatter": 17,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "allowBranchToBranchTraffic",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "true",
+                          "representation": "success",
+                          "text": "True"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "failed",
+                          "text": "False"
+                        }
+                      ],
+                      "customColumnWidthSetting": "21.5714ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "allowVnetToVnetTraffic",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "true",
+                          "representation": "success",
+                          "text": "True"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "failed",
+                          "text": "False"
+                        }
+                      ],
+                      "customColumnWidthSetting": "18ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "[parameter(tagPrefix)]Purpose",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "21.7143ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "topology",
+                    "formatter": 7,
+                    "formatOptions": {
+                      "linkTarget": "Url",
+                      "linkLabel": "View topology and metrics"
+                    }
+                  },
+                  {
+                    "columnMatch": "Topology and Metrics",
+                    "formatter": 7,
+                    "formatOptions": {
+                      "linkTarget": "Url",
+                      "linkLabel": "Click to view"
+                    }
+                  },
+                  {
+                    "columnMatch": "Virtual WAN Name",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "type",
+                    "formatter": 16,
+                    "formatOptions": {
+                      "showIcon": true,
+                      "customColumnWidthSetting": "20ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "apiVersion",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "systemData",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "resourceGroup",
+                    "formatter": 14,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": false
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "name",
+                    "label": "Virtual WAN Name"
+                  },
+                  {
+                    "columnId": "id",
+                    "label": "Virtual WAN Resource Link"
+                  },
+                  {
+                    "columnId": "location",
+                    "label": "Location"
+                  },
+                  {
+                    "columnId": "subscriptionId",
+                    "label": "Subscription"
+                  },
+                  {
+                    "columnId": "RG",
+                    "label": "Resource Group"
+                  },
+                  {
+                    "columnId": "allowBranchToBranchTraffic",
+                    "label": "Branch-To-Branch"
+                  },
+                  {
+                    "columnId": "allowVnetToVnetTraffic",
+                    "label": "VNet-To-VNet"
+                  },
+                  {
+                    "columnId": "topology",
+                    "label": "Topology and metrics"
+                  }
+                ]
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "SubSelectedView",
+              "comparison": "isEqualTo",
+              "value": "vWANOverview"
+            },
+            "name": "Virtual WAN - Overview"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.network/virtualhubs\"\r\n| extend RG = substring(id, 0, indexof(id, '/providers'))\r\n| extend  addressPrefix = tostring(properties.addressPrefix)\r\n| extend  sku = tostring(properties.sku)\r\n| extend  allowBranchToBranchTraffic = tostring(properties.allowBranchToBranchTraffic)\r\n| extend virtualWan = properties.virtualWan\r\n| extend virtualWanId = virtualWan.id\r\n| extend azureFirewall = properties.azureFirewall.id\r\n| extend hubName = split(id, \"/\")[-1]\r\n| project hubName, id, virtualWanId, location, subscriptionId, RG, azureFirewall, addressPrefix, sku, allowBranchToBranchTraffic",
+              "size": 1,
+              "title": "Virtual WAN Hubs - Select a Hub Name in the first column to view Hub VirtualNetwork Connections",
+              "noDataMessage": "No hubs configured",
+              "exportFieldName": "id",
+              "exportParameterName": "HubResourceID",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "hubName",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "id",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true,
+                      "customColumnWidthSetting": "32.1429ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualWanId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true,
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "location",
+                    "formatter": 17,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "azureFirewall",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "allowBranchToBranchTraffic",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "true",
+                          "representation": "success",
+                          "text": "True"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "false",
+                          "representation": "failed",
+                          "text": "False"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "tooltipFormat": {}
+                  },
+                  {
+                    "columnMatch": "type",
+                    "formatter": 16,
+                    "formatOptions": {
+                      "showIcon": true,
+                      "customColumnWidthSetting": "30ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "resourceGroup",
+                    "formatter": 14,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": false
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualHubID",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "hubName",
+                    "label": "Hub Name "
+                  },
+                  {
+                    "columnId": "id",
+                    "label": "Hub Resource Link"
+                  },
+                  {
+                    "columnId": "virtualWanId",
+                    "label": "Virtual WAN"
+                  },
+                  {
+                    "columnId": "location",
+                    "label": "Location"
+                  },
+                  {
+                    "columnId": "subscriptionId",
+                    "label": "Subscription"
+                  },
+                  {
+                    "columnId": "RG",
+                    "label": "Resource Group"
+                  },
+                  {
+                    "columnId": "azureFirewall",
+                    "label": "Secured Hub"
+                  },
+                  {
+                    "columnId": "addressPrefix",
+                    "label": "AddressPrefix"
+                  },
+                  {
+                    "columnId": "sku",
+                    "label": "SKU"
+                  },
+                  {
+                    "columnId": "allowBranchToBranchTraffic",
+                    "label": "Branch-To-Branch"
+                  }
+                ]
+              }
+            },
+            "conditionalVisibilities": [
+              {
+                "parameterName": "ResourceID",
+                "comparison": "isNotEqualTo"
+              },
+              {
+                "parameterName": "SubSelectedView",
+                "comparison": "isEqualTo",
+                "value": "vWANOverview"
+              }
+            ],
+            "name": "Virtual WAN - Hubs"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":null,\"headers\":[],\"method\":\"GET\",\"path\":\"{HubResourceID}/hubVirtualNetworkConnections?api-version=2021-03-01\",\"urlParams\":[],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.value\",\"columns\":[{\"path\":\"$.name\",\"columnid\":\"VNETName\"},{\"path\":\"$.type\",\"columnid\":\"Type\"},{\"path\":\"$.properties.remoteVirtualNetwork.id\",\"columnid\":\"remoteVirtualNetwork\"},{\"path\":\"$.id\",\"columnid\":\"ConnectionID\"},{\"path\":\"$.properties.routingConfiguration.associatedRouteTable.id\",\"columnid\":\"AssociatedRouteTable\"},{\"path\":\"$.properties.allowHubToRemoteVnetTransit\",\"columnid\":\"allowHubToRemoteVnetTransit\"},{\"path\":\"$.properties.allowRemoteVnetToUseHubVnetGateways\",\"columnid\":\"allowRemoteVnetToUseHubVnetGateways\"},{\"path\":\"$.properties.enableInternetSecurity\",\"columnid\":\"enableInternetSecurity\"}]}}]}",
+              "size": 0,
+              "title": "Virtual WAN - Hubs - Connections / Peering",
+              "noDataMessage": "No HubVirtualNetworkConnections configured.",
+              "showExportToExcel": true,
+              "queryType": 12,
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "VNETName",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "32ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "Type",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "remoteVirtualNetwork",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "32.5ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "ConnectionID",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "61ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "AssociatedRouteTable",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "46.5714ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "allowHubToRemoteVnetTransit",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "true",
+                          "representation": "success",
+                          "text": "True"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "false",
+                          "representation": "failed",
+                          "text": "False"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "allowRemoteVnetToUseHubVnetGateways",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "true",
+                          "representation": "success",
+                          "text": "True"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "false",
+                          "representation": "failed",
+                          "text": "False"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "enableInternetSecurity",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "true",
+                          "representation": "success",
+                          "text": "True"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "false",
+                          "representation": "failed",
+                          "text": "False"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "type",
+                    "formatter": 16,
+                    "formatOptions": {
+                      "showIcon": true,
+                      "customColumnWidthSetting": "30ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "location",
+                    "formatter": 17,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "VNETName",
+                    "label": "VNET Name"
+                  },
+                  {
+                    "columnId": "remoteVirtualNetwork",
+                    "label": "Virtual Network"
+                  },
+                  {
+                    "columnId": "ConnectionID",
+                    "label": "Connection ID"
+                  },
+                  {
+                    "columnId": "allowHubToRemoteVnetTransit",
+                    "label": "HubToRemoteVnetTransit"
+                  },
+                  {
+                    "columnId": "allowRemoteVnetToUseHubVnetGateways",
+                    "label": "RemoteVnetToUseHubVnetGateways"
+                  },
+                  {
+                    "columnId": "enableInternetSecurity",
+                    "label": "InternetSecurity"
+                  }
+                ]
+              },
+              "sortBy": []
+            },
+            "conditionalVisibilities": [
+              {
+                "parameterName": "HubResourceID",
+                "comparison": "isNotEqualTo"
+              },
+              {
+                "parameterName": "SubSelectedView",
+                "comparison": "isEqualTo",
+                "value": "vWANOverview"
+              }
+            ],
+            "name": "Virtual WAN - Hubs - Connections / Peering"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type =~ \"microsoft.network/vpngateways\"\r\n| extend RG = substring(id, 0, indexof(id, '/providers'))\r\n| extend vpnGatewayScaleUnit = tostring(properties.vpnGatewayScaleUnit)\r\n| extend virtualHub = properties.virtualHub.id\r\n| extend ipConfigurations = properties.ipConfigurations\r\n| extend bgpSettings = properties.bgpSettings\r\n| extend packetCaptureDiagnosticState = tostring(properties.packetCaptureDiagnosticState)\r\n| extend natRules = properties.natRules\r\n| extend enableBgpRouteTranslationForNat = tostring(properties.enableBgpRouteTranslationForNat)\r\n| extend isRoutingPreferenceInternet = tostring(properties.isRoutingPreferenceInternet)\r\n| extend connections = properties.connections\r\n//| mv-expand bagexpansion=array ipConfigurations\r\n| extend tagLength = strlen(\"[parameter(tagPrefix)]Purpose\")\r\n| extend [parameter(tagValuePrefix)]ManagedTagValue = iff(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Managed\":', substring((substring (tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]managed\")+tagLength+3)),0,indexof(substring(tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]managed\")+tagLength+3),'\"')), \r\n    \"-\")\r\n| extend [parameter(tagPrefix)]Managed = iif(([parameter(tagValuePrefix)]ManagedTagValue contains \"true\"), \"Yes\", iif(([parameter(tagValuePrefix)]ManagedTagValue contains \"[parameter(tagValuePrefixLc)]\"), \"Yes\", iif(([parameter(tagValuePrefix)]ManagedTagValue startswith \"customer\"), \"Yes\", \"No\")))\r\n| extend [parameter(tagPrefix)]Purpose = iff(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Purpose\":', substring((substring (tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]purpose\")+tagLength+3)),0,indexof(substring(tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]purpose\")+tagLength+3),'\"')), \r\n    \"-\")\r\n| extend [parameter(tagPrefix)]Purpose = iif((\r\n    ([parameter(tagPrefix)]Purpose!=\"\") and ([parameter(tagPrefix)]Purpose !startswith \" \")), tostring([parameter(tagPrefix)]Purpose), \r\n    \"Tag value invalid\")\r\n| project id, virtualHub, location, RG, subscriptionId, [parameter(tagPrefix)]Purpose, [parameter(tagPrefix)]Managed, vpnGatewayScaleUnit, enableBgpRouteTranslationForNat, isRoutingPreferenceInternet\r\n//, bgpSettings,natRules, connections, ipConfigurations",
+              "size": 1,
+              "title": "Virtual WAN - VPN Gateways",
+              "noDataMessage": "No VPN Gateways configured.",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "id",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualHub",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true,
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "location",
+                    "formatter": 17,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "type",
+                    "formatter": 16,
+                    "formatOptions": {
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualWanId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualHubID",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "sortBy": [
+                  {
+                    "itemKey": "vpnGatewayScaleUnit",
+                    "sortOrder": 1
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "id",
+                    "label": "VPN Gateway "
+                  },
+                  {
+                    "columnId": "virtualHub",
+                    "label": "Hub "
+                  },
+                  {
+                    "columnId": "location",
+                    "label": "Location"
+                  },
+                  {
+                    "columnId": "RG",
+                    "label": "Resource Group"
+                  },
+                  {
+                    "columnId": "subscriptionId",
+                    "label": "Subscription"
+                  },
+                  {
+                    "columnId": "[parameter(tagPrefix)]Purpose",
+                    "label": "[parameter(tagPrefix)]Purpose"
+                  },
+                  {
+                    "columnId": "[parameter(tagPrefix)]Managed",
+                    "label": "[parameter(tagPrefix)]Managed"
+                  },
+                  {
+                    "columnId": "vpnGatewayScaleUnit",
+                    "label": "VPN Gateway Scale Unit"
+                  },
+                  {
+                    "columnId": "enableBgpRouteTranslationForNat",
+                    "label": "BGP Route Translation For Nat"
+                  },
+                  {
+                    "columnId": "isRoutingPreferenceInternet",
+                    "label": "Routing Preference Internet"
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "vpnGatewayScaleUnit",
+                  "sortOrder": 1
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "SubSelectedView",
+              "comparison": "isEqualTo",
+              "value": "vWANVPN"
+            },
+            "name": "Virtual WAN - VPN"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type =~ \"Microsoft.Network/vpnSites\"\r\n| extend RG = substring(id, 0, indexof(id, '/providers'))\r\n| extend addressPrefixes = properties.addressSpace.addressPrefixes\r\n| extend virtualWan = properties.virtualWan.id\r\n| extend linkSpeedInMbps = tostring(properties.deviceProperties.linkSpeedInMbps)\r\n| extend deviceVendor = tostring(properties.deviceProperties.deviceVendor)\r\n| extend isSecuritySite = tostring(properties.isSecuritySite)\r\n| extend vpnSiteLinks = properties.vpnSiteLinks\r\n| extend site = tostring(id)\r\n| extend vpnSiteName = split(id,\"/\")[-1]\r\n| join kind = leftouter (\r\nresources\r\n| where type =~ \"Microsoft.Network/vpnGateways\"\r\n| extend hub = properties.virtualHub.id\r\n| extend vpngw = id\r\n| extend siteconnections = properties.connections\r\n| mvexpand siteconnections\r\n| extend site = tostring(siteconnections.properties.remoteVpnSite.id)\r\n| project vpngw, hub, site\r\n) on site\r\n| project vpnSiteName, id, virtualWan, hub, vpngw, location, RG, subscriptionId, addressPrefixes, deviceVendor, vpnSiteLinks",
+              "size": 4,
+              "title": "Virtual WAN VPN Sites - Select a VPN Site Name in the first column to view VPN site links",
+              "noDataMessage": "No VpnSites configured.",
+              "exportFieldName": "id",
+              "exportParameterName": "VPNSiteLinkResourceID",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "vpnSiteName",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "id",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true,
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualWan",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true,
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "hub",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "location",
+                    "formatter": 17,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "type",
+                    "formatter": 16,
+                    "formatOptions": {
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualHub",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualWanId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualHubID",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "vpnSiteName",
+                    "label": "VPN Site Name"
+                  },
+                  {
+                    "columnId": "id",
+                    "label": "VPN Site Resource link"
+                  },
+                  {
+                    "columnId": "virtualWan",
+                    "label": "Virtual WAN"
+                  },
+                  {
+                    "columnId": "hub",
+                    "label": "Hub"
+                  },
+                  {
+                    "columnId": "vpngw",
+                    "label": "VPN Gateway"
+                  },
+                  {
+                    "columnId": "location",
+                    "label": "Location"
+                  },
+                  {
+                    "columnId": "RG",
+                    "label": "Resource Group"
+                  },
+                  {
+                    "columnId": "subscriptionId",
+                    "label": "Subscription"
+                  },
+                  {
+                    "columnId": "addressPrefixes",
+                    "label": "AddressPrefixes"
+                  },
+                  {
+                    "columnId": "deviceVendor",
+                    "label": "DeviceVendor"
+                  },
+                  {
+                    "columnId": "vpnSiteLinks",
+                    "label": "VPNSiteLinks"
+                  }
+                ]
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "SubSelectedView",
+              "comparison": "isEqualTo",
+              "value": "vWANVPNSites"
+            },
+            "name": "Virtual WAN - VPN - Sites"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "arg(\"\").Resources\r\n| where type =~ \"Microsoft.Network/vpnSites\"\r\n| where id == '{VPNSiteLinkResourceID}'\r\n| extend vpnSiteLinks = properties.vpnSiteLinks\r\n| mvexpand vpnSiteLinks\r\n| extend ipad = tostring(vpnSiteLinks.properties.ipAddress)\r\n| extend sitelinkname = vpnSiteLinks.id\r\n| extend linkprovidername = vpnSiteLinks.properties.linkProperties.linkProviderName\r\n| extend linkspeed = vpnSiteLinks.properties.linkProperties.linkSpeedInMbps\r\n| extend bgppeeringaddress = vpnSiteLinks.properties.bgpProperties.bgpPeeringAddress\r\n| extend asn = vpnSiteLinks.properties.bgpProperties.asn\r\n| join kind=leftouter (\r\nAzureDiagnostics \r\n| where Category == \"TunnelDiagnosticLog\" \r\n| summarize arg_max(TimeGenerated, Resource, remoteIP_s, status_s)\r\n) on $left.ipad==$right.remoteIP_s\r\n| extend status = iff(notempty(status_s), status_s,\"Unknown\")\r\n| project sitelinkname, status, TimeGenerated, linkprovidername, linkspeed, ipad, bgppeeringaddress, asn",
+              "size": 4,
+              "title": "Virtual WAN - VPN - Sites Links",
+              "noDataMessage": "No VpnSites Links configured.",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "/subscriptions/954bc363-b187-42af-a14d-fc3f210d94a0/resourceGroups/dv3-mgmt-d-rsg-monitoring/providers/Microsoft.OperationalInsights/workspaces/dv3-mgmt-d-loganalytics"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "sitelinkname",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "status",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "startsWith",
+                          "thresholdValue": "Unknown",
+                          "representation": "unknown",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "startsWith",
+                          "thresholdValue": "Disconnected",
+                          "representation": "4",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "startsWith",
+                          "thresholdValue": "Connected",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "warning",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "tooltipFormat": {
+                      "tooltip": "Status is only available for managed site links"
+                    }
+                  },
+                  {
+                    "columnMatch": "TimeGenerated",
+                    "formatter": 0,
+                    "tooltipFormat": {
+                      "tooltip": "Data and time current status is reached"
+                    }
+                  },
+                  {
+                    "columnMatch": "id",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true,
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "laststatusdatetime",
+                    "formatter": 6
+                  },
+                  {
+                    "columnMatch": "type",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "virtualWan",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true,
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "location",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualHub",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualWanId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualHubID",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "sitelinkname",
+                    "label": "VPN Site Link Name"
+                  },
+                  {
+                    "columnId": "status",
+                    "label": "Connectivity Status",
+                    "comment": "Status is only available for managed site links"
+                  },
+                  {
+                    "columnId": "TimeGenerated",
+                    "label": "Last Status Change",
+                    "comment": "Data and time current status is reached"
+                  },
+                  {
+                    "columnId": "linkprovidername",
+                    "label": "Link Provider Name"
+                  },
+                  {
+                    "columnId": "linkspeed",
+                    "label": "Speed In Mbps"
+                  },
+                  {
+                    "columnId": "ipad",
+                    "label": "Link IP Address/FQDN"
+                  },
+                  {
+                    "columnId": "bgppeeringaddress",
+                    "label": "Link BGP Address"
+                  },
+                  {
+                    "columnId": "asn",
+                    "label": "Link ASN"
+                  }
+                ]
+              }
+            },
+            "conditionalVisibilities": [
+              {
+                "parameterName": "SubSelectedView",
+                "comparison": "isEqualTo",
+                "value": "vWANVPNSites"
+              },
+              {
+                "parameterName": "VPNSiteLinkResourceID",
+                "comparison": "isNotEqualTo"
+              }
+            ],
+            "name": "Virtual WAN - VPN - SiteLinks"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.network/p2svpngateways\"\r\n| extend virtualHub = properties.virtualHub.id\r\n| extend RG = substring(id, 0, indexof(id, '/providers'))\r\n| extend vpnServerConfiguration = properties.vpnServerConfiguration\r\n| extend p2SConnectionConfigurations = properties.p2SConnectionConfigurations\r\n| extend vpnGatewayScaleUnit = tostring(properties.vpnGatewayScaleUnit)\r\n| extend customDnsServers = properties.customDnsServers\r\n| extend isRoutingPreferenceInternet = tostring(properties.isRoutingPreferenceInternet)\r\n| project virtualHub, id, type, location, RG, subscriptionId, vpnGatewayScaleUnit, isRoutingPreferenceInternet, customDnsServers, vpnServerConfiguration, p2SConnectionConfigurations",
+              "size": 4,
+              "title": "Virtual WAN - P2S VPN Gateways",
+              "noDataMessage": "No Point-To-Site VPN Gateways configured",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "virtualHub",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "id",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "type",
+                    "formatter": 16,
+                    "formatOptions": {
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "location",
+                    "formatter": 17,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualWanId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualHubID",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "virtualHub",
+                    "label": "Hub Name"
+                  },
+                  {
+                    "columnId": "id",
+                    "label": "P2S VPN Gateway Name"
+                  },
+                  {
+                    "columnId": "type",
+                    "label": "Type"
+                  },
+                  {
+                    "columnId": "location",
+                    "label": "Region"
+                  },
+                  {
+                    "columnId": "RG",
+                    "label": "Resource Group"
+                  },
+                  {
+                    "columnId": "subscriptionId",
+                    "label": "Subscription"
+                  },
+                  {
+                    "columnId": "vpnGatewayScaleUnit",
+                    "label": "GatewayScaleUnit"
+                  }
+                ]
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "SubSelectedView",
+              "comparison": "isEqualTo",
+              "value": "vWANP2S"
+            },
+            "name": "Virtual WAN - P2S VPN"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type =~ \"Microsoft.Network/expressRouteGateways\"\r\n| extend RG = substring(id, 0, indexof(id, '/providers'))\r\n| extend virtualHub = properties.virtualHub.id\r\n| extend expressRouteConnections = properties.expressRouteConnections\r\n| project [\"ExpressRoute Name\"] = split(id,\"/\")[-1], virtualHub, id, location, RG, subscriptionId",
+              "size": 4,
+              "title": "Virtual WAN ExpressRoute Gateways - Select ExpressRoute Name in the first column  view ExpressRouteConnections",
+              "noDataMessage": "No ExpressRoute Gateways configured.",
+              "exportFieldName": "id",
+              "exportParameterName": "ExpressRouteResourceID",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "ExpressRoute Name",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "virtualHub",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "id",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "location",
+                    "formatter": 17,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "Express Route Name",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "type",
+                    "formatter": 16,
+                    "formatOptions": {
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualWanId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualHubID",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "virtualHub",
+                    "label": "Hub Name"
+                  },
+                  {
+                    "columnId": "id",
+                    "label": "ExpressRoute Resource Link"
+                  },
+                  {
+                    "columnId": "location",
+                    "label": "Location"
+                  },
+                  {
+                    "columnId": "RG",
+                    "label": "Resource Groups"
+                  },
+                  {
+                    "columnId": "subscriptionId",
+                    "label": "Subscription"
+                  }
+                ]
+              },
+              "sortBy": []
+            },
+            "conditionalVisibility": {
+              "parameterName": "SubSelectedView",
+              "comparison": "isEqualTo",
+              "value": "vWANExpressRoute"
+            },
+            "name": "Virtual WAN - ExpressRoute"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":null,\"headers\":[],\"method\":\"GET\",\"path\":\"{ExpressRouteResourceID}/expressRouteConnections?api-version=2021-03-01\",\"urlParams\":[],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.value\",\"columns\":[{\"path\":\"$.id\",\"columnid\":\"id\"},{\"path\":\"$.properties.expressRouteCircuitPeering.id\",\"columnid\":\"expressRouteCircuitPeering\"},{\"path\":\"$.properties.routingWeight\",\"columnid\":\"routingWeight\"},{\"path\":\"$.properties.enableInternetSecurity\",\"columnid\":\"enableInternetSecurity\"},{\"path\":\"$.properties.expressRouteGatewayBypass\",\"columnid\":\"expressRouteGatewayBypass\"},{\"path\":\"$.properties.routingConfiguration\",\"columnid\":\"routingConfiguration\"}]}}]}",
+              "size": 4,
+              "title": "Virtual WAN - ExpressRoute Connection List",
+              "noDataMessage": "No ExpressRouteConnection configured.",
+              "queryType": 12,
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "virtualHub",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "id",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "type",
+                    "formatter": 16,
+                    "formatOptions": {
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "location",
+                    "formatter": 17,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "25ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualWanId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "virtualHubID",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "sortBy": [
+                  {
+                    "itemKey": "$gen_link_virtualHub_0",
+                    "sortOrder": 1
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "virtualHub",
+                    "label": "Hub Name"
+                  },
+                  {
+                    "columnId": "id",
+                    "label": "Expressroute Name"
+                  },
+                  {
+                    "columnId": "type",
+                    "label": "Type"
+                  },
+                  {
+                    "columnId": "location",
+                    "label": "Region"
+                  },
+                  {
+                    "columnId": "resourceGroup",
+                    "label": "Resource Group"
+                  },
+                  {
+                    "columnId": "subscriptionId",
+                    "label": "Subscription"
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "$gen_link_virtualHub_0",
+                  "sortOrder": 1
+                }
+              ]
+            },
+            "conditionalVisibilities": [
+              {
+                "parameterName": "SubSelectedView",
+                "comparison": "isEqualTo",
+                "value": "vWANExpressRoute"
+              },
+              {
+                "parameterName": "ExpressRouteResourceID",
+                "comparison": "isNotEqualTo"
+              }
+            ],
+            "name": "Virtual WAN - ExpressRouteConnectionList"
+          }
+        ]
+      },
+      "name": "VirtualWANGroup"
+    }
+  ],
+  "fallbackResourceIds": [
+    "azure monitor"
+  ],
+  "fromTemplateId": "asc-NetworkSecurityDashboard",
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

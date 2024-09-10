@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceResourceID": {
+      "value": "/subscriptions/3e3ae977-9abe-4702-8132-b41d3107928b/resourcegroups/dv5-mgmt-d-rsg-monitoring/providers/microsoft.operationalinsights/workspaces/dv5-mgmt-d-loganalytics"
+    },
+    "managementSubscriptionId": {
+      "value": "3e3ae977-9abe-4702-8132-b41d3107928b"
+    },
+    "resourceGroupName": {
+      "value": "dv5-lnd2-d-rsg-monitoring"
+    },
+    "includeSecurityFindings": {
+      "value": false
+    },
+    "createResourceGroup": {
+      "value": true
+    },
+    "recommendationSeverities": {
+      "value": [
+        "High",
+        "Medium",
+        "Low"
+      ]
+    },
+    "exportedDataTypes": {
+      "value": [
+        "Security recommendations",
+        "Security alerts"
+      ]
+    },
+    "recommendationNames": {
+      "value": []
+    },
+    "secureScoreControlsNames": {
+      "value": []
+    },
+    "regulatoryComplianceStandardsNames": {
+      "value": []
+    },
+    "alertSeverities": {
+      "value": [
+        "High",
+        "Medium",
+        "Low"
+      ]
+    },
+    "azDefenderDataExportDefName": {
+      "value": "azdefenderexport.change.policy.def"
+    },
+    "azDefenderDataExportDefAssignmentDisplayName": {
+      "value": "azdefenderexport.change.policy.def.assignment"
+    },
+    "azDefenderDataExportDefDisplayName": {
+      "value": "Azure defender export change policy definition assignment"
+    }
+  }
+}

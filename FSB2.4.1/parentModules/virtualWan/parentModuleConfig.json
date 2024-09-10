@@ -1,0 +1,27 @@
+{
+    "tlsKeyVaultConfig": {
+        "skuName": "standard",
+        "publicNetworkAccess": "enabled",
+        "networkRuleBypassOptions": "AzureServices",
+        "networkRuleAction": "Allow",
+        "softDeleteRetentionInDays": 7
+    },
+    "tlsKeyVaultFeatures": {
+        "enabledForDeployment": true,
+        "enabledForDiskEncryption": false,
+        "enabledForTemplateDeployment": true,
+        "enablePurgeProtection": true,
+        "enableRbacAuthorization": false,
+        "enableSoftDelete": true
+    },
+    "tlsAccessPolicies":{
+        "secrets": [
+            "Get",
+            "List"
+        ],
+        "certificates": [
+            "Get",
+            "List"
+        ]
+    }
+}

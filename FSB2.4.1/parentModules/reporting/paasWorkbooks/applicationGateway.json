@@ -1,0 +1,246 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "parameters": [
+                {
+                  "id": "f5f66862-c38c-4c25-98fa-ad1e7f463a0f",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "subscriptionPicker",
+                  "label": "Subscription",
+                  "type": 6,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "includeAll": false,
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all"
+                },
+                {
+                  "id": "b1ae8eeb-0570-482d-af41-aa81999ad44a",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "resourceGroupPicker",
+                  "label": "Resource Group",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| distinct name",
+                  "crossComponentResources": [
+                    "{subscriptionPicker}"
+                  ],
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "2a6e9715-65ac-4e99-8087-36d38c6df94b",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "appGatewayPicker",
+                  "label": "Application Gateway",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\r\n| where type == \"microsoft.network/applicationgateways\"\r\n| project id, name",
+                  "crossComponentResources": [
+                    "{subscriptionPicker}"
+                  ],
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "2a7b92f8-8f29-4a97-a7b0-f8101c701bb5",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "[parameter(tagPrefix)]ManagedPicker",
+                  "label": "Managed by [parameter(companyName)]",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "jsonData": "[\"Yes\", \"No\"]",
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all"
+                }
+              ],
+              "style": "above",
+              "queryType": 0,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "name": "parameters - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.network/applicationgateways\"\r\n| where id in~ ({appGatewayPicker})\r\n| where resourceGroup in~ ({resourceGroupPicker})\r\n| extend state = properties.operationalState\r\n| extend sku_tier = properties.sku.tier\r\n| extend capacity = properties.sku.capacity\r\n| extend [parameter(tagPrefix)]Managed = iif((tolower(tostring(tags)) has '\"[parameter(tagPrefixLc)]managed\":\"true\"'), \"Yes\", \"No\")\r\n| where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]ManagedPicker})\r\n| project id, name, location, resource_group = id, subscriptionId, sku_tier, capacity, state, [parameter(tagPrefix)]Managed",
+              "size": 0,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{subscriptionPicker}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "name",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "resource_group",
+                    "formatter": 14,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "state",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Running",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "unknown",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "id",
+                    "label": "Name"
+                  },
+                  {
+                    "columnId": "location",
+                    "label": "Location"
+                  },
+                  {
+                    "columnId": "resource_group",
+                    "label": "Resource group"
+                  },
+                  {
+                    "columnId": "subscriptionId",
+                    "label": "Subscription"
+                  },
+                  {
+                    "columnId": "sku_tier",
+                    "label": "SKU"
+                  },
+                  {
+                    "columnId": "capacity",
+                    "label": "Capacity"
+                  },
+                  {
+                    "columnId": "state",
+                    "label": "State"
+                  },
+                  {
+                    "columnId": "[parameter(tagPrefix)]Managed",
+                    "label": "[parameter(tagPrefix)]Managed"
+                  }
+                ]
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "appGatewayPicker",
+              "comparison": "isNotEqualTo"
+            },
+            "name": "ResourceGraphQuery"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "#### No Azure Application Gateways are deployed in this environment yet"
+            },
+            "conditionalVisibility": {
+              "parameterName": "appGatewayPicker",
+              "comparison": "isEqualTo"
+            },
+            "name": "text - 8"
+          }
+        ]
+      },
+      "name": "group - 0"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

@@ -1,0 +1,404 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "ff24505c-2099-43a4-a8a3-3456bed78eb5",
+            "version": "KqlParameterItem/1.0",
+            "name": "TimeRange",
+            "type": 4,
+            "isRequired": true,
+            "value": {
+              "durationMs": 86400000
+            },
+            "typeSettings": {
+              "selectableValues": [
+                {
+                  "durationMs": 3600000
+                },
+                {
+                  "durationMs": 14400000
+                },
+                {
+                  "durationMs": 43200000
+                },
+                {
+                  "durationMs": 86400000
+                },
+                {
+                  "durationMs": 172800000
+                },
+                {
+                  "durationMs": 259200000
+                },
+                {
+                  "durationMs": 604800000
+                },
+                {
+                  "durationMs": 1209600000
+                },
+                {
+                  "durationMs": 2419200000
+                },
+                {
+                  "durationMs": 2592000000
+                },
+                {
+                  "durationMs": 5184000000
+                },
+                {
+                  "durationMs": 7776000000
+                }
+              ],
+              "allowCustom": true
+            }
+          },
+          {
+            "id": "bfe50469-7469-4c4d-a33e-0edbb43546c4",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subscription",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type=~ 'microsoft.compute/virtualmachines'\r\n| where tostring(tags) !has '\"databricks-instance-name\"'\r\n//| where name != \"\"\r\n| join kind = leftouter (\r\n   resourcecontainers\r\n   | where type == \"microsoft.resources/subscriptions\"\r\n   | extend subname = name) on subscriptionId\r\n| project subname\r\n| distinct subname",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "limitSelectTo": 100,
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "value": [
+              "value::all"
+            ]
+          },
+          {
+            "id": "fb861784-4609-49f2-9f58-427fcc547677",
+            "version": "KqlParameterItem/1.0",
+            "name": "Workspace",
+            "type": 5,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| project id",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "resourceTypeFilter": {
+                "microsoft.operationalinsights/workspaces": true
+              },
+              "limitSelectTo": 100,
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 0
+            },
+            "timeContextFromParameter": "TimeRange",
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "b2627475-cef7-4e91-97b9-b70bf00164e6",
+            "version": "KqlParameterItem/1.0",
+            "name": "Servers",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where type =~'microsoft.compute/virtualmachines'\r\n| where tostring(tags) !has '\"databricks-instance-name\"'\r\n| extend subId = subscriptionId\r\n| join kind = leftouter (\r\n   resourcecontainers\r\n   | where type == \"microsoft.resources/subscriptions\"\r\n   | extend subId = subscriptionId\r\n   | extend subname = name) on subId\r\n| where subname in~ ({Subscription})\r\n| project name\r\n| distinct name\r\n| order by name asc",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 0
+            },
+            "timeContextFromParameter": "TimeRange",
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "6301693a-7f20-4ff6-9270-eb50e553a7a9",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]Managed",
+            "label": "Managed by [parameter(companyName)]",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Yes\", \"No\"]",
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "480686f4-1504-4ad6-b0be-fa5ec8f51e58",
+            "version": "KqlParameterItem/1.0",
+            "name": "Powerstate",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"VM running\", \"VM deallocated\"]",
+            "defaultValue": "value::all"
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 1"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let timeRangeStart = {TimeRange:start};\r\nlet timeRangeEnd = {TimeRange:end};\r\nHeartbeat\r\n| where TimeGenerated > timeRangeStart and TimeGenerated < timeRangeEnd\r\n| where Computer in ({Servers})\r\n| extend RGroup = tolower(ResourceGroup)\r\n| extend RGroup = case(RGroup <>\"\", RGroup, \"On-Prem\")\r\n| join kind = leftouter (\r\n  Heartbeat\r\n  | summarize LastHeartBeat=max(TimeGenerated) by ResourceGroup, Resource, ResourceType ) on Resource\r\n| summarize heartbeat_per_hour=count() by bin_at(TimeGenerated, 1h, timeRangeStart), Computer, _ResourceId, RGroup, LastHeartBeat\r\n| extend available_per_hour=iff(heartbeat_per_hour>0, true, false)\r\n| summarize total_available_hours=countif(available_per_hour==true) by Computer, _ResourceId, RGroup, LastHeartBeat\r\n| extend total_number_of_buckets=round((timeRangeEnd-timeRangeStart)/1h)\r\n| extend round(availability_rate=total_available_hours*100/total_number_of_buckets,2)\r\n| order by availability_rate asc\r\n",
+        "size": 2,
+        "title": "VM Availability",
+        "timeContextFromParameter": "TimeRange",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{Workspace}"
+        ],
+        "visualization": "table",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "total_available_hours",
+              "formatter": 0,
+              "formatOptions": {
+                "aggregation": "Average"
+              }
+            },
+            {
+              "columnMatch": "total_number_of_buckets",
+              "formatter": 0,
+              "formatOptions": {
+                "aggregation": "Average"
+              }
+            },
+            {
+              "columnMatch": "availability_rate",
+              "formatter": 3,
+              "formatOptions": {
+                "min": 0,
+                "max": 100,
+                "palette": "redGreen",
+                "aggregation": "Average"
+              },
+              "numberFormat": {
+                "unit": 1,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            }
+          ],
+          "filter": true,
+          "labelSettings": [
+            {
+              "columnId": "total_available_hours",
+              "label": "Available Hours"
+            },
+            {
+              "columnId": "total_number_of_buckets",
+              "label": "Total Hours"
+            },
+            {
+              "columnId": "availability_rate",
+              "label": "Availability"
+            }
+          ]
+        },
+        "sortBy": []
+      },
+      "conditionalVisibility": {
+        "parameterName": "Computer",
+        "comparison": "isEqualTo",
+        "value": "\"@\""
+      },
+      "name": "query - 0"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "where type =~'microsoft.compute/virtualmachines'\r\n| where name in~ ({Servers})\r\n| extend [parameter(tagPrefix)]Managed=iif((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"Yes\", \"No\")\r\n| extend Powerstate=tostring(properties.extended.instanceView.powerState.displayStatus)\r\n| where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]Managed})\r\n| where Powerstate in~ ({Powerstate})\r\n| project name, id, resourceGroup, [parameter(tagPrefix)]Managed, location, Powerstate\r\n",
+        "size": 0,
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "value::all"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "id",
+        "comparison": "isEqualTo",
+        "value": "\"@\""
+      },
+      "showPin": true,
+      "name": "query - 2"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"3e969e3c-d616-47d1-8633-f4dbc263b04c\",\"mergeType\":\"leftouter\",\"leftTable\":\"query - 2\",\"rightTable\":\"query - 0\",\"leftColumn\":\"name\",\"rightColumn\":\"Computer\"}],\"projectRename\":[{\"originalName\":\"[query - 2].name\",\"mergedName\":\"Name\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 2].id\",\"mergedName\":\"Virtual Machine\",\"fromId\":\"3e969e3c-d616-47d1-8633-f4dbc263b04c\"},{\"originalName\":\"[query - 2].resourceGroup\",\"mergedName\":\"Resource Group\",\"fromId\":\"3e969e3c-d616-47d1-8633-f4dbc263b04c\"},{\"originalName\":\"[query - 2].location\",\"mergedName\":\"Location\",\"fromId\":\"3e969e3c-d616-47d1-8633-f4dbc263b04c\"},{\"originalName\":\"[query - 2].[parameter(tagPrefix)]Managed\",\"mergedName\":\"Managed by [parameter(companyName)]\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 2].Powerstate\",\"mergedName\":\"Powerstate\",\"fromId\":\"unknown\"},{\"originalName\":\"[Added column]\",\"mergedName\":\"Monitoring Agent\",\"fromId\":null,\"isNewItem\":true,\"newItemData\":[{\"criteriaContext\":{\"leftOperand\":\"_ResourceId\",\"operator\":\"startsWith\",\"rightValType\":\"static\",\"rightVal\":\"/sub\",\"resultValType\":\"static\",\"resultVal\":\"Enabled for selected workspace\"}},{\"criteriaContext\":{\"leftOperand\":\"_ResourceId\",\"operator\":\"notStartsWith\",\"rightValType\":\"static\",\"rightVal\":\"/sub\",\"resultValType\":\"static\",\"resultVal\":\"Not enabled (for selected workspace) or not working properly\"}},{\"criteriaContext\":{\"operator\":\"Default\",\"rightValType\":\"column\",\"resultValType\":\"column\"}}]},{\"originalName\":\"[query - 0].LastHeartBeat\",\"mergedName\":\"Last HeartBeat within time range\",\"fromId\":\"3e969e3c-d616-47d1-8633-f4dbc263b04c\"},{\"originalName\":\"[query - 0].Computer\",\"mergedName\":\"Computer\",\"fromId\":\"3e969e3c-d616-47d1-8633-f4dbc263b04c\"},{\"originalName\":\"[query - 0]._ResourceId\",\"mergedName\":\"_ResourceId\",\"fromId\":\"3e969e3c-d616-47d1-8633-f4dbc263b04c\"},{\"originalName\":\"[query - 0].RGroup\",\"mergedName\":\"RGroup\",\"fromId\":\"3e969e3c-d616-47d1-8633-f4dbc263b04c\"},{\"originalName\":\"[query - 0].total_available_hours\",\"mergedName\":\"Available Hours\",\"fromId\":\"3e969e3c-d616-47d1-8633-f4dbc263b04c\"},{\"originalName\":\"[query - 0].total_number_of_buckets\",\"mergedName\":\"Total Hours\",\"fromId\":\"3e969e3c-d616-47d1-8633-f4dbc263b04c\"},{\"originalName\":\"[query - 0].availability_rate\",\"mergedName\":\"Availability\",\"fromId\":\"3e969e3c-d616-47d1-8633-f4dbc263b04c\"},{\"originalName\":\"[query - 2].RGroup\",\"mergedName\":\"RGroup\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 0].RecentHeartBeat\",\"mergedName\":\"RecentHeartBeat\",\"fromId\":\"unknown\"},{\"originalName\":\"[query - 0].LastHeartbeat\"},{\"originalName\":\"[query - 0].PowerState\"}]}",
+        "size": 3,
+        "title": "VM Availability Overview",
+        "showExportToExcel": true,
+        "queryType": 7,
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Name",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Location",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Powerstate",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "VM running",
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "VM deallocated",
+                    "representation": "stopped",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "Monitoring Agent",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Not",
+                    "representation": "2",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "Computer",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "_ResourceId",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "RGroup",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Availability",
+              "formatter": 3,
+              "formatOptions": {
+                "min": 0,
+                "max": 100,
+                "palette": "redGreen",
+                "aggregation": "Average"
+              },
+              "numberFormat": {
+                "unit": 1,
+                "options": {
+                  "style": "decimal"
+                }
+              }
+            },
+            {
+              "columnMatch": "Computer Name",
+              "formatter": 5
+            }
+          ],
+          "rowLimit": 500,
+          "filter": true,
+          "sortBy": [
+            {
+              "itemKey": "Total Hours",
+              "sortOrder": 2
+            }
+          ]
+        },
+        "sortBy": [
+          {
+            "itemKey": "Total Hours",
+            "sortOrder": 2
+          }
+        ]
+      },
+      "name": "query - 4"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "fromTemplateId": "community-Workbooks/Virtual Machines/Availability",
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

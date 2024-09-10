@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateEndpointName": {
+            "value": "Required. Name of the private endpoint"
+        },
+        "location": {
+            "value": "Required. Location of the private endpoint"
+        },
+        "tags": {
+            "value": {
+            "tag1": "value1",
+            "tag2": "value2"
+            }
+        },
+        "privateLinkServiceName": {
+            "value": "Required. Private Link service name"
+        },
+        "privateLinkServiceExternalId": {
+            "value": "Required. Ex: /subscriptions/{subscription}/resourceGroups/{resource_group}/providers/Microsoft.Storage/storageAccounts/{storage_account_name}"
+        },
+        "privateLinkServiceGroupIDs":{
+            "value": "Required. The ID(s) of the group(s) obtained from the remote resource that this private endpoint should connect to. (EX: blob, registry )"
+        },
+        "virtualNetworkExternalId": {
+            "value": "Required. Ex: /subscriptions/{subscription}/resourceGroups/{resource_group}/providers/Microsoft.Network/virtualNetworks/{virtualNetwork_name}"
+        },
+        "subnetName":{
+            "value": "Required. Subnet name from the virtual network"
+        },
+        "privateEndpointDnsZoneGroupName":{
+            "value": "Required. The resource name for private endpoint connection to DNS zone group."
+        },
+        "privateDnsZoneConfigsName":{
+            "value": "Required. Name of the resource that is unique within a resource group. This name can be used to access the resource. (EX: 'PrivateEndPoints' )"
+        },
+        "privateDnsExternalId": {
+            "value": "Required. Ex: /subscriptions/{subscription}/resourceGroups/{resource_group}/providers/Microsoft.Network/privateDnsZones/{privatelink.blob.core.windows.net}"
+        },
+        "requestMessage": {
+          "value": "Required. A message passed to the owner of the remote resource with this connection request. Restricted to 140 chars."
+        },
+        "connectionStateStatus": {
+          "value": "Required. EX: Approved/Rejected/Removed"
+        },
+        "connectionStateDescription": {
+          "value": "Optional. The reason for approval/rejection of the connection. EX: Auto-Approved" 
+        },
+        "connectionStateActionsRequired": {
+          "value": "Optional. A message indicating if changes on the service provider require any updates on the consumer. EX: None"
+        }
+    }
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "west us"
+    },
+    "maintenanceConfigurationName": {
+      "value": "ExampleMaintenanceConfigurationName"
+    },
+    "linuxUpdateClassificationsToInclude": {
+      "value": []
+    },
+    "windowsUpdateClassificationsToInclude": {
+      "value": []
+    },
+    "linuxUpdatePackageNameMasksToExclude": {
+      "value": []
+    },
+    "linuxUpdatePackageNameMasksToInclude": {
+      "value": []
+    },
+    "windowsExcludeKbsRequiringReboot": {
+      "value": true
+    },
+    "windowsKbNumbersToExclude": {
+      "value": []
+    },
+    "windowsKbNumbersToInclude": {
+      "value": []
+    },
+    "maintenanceScope": {
+      "value": "InGuestPatch"
+    },
+    "updateRebootSetting": {
+      "value": "ifRequired"
+    },
+    "maintenanceWindowDuration": {
+      "value": "03:55"
+    },
+    "maintenanceWindowExpirationDateTime": {
+      "value": "9999-12-31 23:59:59"
+    },
+    "maintenanceWindowRecurEvery": {
+      "value": "1Day"
+    },
+    "maintenanceWindowStartTime": {
+      "value": "2024-02-28 15:00"
+    },
+    "maintenanceWindowTimeZone": {
+      "value": "W. Europe Standard Time"
+    },
+    "maintenanceConfigurationTag": {
+      "value": {"EvidenPurpose":"EvidenMaintenanceConfig"}
+    }
+  }
+}

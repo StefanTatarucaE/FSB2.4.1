@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmEnableDependencyAgentWinDefName": {
+            "value": "vm-enabledependencyagentwin-change-policy-def"
+        },
+        "vmEnableDependencyAgentWinDefDisplayName": {
+            "value": "Virtual Machine enable Windows dependency agent change policy definition"
+        },
+        "vmEnableDependencyAgentWinDefEffect": {
+            "value": "DeployIfNotExists"
+        },
+        "vmEnableDependencyAgentLinuxDefName": {
+            "value": "vm-enabledependencyagentlinux-change-policy-def"
+        },
+        "vmEnableDependencyAgentLinuxDefDisplayName": {
+            "value": "Virtual Machine enable Linux dependency agent change policy definition"
+        },
+        "vmEnableDependencyAgentLinuxDefEffect": {
+            "value": "DeployIfNotExists"
+        },
+        "vmEnableDependencyAgentSetName": {
+            "value": "vmdependencyagent-change-policy-set"
+        },
+        "vmEnableDependencyAgentSetDisplayName": {
+            "value": "Virtual Machine dependency agent change policy initiative"
+        },
+        "vmEnableDependencyAgentSetAssignmentName": {
+            "value": "vmdependencyagent-change-policy-set-assignment"
+        },
+        "vmEnableDependencyAgentSetAssignmentDisplayName": {
+            "value": "Virtual Machine dependency agent change policy initiative assignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        },
+        "policyRuleTag": {
+            "value": "EvidenManaged"
+        }
+    }
+}

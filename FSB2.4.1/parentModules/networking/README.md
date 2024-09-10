@@ -1,0 +1,874 @@
+# Networking Parent module
+Azure bicep parent module to deploy the `network solution` in a traditional Hub and Spoke topology.
+
+## Table of Content
+- [Description](#description)
+ - [Resources deployed in the connectivity subscription (Hub)](#resources-deployed-in-the-connectivity-subscription-hub)
+ - [Resources deployed in the landing zone subscription (Spoke)](#resources-deployed-in-the-landing-zone-subscription-Spoke)
+ - [Naming convention module](#naming-convention-module)
+- [Upgrading an existing deployment](#upgrading-an-existing-deployment)
+  - [Connectivity subscription  - configuration values](#connectivity-subscription----configuration-values)
+    - [Resource names](#resource-names)
+    - [Virtual network gateway](#virtual-network-gateway)
+- [Bastion host](#bastion-host)
+- [Parent module parameters](#parent-module-parameters)
+  - [Required parameters](#required-parameters)
+    - [Parameter detail: `subnets`](#parameter-detail-subnets)
+      - [Optional Subnet Property: `securityRules`](#parameter-detail-securityrules)
+      - [Optional Subnet Property: `serviceEndpoints`](#parameter-detail-serviceEndpoints)
+      - [Optional Subnet Property: `serviceEndpointPolicies`](#parameter-detail-serviceEndpointPolicies)
+      - [Optional Subnet Property: `serviceEndpointPolicyDefinitions`](#parameter-detail-serviceEndpointPolicyDefinitions)
+      - [Optional Subnet Property: `privateEndpointNetworkPolicies`](#parameter-detail-privateEndpointNetworkPolicies)
+      - [Optional Subnet Property: `privateLinkServiceNetworkPolicies`](#parameter-detail-privateLinkServiceNetworkPolicies)
+      - [Optional Subnet Property: `ipAllocations`](#parameter-detail-ipAllocations)
+      - [Optional Subnet Property: `delegations`](#parameter-detail-delegations)
+  - [Optional parameters](#optional-parameters)
+   - [Parameter detail: `routes`](#parameter-detail-routes)
+   - [Parameter detail: `vpnGatewayIpConfig`](#parameter-detail-vpngatewayipconfig)
+   - [Parameter detail: `vpnGatewayConfig`](#parameter-detail-vpngatewayconfig)
+   - [Parameter detail: `bastionHostIpConfig`](#parameter-detail-bastionhostipconfig)
+   - [Parameter detail: `bastionHostConfig`](#parameter-detail-bastionhostconfig)
+   - [Parameter detail: `spokePeeringConfig`](#parameter-detail-spokepeeringconfig)
+   - [Parameter detail: `hubPeeringConfig`](#parameter-detail-hubpeeringconfig)
+- [ELZ AzureConfiguration Values](#elz-azure-configuration-values)
+- [Parameter usage examples](#parameter-usage-examples)
+  - [Parameter usage: `routes`](#parameter-usage-routes)
+  - [Parameter usage: `subnets`](#parameter-usage-subnets)
+  - [Parameter usage: `vpnGatewayIpconfig`](#parameter-usage-vpngatewayipconfig)
+  - [Parameter usage: `vpnGatewayConfig`](#parameter-usage-vpngatewayconfig)
+  - [Parameter usage: `bastionHostIpConfig`](#parameter-usage-bastionhostipconfig)
+  - [Parameter usage: `bastionHostConfig`](#parameter-usage-bastionhostconfig)
+  - [Parameter usage: `spokePeeringConfig`](#parameter-usage-spokepeeringconfig)
+  - [Parameter usage: `hubPeeringConfig`](#parameter-usage-hubpeeringconfig)
+- [Parameter File Examples](#parameter-file-examples)
+- [Outputs](#outputs)
+## Description
+The networking parent module deploys resources in the following subscriptions:
+- Connectivity Subscription (Hub)
+- Landing Zone Subscription (Spoke)
+- Tooling Enclave Subscription (Spoke)
+
+It calls several child modules in the `childModules` folder to deploy the solution.
+
+### Resources deployed in the connectivity subscription (Hub)
+- A resource group to hold all networking related resources.
+- A virtual network:
+  - Address space
+  - Subnets (1 default hub subnet, AzureFirewallSubnet, GatewaySubnet & AzureBastionSubnet.)
+  - DNS servers (optional)
+  - Peering (peering from Hub to spoke (Landing zone) is created via the Landing zone deployment)
+- A network security group for the default hub subnet.
+- A DDOS protection plan (optional).
+- A private DNS zone with desired record sets (optional).
+- A private DNS zone virtual network link (optional).
+- A virtual network gateway (optional).
+- A resource group for the bastion host and its public ip address
+- A bastionhost (optional)
+
+### Resources deployed in the landing zone subscription (Spoke)
+- A resource group to hold all networking related resources.
+- A virtual network:
+  - Address space
+  - Subnets (3 subnets are created by default in landing zone) (tooling specific subnet(s) in tooling enclave (spoke))
+  - DNS servers (optional)
+  - Peering (peering from spoke to hub)
+- Network security group for each subnet in spoke.
+- An IP group for every subnet and its corresponding subnet address range.
+- A private DNS zone virtual network link (optional).
+- A route table that is associated with every subnet in spoke.
+
+### Naming convention module
+To ensure & enforce the required naming convention, a naming helper module is used by all other parent modules.
+The names being generated by the naming module are the actual resource names which are used on the Azure platform.
+
+The naming helper module is run in `prepare` job of the workflow which is used to deploy ELZ Azure. The output from the module is saved to a file and published as a workflow artifact. In subsequent jobs the artifact is downloaded and used by Bicep parent modules.
+
+The downloaded artifact is referenced by parent modules by declaring a '*Naming' variable. For example: `var mgmtNaming = json(loadTextContent('../../mgmtNaming.json'))`
+
+## Upgrading an existing deployment
+For best results when upgrading from 1.x to 2.x and higher versions, follow & apply the guidelines & configuration values described in this section.
+
+### Connectivity subscription  - configuration values
+#### Resource names
+To make sure network resources do not get re-deployed during the upgrade, the resource names should remain the same.
+
+Please note there are some additional parameters that you need to pay attention to, these are explained in details below:
+1. legacyNaming
+2. useNamingConventionModule (pay attention to the name property in the subnets object)
+3. nsgName
+
+An important parameter to configure during upgrades from 1.x to 2.x and higher versions is `legacyNaming` for the ELZ virtual network peering and private zones virtual links. Set this to `true` _when performing upgrade of envrionments which are on a release version prior to 2.x_.
+
+Another parameter to carefully configure during upgrade _(for envrionments which are on a release version prior to 2.x)_ is the `useNamingConventionModule` as part of the `subnets` object parameter. Points to keep in mind for this parameter are:
+
+- When set to `true`, the Naming module will be used for generating subnet names, which means that the subnet name will be constructed out of 2 strings.
+_First string_ will come from the ELZ standard naming convention (example: `cu1-sub1-d-euwe-snet-hub-`) and it will append a _second string_ (i.e. add a suffix), that will come from the `name` property inside the `subnets` object parameter (example: `network`). The examples used above will result in a name like: `cu1-sub1-d-euwe-snet-hub-network`.
+
+- When set to `false`, the name of subnet will be exactly the same as the name passed in the `name` property inside the `subnets` object parameter.
+This is required when ELZ naming convention is NOT used for subnets including subnets created automatically by Azure when additional resources were deployed.
+
+- When performing upgrade from 1.x to 2.x and later release, this needs to be set to `false`, as there are changes introduced in naming convention for Hub subnet (in connectivity subscription) 2.x release onwards.
+
+```json
+{
+    "subnets": {
+        "value": [
+            {
+                "name": "non-standard-naming-snet-example",
+                "useNamingConventionModule": false
+            }
+        ]
+    }
+}
+```
+- A subnet which does not follow ELZ naming convention, might also have a NSG, which does not follow the naming convention, associated with it.
+So, when setting `useNamingConventionModule` to `false` and if `securityRules` exist, a new property for Network Security Group name needs to be filled in, within the `subnets` object parameter.
+The property is called `nsgName` and it will reflect the name of the existing Network Security Group, that does not follow the naming convention.
+
+You will have to add it in the `subnets` object.
+
+```json
+{
+    "subnets": {
+        "value": [
+            {
+                "name": "non-standard-naming-snet-example",
+                "nsgName": "non-standard-nsg-name",
+                "useNamingConventionModule": false,
+                "securityRules": []
+            }
+        ]
+    }
+}
+```
+When performing upgrade from 1.x to 2.x and later, for the hub subnets and NSGs (located in connectivity subscription), make sure to match the exact subnet and NSG names, there are changes introduced in naming convention in hub for them from 2.x release onwards.
+
+#### Virtual network gateway
+For virtual network gateway deployments, use the following values when upgrading from 1.x to 2.x and higher versions.
+This is to make sure the gateway deployement is aligned to the configurtaion that was used until 1.6 release version.
+
+| Nr. | Parameter name | Value |
+| :-- | :-- | :-- |
+| 1. | `publicIpAllocationMethod` | `dynamic` |
+| 2. | `skuName` | `Basic` |
+
+These properties are a part of `vpnGatewayIpconfig` object.
+
+For details around all the parameters used to deploy network solution continue reading this document.
+## Bastion host
+Bastion host is an optional feature which can be deployed from ELZ Azure release version 2.2 onwards.
+It is deployed using basic SKU by default, but standard SKU can also be deployed if required.
+
+## Parent module parameters
+Inputs are provided using the following parameter files, depending upon where you need the networking related resources deployed:
+- cu8.cnty.networking.params.json
+- cu8.lnd1.networking.params.json
+- cu1.tool.networking.params.json
+### Required parameters
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- |:-- |
+| `subscriptionType` | `string` |  | Specifies which network configuration to deploy using the subscription type abbreviation. Allowed values (mgmt, cnty, lndz, tool) |
+| `vnetAddressPrefixes` | `array` |  | Specifies the IPv4 addresses in cidr notation (example: `172.16.0.0/16`), for the virtual network. |
+| [`subnets`](#parameter-detail-subnets) | `array` |  | Specifies an array of subnet objects to be deployed. |
+
+#### Parameter detail: `subnets`
+An array of subnet objects to be deployed to the virtual network.
+
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `name` | `string` |  | The last part of a subnet name, that will be appended to the subnet name coming from naming convention. |
+| `addressPrefix` | `array`|  | The subnet IPv4 address range in CIDR notation for a subnet. |
+| `useNamingConventionModule` | `bool` | `true` | Explanation provided in [Resource names](#resource-names) section. |
+| [`securityRules`](#parameter-detail-securityrules) | `array` | `[]` | Specifies an array of network security rule objects for the network security group that will be deployed per subnet. |
+| [`serviceEndpoints`](#parameter-detail-serviceEndpoints) | `array` | `[]` | Specifies an array of service endpoints. |
+| [`serviceEndpointPolicies`](#parameter-detail-serviceEndpointPolicies) | `array`  | `[]` | Specifies an array of service endpoint policies. Note that right now, Microsoft.Storage is the only service that is available for endpoint policies. |
+| [`privateEndpointNetworkPolicies`](#parameter-detail-privateEndpointNetworkPolicies) | `string`  | `Disabled` | Enable or Disable apply network policies on private end point in the subnet. Possible values are `Enabled` or `Disabled`. |
+| [`privateLinkServiceNetworkPolicies`](#parameter-detail-privateLinkServiceNetworkPolicies) | `string`  | `Disabled` | Enable or Disable apply network policies on private link service in the subnet. Possible values are `Enabled` or `Disabled`. |
+| [`ipAllocations`](#parameter-detail-ipAllocations) | `array`  | `[]` | Array of IpAllocation which reference this subnet. |
+| [`delegations`](#parameter-detail-delegations) | `array`  | `[]` | An array of delegations which reference this subnet. For easy identification of the structure, the Export template can be used from the Azure Portal |
+
+##### Parameter detail: `securityRules`
+An array of Security Rules to deploy to the Network Security Group (NSG) as part of the `subnets` object. When not provided, no NSG will be deployed.
+
+> **NOTE**
+> If you choose to use an `NSG with your Azure Bastion` resource, you must create all of the ingress and egress traffic rules detailed in the Microsoft [document](https://learn.microsoft.com/en-us/azure/bastion/bastion-nsg). Omitting any of these rules will block your Azure Bastion resource from receiving necessary updates in the future and therefore open up your resource to future security vulnerabilities.
+> Examples provided in the input parameter file for connectivity subscription and in this readme.
+
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `name` | `string` |  | The name of the security rule. |
+| [`properties`](#parameter-detail-securityrules-properties) | `object` | `{}` | Properties of the security rule.. |
+
+###### Parameter detail: `securityRules-properties`
+Overview of the `properties` object within the `securityRules` parameter.
+
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `protocol` | `string` | | Network protocol this rule applies to. |
+| `sourcePortRange` | `string` | | The source port or range. Integer or range between 0 and 65535. Asterisk "*" can also be used to match all ports. |
+| `sourcePortRanges` | `string[]` | `[]` | The source port ranges. |
+| `destinationPortRange` | `string` | | The destination port or range. Integer or range between 0 and 65535. Asterisk "*" can also be used to match all ports. |
+| `destinationPortRanges` | `string[]` | `[]`| The destination port ranges. |
+| `sourceAddressPrefix` | `string` | | The CIDR or source IP range. Asterisk "*" can also be used to match all source IPs. Default tags such as "VirtualNetwork", "AzureLoadBalancer" and "Internet" can also be used. If this is an ingress rule, specifies where network traffic originates from. |
+| `sourceAddressPrefixes` | `string[]` | `[]`| The CIDR or source IP ranges. |
+| `destinationAddressPrefix` | `string` | | The destination address prefix. CIDR or destination IP range. Asterisk "*" can also be used to match all source IPs. Default tags such as "VirtualNetwork", "AzureLoadBalancer" and "Internet" can also be used. |
+| `destinationAddressPrefixes` | `string[]` | `[]`| The destination address prefixes. CIDR or destination IP ranges. |
+| `access` | `string` | | Whether network traffic is allowed or denied. |
+| `priority` | `int` |  | The priority of the rule. The value can be between 100 and 4096. The priority number must be unique for each rule in the collection. The lower the priority number, the higher the priority of the rule. |
+| `direction` | `string` | | The direction of the rule (inbound\outbound). The direction specifies if rule will be evaluated on incoming or outgoing traffic. |
+
+##### Parameter detail: `serviceEndpoints`
+An array of Service Endpoints to deploy to the virtual network's subnet as part of the `subnets` object. When not provided, no service endpoints will be deployed. Not provinding service endpoints for a vnet that has service endpoints configured will result in removing the policies for the subnet.
+
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `location` | `string[]` | `[]` | A list of locations. |
+| `service` | `string` |  | The type of the endpoint service. |
+
+##### Parameter detail: `serviceEndpointPolicies`
+An array of Service Endpoints Policies to deploy to the virtual network's subnet as part of the `subnets` object. When not provided, no service endpoint policies will be deployed. Not provinding service endpoint policies for a subnet that has service endpoint policies configured will result in removing the service endpoints for the subnet.
+
+> NOTE:
+> Right now, Microsoft.Storage is the only service that is available for endpoint policies.
+> By default, if no policies are attached to a subnet with storage endpoint, you can access all storage accounts in the service.
+> Once a policy is configured, only the resources specified in the policy can be accessed from compute instances in that subnet. Access to all other storage accounts will be denied.
+
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `id` | `string` |  | Resource ID of service endpoint policy.|
+| `location` | `string` |  | Resource location. |
+| `tags` | `object` | `{}` | Resource tags. |
+| [`properties`](#parameter-detail-ServiceEndpointPolicyPropertiesFormat) | `object`  | `{}` | Properties of the service end point policy. (`ServiceEndpointPolicyPropertiesFormat`) |
+
+Check the source information on Microsoft [documentation](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks/subnets?pivots=deployment-language-bicep#serviceendpointpolicy).
+For additional information on service endpoint policies you may refer this Microsoft [documentation](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoint-policies-overview)
+
+###### Parameter detail: `ServiceEndpointPolicyPropertiesFormat`
+Overview of the `properties` object within the `serviceEndpointPolicies` parameter.
+
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `contextualServiceEndpointPolicies` | `string[]` | `[]` | A collection of contextual service endpoint policy. |
+| `serviceAlias` | `string` |  | The alias indicating if the policy belongs to a service. Support for aliases on service endpoint policies to allow whitelisting of resources required for certain P/SaaS offerings. |
+| [`serviceEndpointPolicyDefinitions`](#parameter-detail-serviceEndpointPolicyDefinitions) | `array`  | `[]` | A collection of service endpoint policy definitions of the service endpoint policy. (`serviceEndpointPolicyDefinitions`) |
+
+Check the source information on Microsoft [documentation](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks/subnets?pivots=deployment-language-bicep#serviceendpointpolicypropertiesformat).
+
+###### Parameter detail: `serviceEndpointPolicyDefinitions`
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `id` | `string` |  | Resource ID of the policy definition. |
+| `name` | `string` |  | The name of the resource that is unique within a resource group. This name can be used to access the resource. |
+| [`properties`](#parameter-detail-ServiceEndpointPolicyDefinitionPropertiesFormat) | `object`  | `{}` | Properties of the service end point policy. (`ServiceEndpointPolicyDefinitionPropertiesFormat`) |
+| `type` | `string` |  | The type of the resource. |
+
+Check the source information on Microsoft [documentation](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks/subnets?pivots=deployment-language-bicep#serviceendpointpolicydefinition).
+
+###### Parameter detail: `ServiceEndpointPolicyDefinitionPropertiesFormat`
+Overview of the `properties` object within the `ServiceEndpointPolicyDefinition` parameter.
+
+| Parameter Name | Type | Default Values | Description |
+| :-- | :-- | :-- | :-- |
+| `description` | `string` |  | A description for this rule. Restricted to 140 chars. |
+| `service` | `string` |  | Service endpoint name. |
+| `serviceResources` | `string[]` | `[]` | A list of service resources. |
+
+Check the source information on Microsoft [documentation](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks/subnets?pivots=deployment-language-bicep#serviceendpointpolicydefinitionpropertiesformat).
+
+##### Parameter detail: `privateEndpointNetworkPolicies`
+| Parameter Name | Type | Default Values | Description |
+| :-- | :-- | :-- | :-- |
+| `privateEndpointNetworkPolicies` | `string`  | `Disabled` | Enable or Disable apply network policies on private end point in the subnet. Possible values are `Enabled` or `Disabled`.
+
+Check the source information on Microsoft [documentation](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks/subnets?pivots=deployment-language-bicep#subnetpropertiesformat).
+
+##### Parameter detail: `privateLinkServiceNetworkPolicies`
+| Parameter Name | Type | Default Values | Description |
+| :-- | :-- | :-- | :-- |
+| `privateLinkServiceNetworkPolicies`| `string`  | `Disabled` | Enable or Disable apply network policies on private link service in the subnet. Possible values are `Enabled` or `Disabled`. |
+
+Check the source information on Microsoft [documentation](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks/subnets?pivots=deployment-language-bicep#subnetpropertiesformat).
+
+##### Parameter detail: `ipAllocations`
+| Parameter Name | Type | Default Values | Description |
+| :-- | :-- | :-- | :-- |
+| `id` | `string`  |  | Resource ID. |
+
+Check the source information on Microsoft [documentation](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks/subnets?pivots=deployment-language-bicep#subresource).
+
+##### Parameter detail: `delegations`
+An array of delegations for the particular subnet.
+
+| Parameter Name | Type | Default Values | Description |
+| :-- | :-- | :-- | :-- |
+| `name` | `string` |  | Name of the delegated service (i.e. Microsoft.DBforMySQL.flexibleServers) |
+| `id` | `string` |  | Resource ID of the subnet that contains the delegated service (i.e. /subscriptions/subscriptionId/resourceGroups/resourceGroupName/providers/Microsoft.Network/virtualNetworks/vNetName/subnets/snetName/delegations/Microsoft.DBforMySQL.felxibleServers) |
+| `properties` | `string` |  | The properties contains usually just the serviceName (i.e. "serviceName" : "Microsoft.DBforMySQL/flexibleServers" ). For more detailed info use the Export Template of the virtual network from the Azure Portal |
+| `type` | `string` |  | Resource type (i.e. Microsoft.Network/virtualNetwork/subnets/delegations) |
+
+Check the source information on Microsoft [documentation](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks/subnets?pivots=deployment-language-bicep#subresource).
+
+### Optional parameters
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `privateDnsZoneName` | `string` |  | Specifies the private DNS zone name to be deployed. | >> WIP
+| `deployDdos` | `bool` | `false` | Indicates if DDoS protection is enabled for all the protected resources in the virtual network. It requires a DDoS protection plan associated with the resource.|
+| `deployFirewallTlsPrerequisites` | `bool` | `false`| Specifies if the prerequisites for Azure Firewall TLS inspection feature need to be deployed (Managed Identity and Keyvault). Set this to true if you want to deploy these resources. Note that after deployment, you have to manually generate and upload the certificate into the KeyVault. This will not enable TLS inspection, this is only to satisfy the prerequisites for enabling TLS inspection for Azure Firewall  |
+| `additionalNetworkingTags` | `object` | `{}` | A mapping of additional tags to assign to networking related resource group(s) and resource(s). |
+| `legacyNaming` | `bool` | `false` | Specify to enable or disable support for legacy names. Set to `true if the environment was\is upgraded to 2.x from a version that was deployed using 1.x version`. Explanation provided in [Resource names](#resource-names) section. |
+| `enableVmProtection` | `bool` | `false` | Indicates if VM protection is enabled for all the subnets in the virtual network. |
+| `dnsServers` | `array` | `[]` | Specifies the DNS address(es) of the DNS Server(s) used by the virtual network. Use an empty array [] if the default Azure provided DNS should be used. |
+| [`routes`](#parameter-detail-routes) | `array` | `[]` | Collection of routes contained within a route table. |
+| `disableBgpRoutePropagation` | `bool` | `true` | Whether to disable the routes learned by BGP on that route table. True means disable. |
+| `deployVpnGateway` | `bool` | `false` | Specifies if VPN Gateway is to be deployed.|
+| [`vpnGatewayIpconfig`](#parameter-detail-vpngatewayipconfig) | `object` | `{}` | Specifies the configuration values for the VPN Gateway Public IP. |
+| [`vpnGatewayConfig`](#parameter-detail-vpngatewayconfig) | `object` | `{}` | Specifies the configuration values for the VPN Gateway. |
+| `deployBastionHost` | `bool` | `false` | Specifies if Bastion host is to be deployed.|
+| [`bastionHostIpConfig`](#parameter-detail-bastionhostipconfig) | `object` | `{}` | Specifies the configuration values for the Bastion host Public IP. |
+| [`bastionHostConfig`](#parameter-detail-bastionHostconfig) | `object` | `{}` | Specifies the configuration values for the Bastion host. |
+| `cntySubscriptionId` | `string` |  | Specify the Connectivity Subscription ID. |
+| [`spokePeeringConfig`](#parameter-detail-spokepeeringconfig) | `object` | `{}`| Specifies the configuration values for creating a peering link from spoke virtual network to hub virtual network. |
+| [`hubPeeringConfig`](#parameter-detail-hubpeeringconfig) | `object` | `{}` | Specifies the configuration values for creating a peering link from hub virtual network to spoke virtual network.|
+| `deployPrivateDnsZone` | `bool` | `false` | Specifies to enable or disable Private DNS Zone deployment. |
+| `deployHubPrivateDnsVirtualNetworkLink` | `bool` | `false` | Specifies to enable or disable linking connectivity virtual network to Private DNS Zone. |
+| `deploySpokePrivateDnsVirtualNetworkLink` | `bool` | `false` | Specifies to enable or disable linking Landingzone virtual network to Private DNS Zone. |
+| `enableHubPrivateDnsZoneAutoRegistration` | `bool` | `false` | Specifies to enable or disable auto registration to Private DNS zone for Connectivity virtual network. |
+| `enableSpokePrivateDnsZoneAutoRegistration` | `bool` | `false` | Specifies to enable or disable auto registration to Private DNS zone for the Landingzone virtual network. |
+| `privateDnsARecordSet` | `array` | `[]` | Specifies the A record set to be deployed.|
+| `privateDnsCnameRecordSet` | `array` | `[]` | Specifies the CNAME record set to be deployed.|
+| `privateDnsMxRecordSet` | `array` | `[]` | Specifies the MX record set to be deployed.|
+| `privateDnsPtrRecordSet` | `array` | `[]` | Specifies the PTR record set to be deployed.|
+| `privateDnsSrvRecordSet` | `array` | `[]` | Specifies the SRV record set to be deployed.|
+| `privateDnsTxtRecordSet` | `array` | `[]` | Specifies the TXT record set to be deployed.|
+| `privateDnsAaaaRecordSet` | `array` | `[]` | Specifies the AAAA record set to be deployed.|
+
+#### Parameter detail: `routes`
+An array of route objects to be deployed.
+
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `name` | string | `DCSDefaultRoute` | The name of the route in the route table. |
+| `addressPrefix` | array| `0.0.0.0/0` | The destination IPv4 address in CIDR notation, to which the route applies. |
+| `nextHopIpAddress` | array| `<Hub Azure Firewall IPv4 address>` | The IPv4 address, network traffic should be forwarded to. Next hop values are only allowed in routes where the next hop type is VirtualAppliance. |
+| `nextHopType` | string | `VirtualAppliance` | The next hop type to where network traffic is forwarded to. Allowed values: `Internet`,`None`,`VirtualAppliance`,`VirtualNetworkGateway`,`VnetLocal`. |
+
+#### Parameter detail: `vpnGatewayIpConfig`
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `skuName` | `string` | `Standard` | Specifies the SKU type of the Public IP address. Allowed values: `Basic`,`Standard`. |
+| `skuTier` | `string` | `Regional` | Specifies the tier of the Public IP address. Allowed values: `Global`,`Regional`. |
+| `zones` | `array` | `[]` | Specifies an array with the availability zones for the Public IP address. |
+| `idleTimeoutInMinutes` | `int` | `4` | Specifies the idle timeout of the Public IP address. |
+| `publicIpAddressVersion` | `string` | `Ipv4` | Specifies the Public IP address version. Allowed values: `IPv4`,`IPv6`. |
+| `publicIpAllocationMethod` | `string` | `Static` | Specifies the Public IP address allocation method. Allowed values: `Dynamic`,`Static`. |
+| `privateIPAllocationMethod` | `string` | `Dynamic` | Specifies the private IP address allocation method for the Virtual Network Gateway. Allowed values: `Dynamic`,`Static`. |
+
+#### Parameter detail: `vpnGatewayConfig`
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `sku` | `string` | `VpnGw1` | Specifies the sku of the Virtual Network Gateway. Check the source information on Microsoft [documentation](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworkgateways?pivots=deployment-language-bicep). |
+| `vpnType` | `string` | `RouteBased` | Specifies the vpn type of the Virtual Network Gateway. Allowed values: `PolicyBased`,`RouteBased`. |
+| `gatewayType` | `string` | `Vpn` | Specifies the type of the Virtual Network Gateway. Allowed values: `ExpressRoute`,`LocalGateway`,`Vpn`. |
+| `vpnGatewayGeneration` | `string` | `Generation1` | The generation for this Virtual Network Gateway. Must be None if gatewayType is not VPN. Allowed values: `Generation1`,`Generation2`,`None`.  |
+
+#### Parameter detail: `bastionHostIpConfig`
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `skuName` | `string` | `Standard` | Specifies the SKU type of the Public IP address. Allowed values: `Basic`,`Standard`. |
+| `skuTier` | `string` | `Regional` | Specifies the tier of the Public IP address. Allowed values: `Global`,`Regional`. |
+| `zones` | `array` | `[]` | Specifies an array with the availability zones for the Public IP address. |
+| `idleTimeoutInMinutes` | `int` | `4` | Specifies the idle timeout of the Public IP address. |
+| `publicIpAddressVersion` | `string` | `Ipv4` | Specifies the Public IP address version. Allowed values: `IPv4`,`IPv6`. |
+| `publicIpAllocationMethod` | `string` | `Static` | Specifies the Public IP address allocation method. Allowed values: `Dynamic`,`Static`. |
+| `privateIPAllocationMethod` | `string` | `Dynamic` | Specifies the private IP address allocation method for the Bastion Host. Allowed values: `Dynamic`,`Static`. |
+
+#### Parameter detail: `bastionHostConfig`
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `sku` | `string` | `Basic` | Specifies the sku of the Bastion host. Allowed values: `Basic`,`Standard`. |
+| `enableFileCopy` | `bool` | `true` | Enable/Disable File Copy feature of the Bastion Host resource. To enable filecopy, upgrade to Bastion Standard. |
+| `scaleUnits` | `int` | 2 | For Basic sku scale units (instance count) is fixed to 2. Bastion scalable host is available with Standard SKU. To add additional VM instances, upgrade to Standard and select the desired instance count. |
+| `enableShareableLink` | `bool` | `true` | Shareable Link is not available for the Bastion Basic SKU. To enable the feature, upgrade to Bastion Standard. |
+| `disableCopyPaste` | `bool` | `false` | Copy and paste is enabled by default for Bastion Basic sku. To disable copy and paste, upgrade to Bastion Standard. |
+| `enableIpConnect` | `bool` | `true` | IP-based connection is not available for the Bastion Basic SKU. To enable the feature, upgrade to Bastion Standard. |
+| `enableTunneling` | `bool` | `true` | Enable/Disable Tunneling feature of the Bastion Host resource. To enable the feature, upgrade to Bastion Standard. |
+
+#### Parameter detail: `spokePeeringConfig`
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `allowVirtualNetworkAccess` | `bool` | `true` | Allow communication between the two virtual networks. |
+| `allowForwardedTraffic` | `bool` | `true` | Allow forwarded traffic from remote virtual network (traffic not originating from inside remote virtual network) into this virtual network. |
+| `allowGatewayTransit` | `bool` | `false` | If you have a virtual network gateway deployed in this virtual network and want to allow traffic from the peered virtual network to flow through this gateway.  |
+| `useRemoteGateways` | `bool` | `false` | Set this option to true if you wish to use the peered virtual network's gateway. The peered virtual network must have a gateway already configured and have Allow gateway transit set to true.  |
+
+Check the source information on Microsoft [documentation](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks/virtualnetworkpeerings?pivots=deployment-language-bicep).
+#### Parameter detail: `hubPeeringConfig`
+| Parameter Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `allowVirtualNetworkAccess` | `bool` | `true` | Allow communication between the two virtual networks. |
+| `allowForwardedTraffic` | `bool` | `true` | Allow forwarded traffic from remote virtual network (traffic not originating from inside remote virtual network) into this virtual network. |
+| `allowGatewayTransit` | `bool` | `false` | If you have a virtual network gateway deployed in this virtual network and want to allow traffic from the peered virtual network to flow through this gateway.  |
+| `useRemoteGateways` | `bool` | `false` | Set this option to true if you wish to use the peered virtual network's gateway. The peered virtual network must have a gateway already configured and have Allow gateway transit set to true.  |
+
+Check the source information on Microsoft [documentation](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks/virtualnetworkpeerings?pivots=deployment-language-bicep).
+
+## ELZ Azure Configuration Values
+The parentModule folder (where the networking.bicep file resides) contains a `parentModuleConfig.json` file. This json file holds the default configuration for the networking solution deployment.
+
+The deafult configuration in networking solution is used for setting up prerequisites for TLS inspection, if this option is enabled.
+
+The `parentModuleConfig.json` file is referenced by the networking parent module by declaring a 'parentModuleConfig' variable; `var parentModuleConfig = loadJsonContent('parentModuleConfig.json')`.
+
+In the following table the configuration defaults are described.
+
+| Name | Type | Default Value | Description |
+| :-- | :-- | :-- | :-- |
+| `tlsKeyVaultConfig` | `object` | Please refer `parentModuleConfig.json` file. | Configuration for the Key Vault where your certificate is stored. |
+| `tlsKeyVaultFeatures` | `object` | Please refer `parentModuleConfig.json` file. | Key Vault properties. |
+| `tlsAccessPolicies` | `object` | Please refer `parentModuleConfig.json` file. | Key Vault access policies. |
+
+> **Note**
+>
+> It is recommended to only change these values after consulting the Azure engineering team, if required.
+
+## Parameter usage examples
+The following examples show how to use the more abstract parameters (objects & array of objects) in the Networking parent module.
+
+### Parameter usage: `routes`
+
+<p>
+<details>
+
+<summary>Parameter JSON format</summary>
+
+```json
+"routes": {
+    "value": [
+        {
+            "name": "DCSDefaultRoute",
+            "properties": {
+                "addressPrefix": "0.0.0.0/0",
+                "nextHopIpAddress": "x.x.x.x", //The IPv4 address, network traffic should be forwarded to. Next hop values are only allowed in routes where the next hop type is VirtualAppliance.
+                "nextHopType": "VirtualAppliance"
+            }
+        }
+    ]
+}
+```
+
+</details>
+</p>
+
+### Parameter usage: `subnets`
+
+For guidance on how secruity rules should be written please refer `AzureBastionSubnet` section from the example provided below.
+NOTE: For `AzureBastionSubnet` subnet itself, if deployed with NSG, do not onmit any of the rules provided below. For addition delatils please reffer [Parameter detail: `securityRules`](#parameter-detail-securityrules)
+
+<p>
+<details>
+
+<summary>Parameter JSON format</summary>
+
+
+```json
+"subnets": {
+  "value": [
+    {
+      "name": "network",
+      "addressPrefix": "x.x.x.x/24",
+      "useNamingConventionModule": true,
+      "securityRules": [],
+      "serviceEndpoints": [
+                        {
+                            "locations": [
+                                "westeurope"
+                            ],
+                            "service": "Microsoft.Storage"
+                        },
+                        {
+                            "locations": [
+                                "westeurope"
+                            ],
+                            "service": "Microsoft.Sql"
+                        }
+                    ],
+                    "serviceEndpointPolicies": [
+                        {
+                            "id": "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/serviceEndpointPolicies/{serviceEndpointPolicyName}",
+                            "location": "westeurope",
+                            "properties": {
+                                        "serviceEndpointPolicyDefinitions": [
+                                    {
+                                        "id": "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/serviceEndpointPolicies/serviceEndpointPolicyDefinitions/{serviceEndpointPolicyName}_Microsoft.Storage",
+                                        "name": "{serviceEndpointPolicyName}_Microsoft.Storage",
+                                        "properties": {
+                                            "description": "The Service Endpoint Policies for Storage account",
+                                            "service": "Microsoft.Storage",
+                                            "serviceResources": [
+                                                "/subscriptions/{subscriptionId}",
+                                                "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}",
+                                                "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}"
+                                                
+                                            ]
+                                        },
+                                        "type": "Microsoft.Network/serviceEndpointPolicies/serviceEndpointPolicyDefinitions"
+                                    },
+                                    {
+                                        "id": "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/serviceEndpointPolicies/serviceEndpointPolicyDefinitions/{serviceEndpointPolicyName}_Global",
+                                        "name": "{serviceEndpointPolicyName}_Global",
+                                        "properties": {
+                                            "description": "The Service Endpoint Policies for Global Alias",
+                                            "service": "Global",
+                                            "serviceResources": [
+                                                "/services/Azure/Batch",
+                                                "/services/Azure/MachineLearning"
+                                            ]
+                                        },
+                                        "type": "Microsoft.Network/serviceEndpointPolicies/serviceEndpointPolicyDefinitions"
+                                    }
+                                ]
+                            },
+                            "tags": {}
+                        },
+                        {
+                            "id": "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/serviceEndpointPolicies/{anotherServiceEndpointPolicyName}",
+                            "location": "westeurope",
+                            "properties": {
+                                        "serviceEndpointPolicyDefinitions": [
+                                    {
+                                        "id": "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Network/serviceEndpointPolicies/serviceEndpointPolicyDefinitions/{anotherServiceEndpointPolicyName}_Microsoft.Storage",
+                                        "name": "{anotherServiceEndpointPolicyName}_Microsoft.Storage",
+                                        "properties": {
+                                            "description": "The Service Endpoint Policies for Storage account",
+                                            "service": "Microsoft.Storage",
+                                            "serviceResources": [
+                                                "/subscriptions/{subscriptionId}"
+                                            ]
+                                        },
+                                        "type": "Microsoft.Network/serviceEndpointPolicies/serviceEndpointPolicyDefinitions"
+                                    }
+                                ]
+                            },
+                            "tags": {}
+                        }
+                    ],
+      "privateEndpointNetworkPolicies": "Enabled",
+      "privateLinkServiceNetworkPolicies": "Enabled",
+      "ipAllocations": [
+        {
+          "id": "string"
+        }
+      ]
+    },
+    {
+      "name": "AzureFirewallSubnet",
+      "addressPrefix": "x.x.x.x/26",
+      "useNamingConventionModule": true
+    },
+    {
+      "name": "GatewaySubnet",
+      "addressPrefix": "x.x.x.x/26",
+      "useNamingConventionModule": true
+    },
+    {
+      "name": "AzureBastionSubnet",
+      "addressPrefix": "x.x.x.x/26",
+      "useNamingConventionModule": true,
+      "securityRules": [
+                        {
+                            "name": "Allow_HTTPS_Inbound",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "Internet",
+                                "destinationAddressPrefix": "*",
+                                "access": "Allow",
+                                "priority": 110,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "Allow_GatewayManager_Inbound",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "GatewayManager",
+                                "destinationAddressPrefix": "*",
+                                "access": "Allow",
+                                "priority": 120,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "Allow_AzureLoadBalancer_Inbound",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "AzureLoadBalancer",
+                                "destinationAddressPrefix": "*",
+                                "access": "Allow",
+                                "priority": 130,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "Allow_BastionHost_Communication_inside_vNet",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 140,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [
+                                    "8080",
+                                    "5701"
+                                ],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "Allow_SSH_and_RDP_Outbound",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 110,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [
+                                    "22",
+                                    "3389"
+                                ],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "Allow_443_to_AzureCloud_Outbound",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "AzureCloud",
+                                "access": "Allow",
+                                "priority": 120,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "AllowBastion_DataPlane_Outbound",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 130,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [
+                                    "5701",
+                                    "8080"
+                                ],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "Allow_Session_and_Certificate_Validation",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "80",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "Internet",
+                                "access": "Allow",
+                                "priority": 140,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        }
+                    ]
+    }
+  ]
+}
+```
+
+</details>
+</p>
+
+### Parameter usage: `vpnGatewayIpconfig`
+
+<p>
+<details>
+
+<summary>Parameter JSON format</summary>
+
+```json
+"vpnGatewayIpconfig": {
+    "value": {
+        "skuName": "Standard",
+        "skuTier": "Regional",
+        "zones": [],
+        "idleTimeoutInMinutes": 4,
+        "publicIpAddressVersion": "IPv4",
+        "publicIpAllocationMethod": "Static",
+        "privateIPAllocationMethod": "Dynamic"
+    }
+}
+```
+
+</details>
+</p>
+
+### Parameter usage: `vpnGatewayConfig`
+
+<p>
+<details>
+
+<summary>Parameter JSON format</summary>
+
+```json
+"vpnGatewayConfig": {
+    "value": {
+        "sku": "VpnGw1",
+        "vpnType": "RouteBased",
+        "gatewayType": "Vpn",
+        "vpnGatewayGeneration": "Generation1"
+    }
+}
+```
+</details>
+</p>
+
+### Parameter usage: `bastionHostIpConfig`
+
+<p>
+<details>
+
+<summary>Parameter JSON format</summary>
+
+```json
+"bastionHostIpConfig": {
+    "value": {
+        "skuName": "Standard",
+        "skuTier": "Regional",
+        "zones": [],
+        "idleTimeoutInMinutes": 4,
+        "publicIpAddressVersion": "IPv4",
+        "publicIpAllocationMethod": "Static",
+        "privateIPAllocationMethod": "Dynamic"
+    }
+}
+```
+
+</details>
+</p>
+
+### Parameter usage: `bastionHostConfig`
+
+<p>
+<details>
+
+<summary>Parameter JSON format</summary>
+
+```json
+"bastionHostConfig": {
+    "value": {
+        "sku": "Basic",
+        "enableFileCopy": true,
+        "scaleUnits": 2,
+        "enableShareableLink": true,
+        "disableCopyPaste": false,
+        "enableIpConnect": true,
+        "enableTunneling": true
+    }
+}
+```
+
+</details>
+</p>
+
+### Parameter usage: `spokePeeringConfig`
+
+<p>
+<details>
+
+<summary>Parameter JSON format</summary>
+
+```json
+"spokePeeringConfig": {
+    "value": {
+        "allowVirtualNetworkAccess": true,
+        "allowForwardedTraffic": true,
+        "allowGatewayTransit": false,
+        "useRemoteGateways": false
+    }
+}
+```
+
+</details>
+</p>
+
+### Parameter usage: `hubPeeringConfig`
+
+<p>
+<details>
+
+<summary>Parameter JSON format</summary>
+
+```json
+"hubPeeringConfig": {
+    "value": {
+        "allowVirtualNetworkAccess": true,
+        "allowForwardedTraffic": false,
+        "allowGatewayTransit": true,
+        "useRemoteGateways": false
+    }
+}
+```
+
+</details>
+</p>
+
+## Parameter File Examples
+Please refer the parameter files provided for network solution in the input folder of the repository.
+
+**NOTE:** The parameter files in the input folder serve as an example only. They may not consist of every parameter that can be supplied to deploy the solution. Please read this readme file for details on every parameter that can be used. Update the parameter file as per the environment. Do not run the deployment, using these files as is (exception - dev\test environments).
+
+In the input folder you should find two parameter files that you can refer to:
+- example-environment-name.cnty.networking.params.json
+- example-environment-name.lnd1.networking.params.json
+
+## Outputs
+
+None.

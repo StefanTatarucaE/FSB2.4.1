@@ -1,0 +1,121 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "logicAppName": {
+            "value": "test000085454"
+        },
+        "location": {
+            "value": "West Europe"
+        },
+        "logicAppState": {
+            "value": "Enabled"
+        },
+        "tags": {
+            "value": {
+              }
+        },
+        "systemAssignedIdentity": {
+            "value": false
+        },
+        "userAssignedIdentities": {
+            "value": {}
+        },
+        "definition": {
+            "value": {
+                "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                "actions": {
+                    "Initialize_variable": {
+                        "inputs": {
+                            "variables": [
+                                {
+                                    "name": "testvar",
+                                    "type": "string",
+                                    "value": "temp"
+                                }
+                            ]
+                        },
+                        "runAfter": {},
+                        "type": "InitializeVariable"
+                    },
+                    "Initialize_variable_2": {
+                        "inputs": {
+                            "variables": [
+                                {
+                                    "name": "connection",
+                                    "type": "string",
+                                    "value": "temp"
+                                }
+                            ]
+                        },
+                        "runAfter": {},
+                        "type": "InitializeVariable"
+                    },
+                    "Set_variable": {
+                        "inputs": {
+                            "name": "testvar",
+                            "value": "@{parameters('tempvar')}"
+                            
+                        },
+                        "runAfter": {
+                            "Initialize_variable": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "SetVariable"
+                    },
+                    "Set_variable_2": {
+                        "inputs": {
+                            "name": "testvar",
+                            "value": "@parameters('connections')['servicebus']['id']"
+                            
+                        },
+                        "runAfter": {
+                            "Initialize_variable_2": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "SetVariable"
+                    }
+                    
+                },
+                "contentVersion": "1.0.0.0",
+                "outputs": {},
+                "parameters": {
+                    "tempvar": {
+                        "type": "String"
+                    },
+                    "connections": {
+                        "defaultValue": {},
+                        "type": "Object"
+                    }
+                },
+                "triggers": {
+                    "manual": {
+                        "inputs": {
+                            "schema": {}
+                        },
+                        "kind": "Http",
+                        "type": "Request"
+                    }
+                }
+            }
+        },
+        "definitionParameters": {
+            "value": {
+                "tempvar" : {
+                    "value": "https://cu1-sub1-d-kvt-001.vault.azure.net"
+                  },
+                  "connections" : {
+                    "value": {
+                        "servicebus": {
+                          "connectionId": "testconnectionId",
+                          "connectionName": "sbConnectionName",
+                          "id": "/subscriptions/${subscription().id}/providers/Microsoft.Web/locations/${itsmResourceGroup.location}/managedApis/servicebus"
+                        }
+                      }
+                  }
+              }
+        }
+    }
+  }

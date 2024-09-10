@@ -1,0 +1,20 @@
+{
+    "kind": "StorageV2",
+    "sku": "Standard_LRS",
+    "accessTier": "Hot",
+    "allowBlobPublicAccess": false,
+    "networkAcls": {
+        "bypass": "AzureServices, Logging, Metrics",
+        "defaultAction": "Allow",
+        "ipRules": []
+    },
+    "changeFeed": {
+        "enabled": true,
+        "retentionInDays": 7
+    },
+    "blobSvcDeleteRetentionPolicy": {
+        "enabled": true,
+        "days": 7
+    },
+    "shouldCreateContainers": true
+}

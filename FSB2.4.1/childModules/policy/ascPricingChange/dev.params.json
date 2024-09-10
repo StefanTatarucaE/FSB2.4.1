@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "pricingTier": {
+            "value": {
+                "virtualMachinesTier": "Standard",
+                "appServicesTier": "Free",
+                "sqlServersTier": "Free",
+                "sqlServerVirtualMachinesTier": "Free",
+                "storageAccountsTier": "Free",
+                "opensourcerelationaldatabases": "Free",
+                "arm": "Free",
+                "dns": "Free",
+                "containers": "Free",
+                "CosmosDbs": "Free",
+                "cloudPosture":"Free",
+                "cloudPostureExtensions":{
+                  "sensitiveDataDiscovery": "True",
+                  "containerRegistriesVulnerabilityAssessments": "True",
+                  "agentlessDiscoveryForKubernetes": "True"
+                },
+                "keyVaultsTier": "Standard"
+            }
+        },
+        "virtualMachinesSubPlan": {
+            "value": "P2"
+        },
+        "ascPricingChangeDefName": {
+            "value": "asc.pricing.change.policy.def"
+        },
+        "ascPricingChangeDefDisplayName": {
+            "value": "ASC pricing change policy definition"
+        },
+        "ascPricingChangeDefAssignmentName": {
+            "value": "asc.pricing.change.policy.def.assignment"
+        },
+        "ascPricingChangeDefAssignmentDisplayName": {
+            "value": "ASC pricing change policy definition assignment"
+        },
+        "policyMetadata": {
+            "value": "Specify metadata source value required for billing and monitoring"
+        }
+    }
+}

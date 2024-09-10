@@ -1,0 +1,2 @@
+# Do not sync Bicep built ARM template file.
+getResourceId.json

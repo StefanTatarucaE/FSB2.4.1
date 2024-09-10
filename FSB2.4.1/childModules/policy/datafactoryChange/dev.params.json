@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "disablePublicNetworkAccessEffect": {
+            "value": "Modify"
+        },
+        "disablePublicNetworkAccessDefName": {
+            "value": "datafactory.disablePublicNetworkAccess.change.policy.def"
+        },
+        "disablePublicNetworkAccessDefDisplayName": {
+            "value": "Datafactory disable public network access change policy definition."
+        },
+        "dataFactoryChangeSetName": {
+            "value": "datafactory.change.policy.set"
+        },
+        "dataFactoryChangeSetDisplayName": {
+            "value": "Datafactory change policy set"
+        },
+        "dataFactoryChangeSetAssignmentName": {
+            "value": "datafactory.change.policy.set.assignment"
+        },
+        "dataFactoryChangeSetAssignmentDisplayName": {
+            "value": "Datafactory change policy set assignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        },
+        "policyRuleTag": {
+            "value": "EvidenManaged"
+        }
+    }
+}

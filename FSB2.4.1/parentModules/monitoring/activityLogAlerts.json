@@ -1,0 +1,403 @@
+{
+  "alertRules": [
+	  {
+      "alertScope": "core",
+      "alertType": "ServiceHealth",
+      "alertName": "Azure Service Health alert",
+      "alertDescription": "This alert is triggered when an Azure service has known issues",
+      "resourceTypesCondition": [
+        {
+          "field": "properties.incidentType",
+          "equals": "Incident"
+        }
+      ]
+	  },
+	  {
+      "alertScope": "core",
+      "alertType": "ServiceHealth",
+      "alertName": "Azure Service planned maintenance alert",
+      "alertDescription": "This alert is triggered when an Azure service has maintenance planned",
+      "resourceTypesCondition": [
+        {
+          "field": "properties.incidentType",
+          "equals": "Maintenance"
+        }
+      ]
+	  },
+	  {
+      "alertScope": "network",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure Network",
+      "alertDescription": "Cloud.IaaS.DCS-Azure-Network - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.network/applicationgateways",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.network/bastionhosts",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.network/connections",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.network/expressroutecircuits",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.network/frontdoors",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.network/LoadBalancers",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.network/virtualNetworkGateways",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.network/trafficmanagerprofiles",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "core",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure Security",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Security - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.KeyVault/vaults",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "core",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure Storage",
+      "alertDescription": "Cloud.IaaS.DCS-Azure-Storage - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.Storage/storageAccounts",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "osmgmt",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Virtual machines OS",
+      "alertDescription": "Cloud.IaaS.DCS-Azure-OS - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.compute/virtualmachines",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.classiccompute/virtualmachines",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.classiccompute/domainnames",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "paas",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure Analytics",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Analytics - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.datafactory/factories",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.AnalysisServices/servers",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.datalakeanalytics/accounts",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.datalakestore/accounts",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.DataShare/accounts",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.hdinsight/clusters",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.eventhub/namespaces",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.Kusto/clusters",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.PowerBIDedicated/Capacities",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.StreamAnalytics/streamingjobs",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "paas",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure Web",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Web - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.CDN/profile",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.ApiManagement/service",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.devices/iothubs",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.DigitalTwins/DigitalTwinsInstances",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.IoTCentral/IoTApps",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.MachineLearning/webServices",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.cognitiveservices/accounts",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.NotificationHubs/namespace",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.search/searchServices",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.web/serverFarms",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.web/sites",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.Media/mediaservices",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "paas",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure Compute",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Compute - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.Batch/batchAccounts",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.AppPlatform/Spring",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.compute/hostgroups/hosts",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.ServiceFabric/clusters",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "paas",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure Compute-AKS",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Compute-AKS - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.ContainerService/managedClusters",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "paas",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure-Database-MSSQL",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Database-MSSQL - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.SQL/managedInstances/databases",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.SQL/servers/databases",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "paas",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure-Database-CosmosDB",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Database-CosmosDB - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.documentdb/databaseAccounts",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "paas",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure-Database-PostgreSQL",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Database-PostgreSQL - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.DBforPostgreSQL/servers",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "paas",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure-Database-MySQL",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Database-MySQL - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.DBforMySQL/servers",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "paas",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure-Database-MariaDB",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Database-MariaDB - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.DBforMariaDB/servers",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "paas",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure-Database",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Database - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.Cache/Redis",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.datamigration/services",
+          "containsAny": null
+        }
+      ]
+	  },
+	  {
+      "alertScope": "paas",
+      "alertType": "ResourceHealth",
+      "alertName": "Azure Resource Health alert rule - Azure-Management",
+      "alertDescription": "Cloud.PaaS.DCS-Azure-Management - This Resource Health alert is triggered when an issue occurs in Azure platform",
+      "resourceTypesCondition": [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.operationalinsights/workspaces",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.RecoveryServices/vaults",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.ServiceBus/namespaces",
+          "containsAny": null
+        }
+      ]
+	  }        
+  ]
+}

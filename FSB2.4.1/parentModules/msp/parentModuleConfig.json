@@ -1,0 +1,73 @@
+{
+    "cisPolicyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/06f19060-9e68-4070-92ca-f15cc126059e",
+    "isoPolicyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/89c6cddc-1c73-4ac1-b19c-54d1a15a42f2",
+    "mcsbPolicyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8",
+    "monitoringWorkspacePublicNetworkAccess": {
+        "forIngestion": "Enabled",
+        "forQuery": "Enabled"
+    },
+    "dataSources": [],
+    "solutions": [],
+    "aadLogsProperties": [
+        {
+            "logCategory": "AuditLogs",
+            "retentionDays": 0,
+            "enabled": true
+        },
+        {
+            "logCategory": "SignInLogs",
+            "retentionDays": 0,
+            "enabled": true
+        },
+        {
+            "logCategory": "NonInteractiveUserSignInLogs",
+            "retentionDays": 0,
+            "enabled": true
+        },
+        {
+            "logCategory": "ServicePrincipalSignInLogs",
+            "retentionDays": 0,
+            "enabled": true
+        },
+        {
+            "logCategory": "ManagedIdentitySignInLogs",
+            "retentionDays": 0,
+            "enabled": true
+        },
+        {
+            "logCategory": "ProvisioningLogs",
+            "retentionDays": 0,
+            "enabled": true
+        },
+        {
+            "logCategory": "ADFSSignInLogs",
+            "retentionDays": 0,
+            "enabled": true
+        },
+        {
+            "logCategory": "RiskyUsers",
+            "retentionDays": 0,
+            "enabled": true
+        },
+        {
+            "logCategory": "UserRiskEvents",
+            "retentionDays": 0,
+            "enabled": true
+        },
+        {
+            "logCategory": "NetworkAccessTrafficLogs",
+            "retentionDays": 0,
+            "enabled": true
+        },
+        {
+            "logCategory": "RiskyServicePrincipals",
+            "retentionDays": 0,
+            "enabled": true
+        },
+        {
+            "logCategory": "ServicePrincipalRiskEvents",
+            "retentionDays": 0,
+            "enabled": true
+        }
+    ]
+}

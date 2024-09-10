@@ -1,0 +1,27 @@
+{
+    "resourceType": "Microsoft.Web/sites",
+    "functionName": "checkForSupportingOsVm",
+    "advancedFilters": [
+        {
+            "operator": "StringBeginsWith",
+            "key": "data.operationName",
+            "Values": [
+                "Microsoft.Compute/virtualMachines/write",
+                "Microsoft.Compute/virtualMachines/start/action"
+            ]
+        },
+        {
+            "operator": "StringBeginsWith",
+            "key": "data.authorization.action",
+            "Values": [
+                "Microsoft.Resources/tags/write",
+                "Microsoft.EventGrid/eventSubscriptions/write",
+                "Microsoft.Compute/virtualMachines/write"
+            ]
+        }
+    ],
+    "includedEventType": [
+        "Microsoft.Resources.ResourceWriteSuccess",
+        "Microsoft.Resources.ResourceActionSuccess"
+    ]
+}

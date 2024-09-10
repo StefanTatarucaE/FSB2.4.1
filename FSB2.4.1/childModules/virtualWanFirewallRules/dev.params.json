@@ -1,0 +1,199 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "firewallRuleCollectionGroups": {
+            "value": [
+                {
+                    "name": "DefaultApplicationRuleCollectionGroup",
+                    "properties": {
+                        "priority": 1500,
+                        "ruleCollections": [
+                            {
+                                "name": "Eviden-Application-Allow-RC",
+                                "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                "priority": 1500,
+                                "action": {
+                                    "type": "Allow"
+                                },
+                                "rules": [
+                                    {
+                                        "ruleType": "ApplicationRule",
+                                        "name": "EvidenAllowMicrosoft",
+                                        "protocols": [
+                                            {
+                                                "protocolType": "Https",
+                                                "port": 443
+                                            }
+                                        ],
+                                        "fqdnTags": [],
+                                        "webCategories": [],
+                                        "targetFqdns": [
+                                            "*.microsoft.com"
+                                        ],
+                                        "targetUrls": [],
+                                        "terminateTLS": false,
+                                        "sourceAddresses": [
+                                            "*"
+                                        ],
+                                        "destinationAddresses": [],
+                                        "sourceIpGroups": []
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Eviden-Application-Deny-RC",
+                                "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                "priority": 500,
+                                "action": {
+                                    "type": "Deny"
+                                },
+                                "rules": []
+                            },
+                            {
+                                "name": "Cu6-Application-Allow-RC",
+                                "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                "priority": 1000,
+                                "action": {
+                                    "type": "Allow"
+                                },
+                                "rules": []
+                            },
+                            {
+                                "name": "Cu6-Application-Deny-RC",
+                                "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                "priority": 100,
+                                "action": {
+                                    "type": "Deny"
+                                },
+                                "rules": []
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "DefaultNetworkRuleCollectionGroup",
+                    "properties": {
+                        "priority": 100,
+                        "ruleCollections": [
+                            {
+                                "name": "Eviden-Network-Allow-RC",
+                                "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                "priority": 1500,
+                                "action": {
+                                    "type": "Allow"
+                                },
+                                "rules": [
+                                    {
+                                        "ruleType": "NetworkRule",
+                                        "name": "EvidenAllowTCP",
+                                        "ipProtocols": [
+                                            "TCP"
+                                        ],
+                                        "destinationPorts": [
+                                            "*"
+                                        ],
+                                        "sourceAddresses": [
+                                            "*"
+                                        ],
+                                        "sourceIpGroups": [],
+                                        "destinationIpGroups": [],
+                                        "destinationAddresses": [
+                                            "*"
+                                        ],
+                                        "destinationFqdns": []
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Eviden-Network-Deny-RC",
+                                "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                "priority": 500,
+                                "action": {
+                                    "type": "Deny"
+                                },
+                                "rules": [
+                                    {
+                                        "ruleType": "NetworkRule",
+                                        "name": "EvidenDenyRDP",
+                                        "ipProtocols": [
+                                            "Any"
+                                        ],
+                                        "destinationPorts": [
+                                            "3389"
+                                        ],
+                                        "sourceAddresses": [
+                                            "*"
+                                        ],
+                                        "sourceIpGroups": [],
+                                        "destinationIpGroups": [],
+                                        "destinationAddresses": [
+                                            "*"
+                                        ],
+                                        "destinationFqdns": []
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "Cu6-Network-Allow-RC",
+                                "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                "priority": 1000,
+                                "action": {
+                                    "type": "Allow"
+                                },
+                                "rules": []
+                            },
+                            {
+                                "name": "Cu6-Network-Deny-RC",
+                                "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                "priority": 100,
+                                "action": {
+                                    "type": "Deny"
+                                },
+                                "rules": []
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "DefaultDnatRuleCollectionGroup",
+                    "properties": {
+                        "priority": 700,
+                        "ruleCollections": [
+                            {
+                                "ruleCollectionType": "FirewallPolicyNatRuleCollection",
+                                "action": {
+                                    "type": "Dnat"
+                                },
+                                "rules": [
+                                    {
+                                        "ruleType": "NatRule",
+                                        "name": "AllowRDP",
+                                        "translatedAddress": "192.168.0.1",
+                                        "translatedPort": "3389",
+                                        "ipProtocols": [
+                                            "TCP",
+                                            "UDP"
+                                        ],
+                                        "sourceAddresses": [
+                                            "192.168.0.1"
+                                        ],
+                                        "sourceIpGroups": [],
+                                        "destinationAddresses": [
+                                            "172.167.87.46"
+                                        ],
+                                        "destinationPorts": [
+                                            "3389"
+                                        ]
+                                    }
+                                ],
+                                "name": "AllowRDP",
+                                "priority": 700
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

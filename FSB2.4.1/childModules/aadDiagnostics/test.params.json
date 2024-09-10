@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "logAnalyticsWorkspaceResourceId": {
+      "value": "/subscriptions/be09a3a8-0c4b-4643-910f-4506db3598b3/resourcegroups/cu6-cnty-d-rsg-hub/providers/microsoft.operationalinsights/workspaces/la-default"
+    },
+    "aadDiagnosticsRuleName": {
+      "value": "EvidenDiagnosticRule-SendToLogAnalytics"
+    },
+    "aadLogsProperties": {
+      "value": [
+        {
+          "logCategory": "Auditlogs",
+          "retentionDays": 0,
+          "enabled": true
+        },
+        {
+          "logCategory": "SignInLogs",
+          "retentionDays": 0,
+          "enabled": true
+        },
+        {
+          "logCategory": "NonInteractiveUserSignInLogs",
+          "retentionDays": 0,
+          "enabled": true
+        },
+        {
+          "logCategory": "ServicePrincipalSignInLogs",
+          "retentionDays": 0,
+          "enabled": true
+        },
+        {
+          "logCategory": "ManagedIdentitySignInLogs",
+          "retentionDays": 0,
+          "enabled": true
+        },
+        {
+          "logCategory": "ProvisioningLogs",
+          "retentionDays": 0,
+          "enabled": true
+        },
+        {
+          "logCategory": "ADFSSignInLogs",
+          "retentionDays": 0,
+          "enabled": true
+        },
+        {
+          "logCategory": "RiskyUsers",
+          "retentionDays": 0,
+          "enabled": true
+        },
+        {
+          "logCategory": "UserRiskEvents",
+          "retentionDays": 0,
+          "enabled": true
+        },
+        {
+          "logCategory": "NetworkAccessTrafficLogs",
+          "retentionDays": 0,
+          "enabled": true
+        },
+        {
+          "logCategory": "RiskyServicePrincipals",
+          "retentionDays": 0,
+          "enabled": true
+        },
+        {
+          "logCategory": "ServicePrincipalRiskEvents",
+          "retentionDays": 0,
+          "enabled": true
+        }
+      ]
+    }
+  }
+}

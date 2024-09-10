@@ -1,0 +1,450 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "## Azure Analysis Services Overview"
+      },
+      "name": "text - 1"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "ff57fc0a-8cd6-42be-aeca-c78ffe77f3e1",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subscription",
+            "type": 6,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": false,
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "b1777606-6c50-4544-b61e-ec5bf86a97cf",
+            "version": "KqlParameterItem/1.0",
+            "name": "Location",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type =~ \"microsoft.analysisservices/servers\"\r\n| project location\r\n| distinct location",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "9a64e295-6164-4120-b1f4-0280c0f48ee9",
+            "version": "KqlParameterItem/1.0",
+            "name": "ResourceGroup",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type =~ \"microsoft.analysisservices/servers\"\r\n| project resourceGroup\r\n| distinct resourceGroup",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "c0b61e29-1b2f-4ecb-9d2a-e6d1c11b618c",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]Managed",
+            "label": "Managed by [parameter(companyName)]",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Yes\", \"No\"]",
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "value": [
+              "value::all"
+            ]
+          },
+          {
+            "id": "97ff14ab-c359-4d63-98f1-0a6c210a0f10",
+            "version": "KqlParameterItem/1.0",
+            "name": "Tier",
+            "label": "Pricing Tier",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type =~ \"microsoft.analysisservices/servers\"\r\n| extend Pricing_Tier = tostring(sku.name)\r\n| project Pricing_Tier\r\n| distinct Pricing_Tier",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "417903d2-9653-489f-8d97-b4842e51a6f6",
+            "version": "KqlParameterItem/1.0",
+            "name": "ManMode",
+            "label": "Managed Mode",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Managed\", \"Not Managed\"]",
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "value": [
+              "value::all"
+            ]
+          },
+          {
+            "id": "a8fc1941-133b-4358-bb1a-3d6812632b8b",
+            "version": "KqlParameterItem/1.0",
+            "name": "AASAvailable",
+            "type": 1,
+            "isHiddenWhenLocked": true,
+            "criteriaData": [
+              {
+                "criteriaContext": {
+                  "leftOperand": "Location",
+                  "operator": "is Empty",
+                  "rightValType": "param",
+                  "resultValType": "static",
+                  "resultVal": "AASUnAvailable"
+                }
+              },
+              {
+                "criteriaContext": {
+                  "leftOperand": "Location",
+                  "operator": "isNotNull",
+                  "rightValType": "param",
+                  "resultValType": "static",
+                  "resultVal": "AASAvailable"
+                }
+              },
+              {
+                "criteriaContext": {
+                  "operator": "Default",
+                  "rightValType": "param",
+                  "resultValType": "param"
+                }
+              }
+            ]
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "parameters - 2"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Resources\r\n | where type =~ 'microsoft.analysisservices/servers'\r\n | extend [parameter(tagPrefix)]Managed=iif((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"Yes\", \"No\")\r\n| extend Subscription = subscriptionId\r\n| extend Location = location\r\n| extend ResourceGroup = resourceGroup\r\n| extend Tier = sku.name\r\n| extend Capacity = sku.capacity\r\n| extend managedMode = tostring(iif(properties.managedMode == 1, \"Managed\", \"Not Managed\"))\r\n| extend QueryPoolConnectionMode = tostring(properties.querypoolConnectionMode)\r\n| where Tier in ({Tier})\r\n| where [parameter(tagPrefix)]Managed in ({[parameter(tagPrefix)]Managed})\r\n| where ResourceGroup in ({ResourceGroup})\r\n| where managedMode in ({ManMode})\r\n| where Location in ({Location})\r\n| project Name=id, Subscription, Location, ResourceGroup, [parameter(tagPrefix)]Managed, Tier, Capacity, managedMode, QueryPoolConnectionMode",
+        "size": 0,
+        "noDataMessage": "No Azure Analysis Services available with selected filters",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscription}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Subscription",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "managedMode",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "21.7143ch"
+              }
+            }
+          ],
+          "labelSettings": [
+            {
+              "columnId": "ResourceGroup",
+              "label": "Resourcegroup"
+            },
+            {
+              "columnId": "managedMode",
+              "label": "Man. Mode"
+            },
+            {
+              "columnId": "QueryPoolConnectionMode",
+              "label": "QueryPool Con. Mode"
+            }
+          ]
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "name",
+        "comparison": "isEqualTo",
+        "value": "@"
+      },
+      "name": "query - 3"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{Subscription}"
+        ],
+        "parameters": [
+          {
+            "id": "7fa09a97-3ea1-42a8-a530-0a6d22ae7a47",
+            "version": "KqlParameterItem/1.0",
+            "name": "LAWorkspace",
+            "type": 5,
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| where (tostring(tags) has ('\"[parameter(tagValuePrefix)]LogAnalytics\"')) or (tostring(tags) has ('\"[parameter(tagValuePrefix)]Monitoring\"'))\r\n| project id",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "isHiddenWhenLocked": true,
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::1"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::1",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 4"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AzureDiagnostics\r\n| where ResourceProvider == \"MICROSOFT.ANALYSISSERVICES\"\r\n| extend [parameter(tagValuePrefix)]Workspace = 'Yes'\r\n| where OperationName == \"SuspendServer\" or  OperationName == \"ResumeServer\"\r\n| where ResultType == \"Success\"\r\n| extend name= ResourceId\r\n| project name, OperationName, TimeGenerated, [parameter(tagValuePrefix)]Workspace\r\n| summarize arg_max(TimeGenerated, *) by name\r\n| extend Status = iff((OperationName == \"SuspendServer\"), \"Paused\", \"Active\")\r\n| project name, Status, [parameter(tagValuePrefix)]Workspace\r\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 604800000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LAWorkspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "name",
+        "comparison": "isEqualTo",
+        "value": "@"
+      },
+      "name": "query - 5"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"e85501b2-292c-4208-a528-05e12d02105d\",\"mergeType\":\"leftouter\",\"leftTable\":\"query - 3\",\"rightTable\":\"query - 5\",\"leftColumn\":\"Name\",\"rightColumn\":\"name\"}],\"projectRename\":[{\"originalName\":\"[query - 3].Name\",\"mergedName\":\"Name\",\"fromId\":\"e85501b2-292c-4208-a528-05e12d02105d\"},{\"originalName\":\"[query - 3].Subscription\",\"mergedName\":\"Subscription\",\"fromId\":\"e85501b2-292c-4208-a528-05e12d02105d\"},{\"originalName\":\"[query - 3].Location\",\"mergedName\":\"Location\",\"fromId\":\"e85501b2-292c-4208-a528-05e12d02105d\"},{\"originalName\":\"[query - 3].ResourceGroup\",\"mergedName\":\"Resourcegroup\",\"fromId\":\"e85501b2-292c-4208-a528-05e12d02105d\"},{\"originalName\":\"[query - 3].[parameter(tagValuePrefix)]Managed\",\"mergedName\":\"[parameter(tagValuePrefix)]Managed\",\"fromId\":\"e85501b2-292c-4208-a528-05e12d02105d\"},{\"originalName\":\"[query - 3].Tier\",\"mergedName\":\"Tier\",\"fromId\":\"e85501b2-292c-4208-a528-05e12d02105d\"},{\"originalName\":\"[query - 3].Capacity\",\"mergedName\":\"Capacity\",\"fromId\":\"e85501b2-292c-4208-a528-05e12d02105d\"},{\"originalName\":\"[query - 3].managedMode\",\"mergedName\":\"Man. Mode\",\"fromId\":\"e85501b2-292c-4208-a528-05e12d02105d\"},{\"originalName\":\"[query - 3].QueryPoolConnectionMode\",\"mergedName\":\"QueryPool Con. Mode\",\"fromId\":\"e85501b2-292c-4208-a528-05e12d02105d\"},{\"originalName\":\"[query - 5].name\",\"mergedName\":\"name\",\"fromId\":\"e85501b2-292c-4208-a528-05e12d02105d\"},{\"originalName\":\"[query - 5].[parameter(tagValuePrefix)]Workspace\",\"mergedName\":\"[parameter(tagValuePrefix)]Workspace\",\"fromId\":\"e85501b2-292c-4208-a528-05e12d02105d\"},{\"originalName\":\"[query - 5].OperationName\",\"mergedName\":\"OperationName\",\"fromId\":\"unknown\"},{\"originalName\":\"[Added column]\",\"mergedName\":\"Remark\",\"fromId\":null,\"isNewItem\":true,\"newItemData\":[{\"criteriaContext\":{\"leftOperand\":\"[parameter(tagValuePrefix)]Workspace\",\"operator\":\"==\",\"rightValType\":\"static\",\"rightVal\":\"Yes\",\"resultValType\":\"static\",\"resultVal\":\"Connected to [parameter(companyName)] Monitored LogAnalytics Workspace\"}},{\"criteriaContext\":{\"leftOperand\":\"[parameter(tagPrefix)]Workspace\",\"operator\":\"!=\",\"rightValType\":\"static\",\"rightVal\":\"Yes\",\"resultValType\":\"static\",\"resultVal\":\"Not connected to [parameter(companyName)] Monitored LogAnalytics Workspace\"}},{\"criteriaContext\":{\"operator\":\"Default\",\"rightValType\":\"column\",\"resultValType\":\"column\"}}]},{\"originalName\":\"[query - 5].Status\",\"mergedName\":\"Status\",\"fromId\":\"unknown\"}]}",
+        "size": 0,
+        "noDataMessage": "No Azure Analysis Services available with selected filters",
+        "queryType": 7,
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Subscription",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "name",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "[parameter(tagPrefix)]Workspace",
+              "formatter": 5
+            },
+            {
+              "columnMatch": "Status",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Paused",
+                    "representation": "stopped",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Active",
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "representation": "unknown",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "Unknown",
+                    "text": "Unknown"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "Remark",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Not",
+                    "representation": "2",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "Log Analytics Workspace",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Not",
+                    "representation": "2",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "AASAvailable",
+        "comparison": "isEqualTo",
+        "value": "AASAvailable"
+      },
+      "name": "query - 6"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "#### No Azure Analysis Services are deployed in this environment yet"
+      },
+      "conditionalVisibility": {
+        "parameterName": "AASAvailable",
+        "comparison": "isNotEqualTo",
+        "value": "AASAvailable"
+      },
+      "name": "text - 8"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "fromTemplateId": "community-Workbooks/Virtual Machines/Availability",
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

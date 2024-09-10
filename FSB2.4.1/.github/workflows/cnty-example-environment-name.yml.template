@@ -1,0 +1,1025 @@
+# This is the workflow to deploy & configure Azure resources in the connectivity subscription
+
+name: example-environment-name | Cnty Deployment
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  deployInfoFile: ./input/example-customer-name/example-environment-name/example-environment-name.deployInfo.json
+  workflowInfoFile: ./workflowInfo.json
+
+  namingModulePath: ./helperModules/naming/
+  namingScriptFile: ./scripts/Publish-AzResourceNames.ps1
+  cntyResourceNamesFile: ./cntyNaming.json
+
+  monitoringTemplateFile: ./parentModules/monitoring/monitoring.bicep
+  monitoringMgmtTemplateParameterFile: ./input/example-customer-name/example-environment-name/parentModules/example-environment-name.mgmt.monitoring.params.json
+
+  costManagementTemplateFile: ./parentModules/costManagement/costManagement.bicep
+  costManagementTemplateParameterFilePath: ./input/example-customer-name/example-environment-name/parentModules/
+
+  networkTemplateFile: ./parentModules/networking/networking.bicep
+  networkTemplateParameterPath: ./input/example-customer-name/example-environment-name/parentModules/
+
+  firewallTemplateFile: ./parentModules/firewall/firewall.bicep
+  firewallTemplateParameterFile: ./input/example-customer-name/example-environment-name/parentModules/example-environment-name.cnty.firewall.params.json
+
+  vWanNetworkTemplateFile: ./parentModules/virtualWan/virtualWan.bicep
+  vWanNetworkTemplateParameterPath: ./input/example-customer-name/example-environment-name/parentModules/
+
+  vWanfirewallTemplateFile: ./parentModules/virtualWanFirewallRules/virtualWanFirewallRules.bicep
+  vWanfirewallTemplateParameterFile: ./input/example-customer-name/example-environment-name/parentModules/example-environment-name.cnty.virtualwanfirewallrules.params.json
+
+  policyTemplateFile: ./parentModules/policy/policy.bicep
+  policyCntyTemplateParameterFile: ./input/example-customer-name/example-environment-name/parentModules/example-environment-name.cnty.policy.params.json
+
+  policyExemptionTemplateFile: ./parentModules/exemptions/exemptions.bicep
+
+  itsmLogicNetworkEventGridInputFile: ./parentModules/itsm/evgs-logic-network.json
+  itsmLogicOsMgmtEventGridInputFile: ./parentModules/itsm/evgs-logic-osmgmt.json
+  itsmLogicPaas1EventGridInputFile: ./parentModules/itsm/evgs-logic-paas-p1.json
+  itsmLogicPaas2EventGridInputFile: ./parentModules/itsm/evgs-logic-paas-p2.json
+
+  vmOsManagementFuncOsTaggingEventGridInputFile: ./parentModules/vmosmanagement/evgs-func-ostagging.json
+  vmOsManagementRunbookEncryptEventGridInputFile: ./parentModules/vmosmanagement/evgs-rb-osdiskencrypt.json
+
+  enterpriseResourceProviderScriptFile: ./scripts/Register-EnterpriseResourceProvider.ps1
+  enterpriseResourceProviderInputFile: ./input/example-customer-name/example-environment-name/scripts/example-environment-name.cnty.resourceProviders.json
+
+  msiPermissionsScriptFile: ./scripts/Add-RolesForMgmtResources.ps1
+  initializeEventGridSubscriptionScriptFile: ./scripts/Initialize-EventGridSubscription.ps1
+  startAutoRemediationForDinePoliciesScriptFile: ./scripts/Start-AutoRemediationForDinePolicies.ps1
+  startAutomationRunbookScriptFile: ./scripts/Start-AutomationRunbook.ps1
+  importModuleScriptFile: ./scripts/Invoke-Module.ps1
+  publishGithubEnvironmentVarsScriptFile: ./scripts/Publish-GithubEnvironmentVariables.ps1
+  publishWorkflowInfoScriptFile: ./scripts/Publish-WorkflowInfo.ps1
+
+  outputPath: ./output/
+
+# This workflow run is made up of 6 jobs that run sequentially
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      runcore: ${{ steps.runjobs.outputs.runcore }}
+      runnetwork: ${{ steps.runjobs.outputs.runnetwork }}
+      runosmgmt: ${{ steps.runjobs.outputs.runosmgmt }}
+      runpaas: ${{ steps.runjobs.outputs.runpaas }}
+      runfinish: ${{ steps.runjobs.outputs.runfinish }}
+      deployVwan: ${{ steps.runjobs.outputs.deployVwan }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Populate Environment Variables
+        id: runjobs
+        run: |
+          . '${{ env.publishGithubEnvironmentVarsScriptFile }}'
+
+          $params = @{
+            inputJson        = '${{ env.deployInfoFile }}'
+            scope            = 'all'
+            subscriptionType = 'cnty'
+            Verbose          = $true
+          }
+          Publish-GithubEnvironmentVariables @params
+        shell: pwsh
+
+      - name: Create Workflow Info
+        env:
+          mgmtSubscriptionId: ${{ secrets[env.mgmtSubscriptionSecret] }}
+          cntySubscriptionId: ${{ secrets[env.cntySubscriptionSecret] }}
+        run: |
+          . '${{ env.publishWorkflowInfoScriptFile }}'
+
+          $params = @{
+            inputJson          = '${{ env.deployInfoFile }}'
+            outputPath         = '${{ github.workspace }}'
+            Verbose            = $true
+          }
+          Publish-WorkflowInfo @params
+
+          if (Test-Path '${{ env.workflowInfoFile }}') {
+            Copy-Item '${{ env.workflowInfoFile }}' -Destination '${{ env.outputPath }}' -Verbose
+          } else {
+            Write-Error "Copying the workflowInfo.json file to the output folder failed..." -ErrorAction 'Stop'
+          }
+        shell: pwsh
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Generate Resource Names - mgmt
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            . '${{ env.namingScriptFile }}'
+
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $params = @{
+              bicepTemplatePath     = '${{ env.namingModulePath }}'
+              outputPath            = '${{ env.outputPath }}'
+              azRegion              = $workflowInfo.subscriptionDeployLocation
+              organizationCode      = $workflowInfo.organizationCode
+              environmentCode       = $workflowInfo.mgmtEnvironmentCode
+              subscriptionCode      = $workflowInfo.mgmtSubscriptionCode
+              subscriptionType      = 'mgmt'
+            }
+            Publish-AzResourceNames @params
+          azPSVersion: "latest"
+
+      - name: Generate Resource Names - cnty
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            . '${{ env.namingScriptFile }}'
+
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $params = @{
+              bicepTemplatePath     = '${{ env.namingModulePath }}'
+              outputPath            = '${{ env.outputPath }}'
+              azRegion              = $workflowInfo.subscriptionDeployLocation
+              organizationCode      = $workflowInfo.organizationCode
+              environmentCode       = $workflowInfo.cntyEnvironmentCode
+              subscriptionCode      = $workflowInfo.cntySubscriptionCode
+              subscriptionType      = 'cnty'
+            }
+            Publish-AzResourceNames @params
+          azPSVersion: "latest"
+
+      - name: Generate Resource Names - lndz
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            . '${{ env.namingScriptFile }}'
+
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $params = @{
+              bicepTemplatePath     = '${{ env.namingModulePath }}'
+              outputPath            = '${{ env.outputPath }}'
+              azRegion              = $workflowInfo.subscriptionDeployLocation
+              organizationCode      = $workflowInfo.organizationCode
+              environmentCode       = $workflowInfo.lndzEnvironmentCode
+              subscriptionCode      = $workflowInfo.lndzSubscriptionCode
+              subscriptionType      = 'lndz'
+            }
+            Publish-AzResourceNames @params
+          azPSVersion: "latest"
+
+      - name: Generate Resource Names - tool
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            . '${{ env.namingScriptFile }}'
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $params = @{
+              bicepTemplatePath     = '${{ env.namingModulePath }}'
+              outputPath            = '${{ env.outputPath }}'
+              azRegion              = $workflowInfo.subscriptionDeployLocation
+              organizationCode      = $workflowInfo.organizationCode
+              environmentCode       = $workflowInfo.toolEnvironmentCode
+              subscriptionCode      = $workflowInfo.toolSubscriptionCode
+              subscriptionType      = 'tool'
+            }
+            Publish-AzResourceNames @params
+          azPSVersion: "latest"
+
+      - name: Upload Resource Names
+        uses: actions/upload-artifact@v4
+        with:
+          name: naming
+          path: output/
+
+      - name: Cleanup temporary Azure Resources
+        if: ${{ success() }}
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            Get-AzResourceGroup | Where-Object {$_.ResourceGroupName -like '*deleteme'} | Remove-AzResourceGroup -Force -Verbose
+          azPSVersion: "latest"
+
+  core:
+    needs: prepare
+    runs-on: ubuntu-latest
+    if: ${{ needs.prepare.outputs.runcore == 'yes' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Populate Environment Variables
+        run: |
+          . '${{ env.publishGithubEnvironmentVarsScriptFile }}'
+
+          $params = @{
+            inputJson        = '${{ env.deployInfoFile }}'
+            scope            = 'login'
+            subscriptionType = 'cnty'
+            Verbose          = $true
+          }
+          Publish-GithubEnvironmentVariables @params
+        shell: pwsh
+
+      - name: Download Workflow Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: naming
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Deploy Monitoring Core
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-core-monitoring")
+            $subDeployParams = @{
+              Name                     = $deploymentName
+              Location                 = $workflowInfo.subscriptionDeployLocation
+              TemplateFile             = '${{ env.monitoringTemplateFile }}'
+              TemplateParameterFile    = '${{ env.monitoringMgmtTemplateParameterFile }}'
+              managementSubscriptionId = $workflowInfo.mgmtSubscriptionId
+              subscriptionType         = 'cnty'
+              deploymentScope          = 'core'
+              Verbose                  = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+      - name: Deploy Policy Core AuditDeny
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-core-auditdeny-policy")
+            $subDeployParams = @{
+              Name                  = $deploymentName
+              Location              = $workflowInfo.subscriptionDeployLocation
+              TemplateFile          = '${{ env.policyTemplateFile }}'
+              TemplateParameterFile = '${{ env.policyCntyTemplateParameterFile }}'
+              coreAuditDenyPolicies = $true
+              managementSubscriptionId = $workflowInfo.mgmtSubscriptionId
+              Verbose               = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+      - name: Deploy Policy Network AuditDeny
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-network-auditdeny-policy")
+            $subDeployParams = @{
+              Name                     = $deploymentName
+              Location                 = $workflowInfo.subscriptionDeployLocation
+              TemplateFile             = '${{ env.policyTemplateFile }}'
+              TemplateParameterFile    = '${{ env.policyCntyTemplateParameterFile }}'
+              networkAuditDenyPolicies = $true
+              Verbose                  = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+      - name: Deploy Policy OsMgmt AuditDeny
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-osmgmt-auditdeny-policy")
+            $subDeployParams = @{
+              Name                    = $deploymentName
+              Location                = $workflowInfo.subscriptionDeployLocation
+              TemplateFile            = '${{ env.policyTemplateFile }}'
+              TemplateParameterFile   = '${{ env.policyCntyTemplateParameterFile }}'
+              osmgmtAuditDenyPolicies = $true
+              Verbose                 = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+      - name: Deploy Policy Paas AuditDeny
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-paas-auditdeny-policy")
+            $subDeployParams = @{
+              Name                  = $deploymentName
+              Location              = $workflowInfo.subscriptionDeployLocation
+              TemplateFile          = '${{ env.policyTemplateFile }}'
+              TemplateParameterFile = '${{ env.policyCntyTemplateParameterFile }}'
+              paasAuditDenyPolicies = $true
+              Verbose               = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+      - name: Deploy Policy Core change
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-core-change-policy")
+            $subDeployParams = @{
+              Name                  = $deploymentName
+              Location              = $workflowInfo.subscriptionDeployLocation
+              TemplateFile          = '${{ env.policyTemplateFile }}'
+              TemplateParameterFile = '${{ env.policyCntyTemplateParameterFile }}'
+              coreChangePolicies    = $true
+              Verbose               = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+# Re-Login is needed as the next job is not using the latest version of Powershell and it cannot handle token refresh
+      - name: Re-Login to Azure (temporary workaround)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Configure Resource Providers
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            . '${{ env.enterpriseResourceProviderScriptFile }}'
+
+            $inputJson = Get-Content -Path '${{ env.enterpriseResourceProviderInputFile }}' -Raw | ConvertFrom-Json
+            $inputJson.resourceProvider.core | Register-EnterpriseResourceProvider
+          azPSVersion: "7.5.0"
+
+# Re-Login is needed as the next job is not using the latest version of Powershell and it cannot handle token refresh
+      - name: Re-Login to Azure (temporary workaround)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Deploy Cost Management
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $file = ($workflowInfo.costManagementCntyTemplateParameterFile).ToLower()
+            $costManagementCntyTemplateParameterFile = Join-Path -Path '${{ env.costManagementTemplateParameterFilePath }}' -ChildPath $file
+
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-core-costmanagement")
+            $subDeployParams = @{
+              Name                     = $deploymentName
+              Location                 = $workflowInfo.subscriptionDeployLocation
+              TemplateFile             = '${{ env.costManagementTemplateFile }}'
+              TemplateParameterFile    = $costManagementCntyTemplateParameterFile
+              managementSubscriptionId = $workflowInfo.mgmtSubscriptionId
+              Verbose                  = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "7.5.0"
+
+  network:
+    needs: [prepare, core]
+    runs-on: ubuntu-latest
+    if: ${{ needs.prepare.outputs.runnetwork == 'yes' && always() && !cancelled() }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Populate Environment Variables
+        run: |
+          . '${{ env.publishGithubEnvironmentVarsScriptFile }}'
+
+          $params = @{
+            inputJson        = '${{ env.deployInfoFile }}'
+            scope            = 'login'
+            subscriptionType = 'cnty'
+            Verbose          = $true
+          }
+          Publish-GithubEnvironmentVariables @params
+        shell: pwsh
+
+      - name: Download Workflow Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: naming
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Deploy Networking
+        uses: azure/powershell@v2
+        if: ${{ needs.prepare.outputs.deployVwan == 'no' && always() && !cancelled() }}
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $file = ($workflowInfo.networkCntyTemplateParameterFile).ToLower()
+            $networkCntyTemplateParameterFile = Join-Path -Path '${{ env.networkTemplateParameterPath }}' -ChildPath $file
+
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-networking")
+            $subDeployParams = @{
+              Name                  = $deploymentName
+              Location              = $workflowInfo.subscriptionDeployLocation
+              TemplateFile          = '${{ env.networkTemplateFile }}'
+              TemplateParameterFile = $networkCntyTemplateParameterFile
+              Verbose               = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+      - name: Deploy Firewall
+        uses: azure/powershell@v2
+        if: ${{ needs.prepare.outputs.deployVwan == 'no' && always() && !cancelled() }}
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-firewall")
+            $subDeployParams = @{
+              Name                  = $deploymentName
+              Location              = $workflowInfo.subscriptionDeployLocation
+              TemplateFile          = '${{ env.firewallTemplateFile }}'
+              managementSubscriptionId = $workflowInfo.mgmtSubscriptionId
+              TemplateParameterFile = '${{ env.firewallTemplateParameterFile }}'
+              Verbose               = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+      - name: Deploy Vwan Networking
+        uses: azure/powershell@v2
+        if: ${{ needs.prepare.outputs.deployVwan == 'yes' && always() && !cancelled() }}
+        with:
+            inlineScript: |
+              $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+              $file = ($workflowInfo.vWanNetworkCntyTemplateParameterFile).ToLower()
+              $vWanNetworkCntyTemplateParameterFile = Join-Path -Path '${{ env.vWanNetworkTemplateParameterPath }}' -ChildPath $file
+
+              $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-networking")
+              $subDeployParams = @{
+                Name                  = $deploymentName
+                Location              = $workflowInfo.subscriptionDeployLocation
+                TemplateFile          = '${{ env.vWanNetworkTemplateFile }}'
+                TemplateParameterFile = $vWannetworkCntyTemplateParameterFile
+                Verbose               = $true
+              }
+              New-AzSubscriptionDeployment @subDeployParams
+            azPSVersion: "latest"
+
+      - name: Deploy Vwan Firewall
+        uses: azure/powershell@v2
+        if: ${{ needs.prepare.outputs.deployVwan == 'yes' && always() && !cancelled() }}
+        with:
+           inlineScript: |
+              $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+              $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-firewall")
+              $subDeployParams = @{
+                Name                  = $deploymentName
+                Location              = $workflowInfo.subscriptionDeployLocation
+                TemplateFile          = '${{ env.vWanfirewallTemplateFile }}'
+                TemplateParameterFile = '${{ env.vWanfirewallTemplateParameterFile }}'
+                Verbose               = $true
+              }
+              New-AzSubscriptionDeployment @subDeployParams
+           azPSVersion: "latest"
+
+      - name: Deploy Monitoring Network
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-network-monitoring")
+            $subDeployParams = @{
+              Name                     = $deploymentName
+              Location                 = $workflowInfo.subscriptionDeployLocation
+              TemplateFile             = '${{ env.monitoringTemplateFile }}'
+              TemplateParameterFile    = '${{ env.monitoringMgmtTemplateParameterFile }}'
+              managementSubscriptionId = $workflowInfo.mgmtSubscriptionId
+              subscriptionType         = 'cnty'
+              deploymentScope          = 'network'
+              Verbose                  = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+# Re-Login is needed as the next job is not using the latest version of Powershell and it cannot handle token refresh
+      - name: Re-Login to Azure (temporary workaround)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Configure Eventgrid Subscription - ITSM LogicApp (Network)
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            . '${{ env.importModuleScriptFile }}'
+            Invoke-Module -moduleName 'Az.ResourceGraph' -moduleVersion '0.13.0'
+
+            . '${{ env.initializeEventGridSubscriptionScriptFile }}'
+
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $resourceNames = Get-Content -Path '${{ env.cntyResourceNamesFile }}' -Raw | ConvertFrom-Json
+
+            $evgsParams = @{
+              eventSubscriptionName = $resourceNames.eventgridSubscriptionLogicItsmNetwork.name
+              targetSubscriptionId  = $workflowInfo.mgmtSubscriptionId
+              sourceSubscriptionId  = $workflowInfo.cntySubscriptionId
+              inputJson             = '${{ env.itsmLogicNetworkEventGridInputFile }}'
+              resourceTagName       = $resourceNames.tagPrefix.name + 'Purpose'
+              resourceTagValue      = $resourceNames.tagValuePrefix.name + 'ItsmCmdb'
+              Verbose               = $true
+            }
+            Initialize-EventGridSubscription @evgsParams
+          azPSVersion: "latest"
+
+  osmgmt:
+    needs: [prepare, core, network]
+    runs-on: ubuntu-latest
+    if: ${{ needs.prepare.outputs.runosmgmt == 'yes' && always() && !cancelled() }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Populate Environment Variables
+        run: |
+          . '${{ env.publishGithubEnvironmentVarsScriptFile }}'
+
+          $params = @{
+            inputJson        = '${{ env.deployInfoFile }}'
+            scope            = 'login'
+            subscriptionType = 'cnty'
+            Verbose          = $true
+          }
+          Publish-GithubEnvironmentVariables @params
+        shell: pwsh
+
+      - name: Download Workflow Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: naming
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Deploy Monitoring OsMgmt
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-osmgmt-monitoring")
+            $subDeployParams = @{
+              Name                     = $deploymentName
+              Location                 = $workflowInfo.subscriptionDeployLocation
+              TemplateFile             = '${{ env.monitoringTemplateFile }}'
+              TemplateParameterFile    = '${{ env.monitoringMgmtTemplateParameterFile }}'
+              managementSubscriptionId = $workflowInfo.mgmtSubscriptionId
+              subscriptionType         = 'cnty'
+              deploymentScope          = 'osmgmt'
+              Verbose                  = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+      - name: Deploy Policy OSMGMT Change
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-change-osmgmt-policy")
+            $subDeployParams = @{
+              Name                  = $deploymentName
+              Location              = $workflowInfo.subscriptionDeployLocation
+              TemplateFile          = '${{ env.policyTemplateFile }}'
+              TemplateParameterFile = '${{ env.policyCntyTemplateParameterFile }}'
+              osMgmtChangePolicies  = $true
+              managementSubscriptionId = $workflowInfo.mgmtSubscriptionId
+              Verbose               = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+      - name: Remove Old Log Analytics Monitoring Agent Policy OSMGMT change
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            # Removes old Log Analytics agent change policies that exist in release 2.3 and before
+            # This step should be kept for some time for brownfield update scenarios
+            $oldPolicyNames = (Get-Content -Path '${{ env.cntyResourceNamesFile }}' -Raw | ConvertFrom-Json).oldLogAnalyticsAgentPolicy
+            Remove-AzPolicyAssignment -Name $oldPolicyNames.vmEnableLogAnalyticsAgentSetAssignmentName -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+            Remove-AzPolicyAssignment -Name $oldPolicyNames.vmssEnableLogAnalyticsAgentSetAssignmentName -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+            Remove-AzPolicySetDefinition -Name $oldPolicyNames.vmEnableLogAnalyticsAgentSetName -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+            Remove-AzPolicySetDefinition -Name $oldPolicyNames.vmssEnableLogAnalyticsAgentSetName -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+            Remove-AzPolicyDefinition -Name $oldPolicyNames.vmEnableLogAnalyticsAgentLinuxDefName -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+            Remove-AzPolicyDefinition -Name $oldPolicyNames.vmEnableLogAnalyticsAgentWinDefName -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+            Remove-AzPolicyDefinition -Name $oldPolicyNames.vmssEnableLogAnalyticsAgentLinuxDefName -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+            Remove-AzPolicyDefinition -Name $oldPolicyNames.vmssEnableLogAnalyticsAgentWinDefName -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null
+          azPSVersion: "latest"
+
+# Re-Login is needed as the next job is not using the latest version of Powershell and it cannot handle token refresh
+      - name: Re-Login to Azure (temporary workaround)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Configure Eventgrid Subscription - ITSM LogicApp (OsMgmt)
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            . '${{ env.importModuleScriptFile }}'
+            Invoke-Module -moduleName 'Az.ResourceGraph' -moduleVersion '0.13.0'
+
+            . '${{ env.initializeEventGridSubscriptionScriptFile }}'
+
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $resourceNames = Get-Content -Path '${{ env.cntyResourceNamesFile }}' -Raw | ConvertFrom-Json
+
+            $evgsParams = @{
+              eventSubscriptionName = $resourceNames.eventgridSubscriptionLogicItsmOsMgmt.name
+              targetSubscriptionId  = $workflowInfo.mgmtSubscriptionId
+              sourceSubscriptionId  = $workflowInfo.cntySubscriptionId
+              resourceTagName       = $resourceNames.tagPrefix.name + 'Purpose'
+              resourceTagValue      = $resourceNames.tagValuePrefix.name + 'ItsmCmdb'
+              inputJson             = '${{ env.itsmLogicOsMgmtEventGridInputFile }}'
+              Verbose               = $true
+            }
+            Initialize-EventGridSubscription @evgsParams
+          azPSVersion: "latest"
+
+# Re-Login is needed as the next job is not using the latest version of Powershell and it cannot handle token refresh
+      - name: Re-Login to Azure (temporary workaround)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Configure Eventgrid Subscription - OSTagging FunctionApp
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            . '${{ env.importModuleScriptFile }}'
+            Invoke-Module -moduleName 'Az.ResourceGraph' -moduleVersion '0.13.0'
+
+            . '${{ env.initializeEventGridSubscriptionScriptFile }}'
+
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $resourceNames = Get-Content -Path '${{ env.cntyResourceNamesFile }}' -Raw | ConvertFrom-Json
+
+            $evgsParams = @{
+              eventSubscriptionName = $resourceNames.eventgridSubscriptionFuncOsTagging.name
+              targetSubscriptionId  = $workflowInfo.mgmtSubscriptionId
+              sourceSubscriptionId  = $workflowInfo.cntySubscriptionId
+              resourceTagName       = $resourceNames.tagPrefix.name + 'Purpose'
+              resourceTagValue      = 'FuncOsTagging'
+              inputJson             = '${{ env.vmOsManagementFuncOsTaggingEventGridInputFile  }}'
+              Verbose               = $true
+            }
+            Initialize-EventGridSubscription @evgsParams
+          azPSVersion: "latest"
+
+# Re-Login is needed as the next job is not using the latest version of Powershell and it cannot handle token refresh
+      - name: Re-Login to Azure (temporary workaround)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Configure Eventgrid Subscription - Disk Encryption Runbook
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            . '${{ env.importModuleScriptFile }}'
+            Invoke-Module -moduleName 'Az.ResourceGraph' -moduleVersion '0.13.0'
+
+            . '${{ env.initializeEventGridSubscriptionScriptFile }}'
+
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $resourceNames = Get-Content -Path '${{ env.cntyResourceNamesFile }}' -Raw | ConvertFrom-Json
+
+            $evgsParams = @{
+              eventSubscriptionName = $resourceNames.eventgridSubscriptionRbOsDiskEncrypt.name
+              targetSubscriptionId  = $workflowInfo.mgmtSubscriptionId
+              sourceSubscriptionId  = $workflowInfo.cntySubscriptionId
+              subscriptionCode      = $workflowInfo.cntySubscriptionCode
+              resourceTagName       = $resourceNames.tagPrefix.name + 'Purpose'
+              resourceTagValue      = 'RunbookOsDiskEncrypt'
+              inputJson             = '${{ env.vmOsManagementRunbookEncryptEventGridInputFile }}'
+              Verbose               = $true
+            }
+            Initialize-EventGridSubscription @evgsParams
+          azPSVersion: "latest"
+
+  paas:
+    needs: [prepare, core, network, osmgmt]
+    runs-on: ubuntu-latest
+    if: ${{ needs.prepare.outputs.runpaas == 'yes' && always() && !cancelled() }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Populate Environment Variables
+        run: |
+          . '${{ env.publishGithubEnvironmentVarsScriptFile }}'
+
+          $params = @{
+            inputJson        = '${{ env.deployInfoFile }}'
+            scope            = 'login'
+            subscriptionType = 'cnty'
+            Verbose          = $true
+          }
+          Publish-GithubEnvironmentVariables @params
+        shell: pwsh
+
+      - name: Download Workflow Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: naming
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Deploy Monitoring PaaS
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-paas-monitoring")
+            $subDeployParams = @{
+              Name                     = $deploymentName
+              Location                 = $workflowInfo.subscriptionDeployLocation
+              TemplateFile             = '${{ env.monitoringTemplateFile }}'
+              TemplateParameterFile    = '${{ env.monitoringMgmtTemplateParameterFile }}'
+              managementSubscriptionId = $workflowInfo.mgmtSubscriptionId
+              subscriptionType         = 'cnty'
+              deploymentScope          = 'paas'
+              Verbose                  = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+      - name: Deploy Policy PaaS Change
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-change-paas-policy")
+            $subDeployParams = @{
+              Name                  = $deploymentName
+              Location              = $workflowInfo.subscriptionDeployLocation
+              TemplateFile          = '${{ env.policyTemplateFile }}'
+              TemplateParameterFile = '${{ env.policyCntyTemplateParameterFile }}'
+              managementSubscriptionId = $workflowInfo.mgmtSubscriptionId
+              paasChangePolicies    = $true
+              Verbose               = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+# Re-Login is needed as the next job is not using the latest version of Powershell and it cannot handle token refresh
+      - name: Re-Login to Azure (temporary workaround)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Configure Eventgrid Subscription - ITSM LogicApp (Paas1)
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            . '${{ env.importModuleScriptFile }}'
+            Invoke-Module -moduleName 'Az.ResourceGraph' -moduleVersion '0.13.0'
+
+            . '${{ env.initializeEventGridSubscriptionScriptFile }}'
+
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $resourceNames = Get-Content -Path '${{ env.cntyResourceNamesFile }}' -Raw | ConvertFrom-Json
+
+            $evgsParams = @{
+              eventSubscriptionName = $resourceNames.eventgridSubscriptionLogicItsmPaas1.name
+              targetSubscriptionId  = $workflowInfo.mgmtSubscriptionId
+              sourceSubscriptionId  = $workflowInfo.cntySubscriptionId
+              resourceTagName       = $resourceNames.tagPrefix.name + 'Purpose'
+              resourceTagValue      = $resourceNames.tagValuePrefix.name + 'ItsmCmdb'
+              inputJson             = '${{ env.itsmLogicPaas1EventGridInputFile }}'
+              Verbose               = $true
+            }
+            Initialize-EventGridSubscription @evgsParams
+          azPSVersion: "latest"
+
+# Re-Login is needed as the next job is not using the latest version of Powershell and it cannot handle token refresh
+      - name: Re-Login to Azure (temporary workaround)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Configure Eventgrid Subscription - ITSM LogicApp (Paas2)
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            . '${{ env.importModuleScriptFile }}'
+            Invoke-Module -moduleName 'Az.ResourceGraph' -moduleVersion '0.13.0'
+
+            . '${{ env.initializeEventGridSubscriptionScriptFile }}'
+
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $resourceNames = Get-Content -Path '${{ env.cntyResourceNamesFile }}' -Raw | ConvertFrom-Json
+
+            $evgsParams = @{
+              eventSubscriptionName = $resourceNames.eventgridSubscriptionLogicItsmPaas2.name
+              targetSubscriptionId  = $workflowInfo.mgmtSubscriptionId
+              sourceSubscriptionId  = $workflowInfo.cntySubscriptionId
+              resourceTagName       = $resourceNames.tagPrefix.name + 'Purpose'
+              resourceTagValue      = $resourceNames.tagValuePrefix.name + 'ItsmCmdb'
+              inputJson             = '${{ env.itsmLogicPaas2EventGridInputFile }}'
+              Verbose               = $true
+            }
+            Initialize-EventGridSubscription @evgsParams
+          azPSVersion: "latest"
+
+  finish:
+    needs: [prepare, core, osmgmt, paas]
+    runs-on: ubuntu-latest
+    if: ${{ needs.prepare.outputs.runfinish == 'yes' && always() && !cancelled() }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Populate Environment Variables
+        run: |
+          . '${{ env.publishGithubEnvironmentVarsScriptFile }}'
+
+          $params = @{
+            inputJson        = '${{ env.deployInfoFile }}'
+            scope            = 'login'
+            subscriptionType = 'cnty'
+            Verbose          = $true
+          }
+          Publish-GithubEnvironmentVariables @params
+        shell: pwsh
+
+      - name: Download Workflow Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: naming
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Deploy Policy Exemptions
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $deploymentName = -join ("$Env:GITHUB_RUN_ID", "-cnty-exemptions")
+            $subDeployParams = @{
+              Name                  = $deploymentName
+              Location              = $workflowInfo.subscriptionDeployLocation
+              TemplateFile          = '${{ env.policyExemptionTemplateFile }}'
+              DeployVwan            = '${{ needs.prepare.outputs.deployVwan }}'
+              subscriptionType      = 'cnty'
+              Verbose               = $true
+            }
+            New-AzSubscriptionDeployment @subDeployParams
+          azPSVersion: "latest"
+
+# Re-Login is needed as the next job is not using the latest version of Powershell and it cannot handle token refresh
+      - name: Re-Login to Azure (temporary workaround)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Configure Managed Identity RBAC
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $resourceNames = Get-Content -Path '${{ env.cntyResourceNamesFile }}' -Raw | ConvertFrom-Json
+
+            . '${{ env.importModuleScriptFile }}'
+            Invoke-Module -moduleName 'Az.ResourceGraph' -moduleVersion '0.13.0'
+
+            . '${{ env.msiPermissionsScriptFile }}'
+
+            $scriptParams = @{
+              sourceSubscriptionId = $workflowInfo.mgmtSubscriptionId
+              targetSubscriptionId = $workflowInfo.cntySubscriptionId
+              tagPrefix            = $resourceNames.tagPrefix.name
+              tagValuePrefix       = $resourceNames.tagValuePrefix.name
+              Verbose              = $true
+            }
+            Add-RolesForMgmtResources @scriptParams
+          azPSVersion: "latest"
+
+      - name: Configure Policy Compliance Scan
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            Start-AzPolicyComplianceScan -Verbose
+          azPSVersion: "latest"
+
+# Re-Login is needed as the next job is not using the latest version of Powershell and it cannot handle token refresh 
+      - name: Re-Login to Azure (temporary workaround)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Configure DINE Policy Auto Remediation
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            $workflowInfo = Get-Content -Path '${{ env.workflowInfoFile }}' -Raw | ConvertFrom-Json
+            $resourceNames = Get-Content -Path '${{ env.cntyResourceNamesFile }}' -Raw | ConvertFrom-Json
+
+
+            . '${{ env.startAutoRemediationForDinePoliciesScriptFile }}'
+
+            $params = @{
+              targetSubscriptionId = $workflowInfo.cntySubscriptionId
+              mgmtSubscriptionId   = $workflowInfo.mgmtSubscriptionId
+              tagPrefix            = $resourceNames.tagPrefix.name
+              tagValuePrefix       = $resourceNames.tagValuePrefix.name
+              Verbose              = $true
+            }
+            Start-AutoRemediationForDinePolicies @params
+          azPSVersion: "7.5.0"
+
+# Re-Login is needed as the next job is not using the latest version of Powershell and it cannot handle token refresh 
+      - name: Re-Login to Azure (temporary workaround)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets[env.clientSecret] }}
+          tenant-id: ${{ secrets[env.tenantSecret] }}
+          subscription-id: ${{ secrets[env.subscriptionSecret] }}
+          enable-AzPSSession: true
+
+      - name: Configure EventGrid Webhook expiry
+        uses: azure/powershell@v2
+        with:
+          inlineScript: |
+            . '${{ env.importModuleScriptFile }}'
+            Invoke-Module -moduleName 'Az.Automation'
+
+            . '${{ env.startAutomationRunbookScriptFile }}'
+
+            $params = @{
+              runbookName = "Update-EventGridAutomationWebhook"
+              Verbose     = $true
+            }
+            Start-AutomationRunbook @params
+          azPSVersion: "9.2.0"

@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "windowsVmUpdateAssessmentDefName": {
+            "value": "vm-enabledependencyagentwin-change-policy-def"
+        },
+        "linuxVmUpdateAssessmentDefName": {
+            "value": "Virtual Machine enable Windows dependency agent change policy definition"
+        },
+        "updateManagerSetAssignmentName": {
+            "value": "DeployIfNotExists"
+        },
+        "updateManagerSetName": {
+            "value": "vm-enabledependencyagentlinux-change-policy-def"
+        },
+        "updateManagerDefDisplayname": {
+            "value": "Virtual Machine enable Linux dependency agent change policy definition"
+        },
+        "updateManagerAssignmentSetDisplayName": {
+            "value": "DeployIfNotExists"
+        },
+        "linuxVmUpdatePatchModeDefName": {
+            "value": "vmdependencyagent-change-policy-set"
+        },
+        "windowsVmUpdatePatchModeDefName": {
+            "value": "Virtual Machine dependency agent change policy initiative"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        },
+        "policyRuleTag": {
+            "value": "EvidenManaged"
+        },
+        "policyPatchingRuleTag": {
+            "value": "EvidenPatching"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "wafEnableEffect": {
+      "value": "Audit"
+    },
+    "wafModeEffect": {
+      "value": "Audit"
+    },
+    "appGatewayAuditDenySetName": {
+      "value": "appgateway.auditdeny.policy.set"
+    },
+    "appGatewayAuditDenySetDisplayName": {
+      "value": "Application gateway auditdeny policy set"
+    },
+    "appGatewayAuditDenySetAssignmentName": {
+      "value": "appgateway.auditdeny.policy.set.assignment"
+    },
+    "appGatewayAuditDenySetAssignmentDisplayName": {
+      "value": "Application gateway auditdeny policy set assignment"
+    },
+    "modeRequirement": {
+      "value": "Detection"
+    },
+    "policyMetadata": {
+        "value": "EvidenELZ"
+    }
+  }
+}

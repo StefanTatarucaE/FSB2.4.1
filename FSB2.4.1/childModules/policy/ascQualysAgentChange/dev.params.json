@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "deployQualysWindowsPolicy": {
+            "value": true
+        },
+        "deployQualysLinuxPolicy": {
+            "value": true
+        },
+        "ascQualysAgentChangeWindowsDefName": {
+            "value": "ascqualysagent.windows.change.policy.def"
+        },
+        "ascQualysAgentChangeWindowsDefDisplayName": {
+            "value": "Azure security center qualys agent windows change policy definition"
+        },
+        "ascQualysAgentChangeLinuxDefName": {
+            "value": "ascqualysagent.linux.change.policy.def"
+        },
+        "ascQualysAgentChangeLinuxDefDisplayName": {
+            "value": "Azure security center qualys agent linux change policy definition"
+        },
+        "ascQualysAgentChangeSetName": {
+            "value": "ascqualysagent.change.policy.set"
+        },
+        "ascQualysAgentChangeSetDisplayName": {
+            "value": "Azure security center qualys agent change policy set"
+        },
+        "ascQualysAgentChangeSetAssignmentName": {
+            "value": "ascqualysagent.change.policy.set.assignment"
+        },
+        "ascQualysAgentChangeSetAssignmentDisplayName": {
+            "value": "Azure security center qualys agent change policy assignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        },
+        "policyRuleTag": {
+            "value": [
+                "EvidenManaged",
+                "EvidenCompliance"
+            ]
+        }
+    }
+}

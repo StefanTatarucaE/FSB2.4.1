@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "westeurope"
+    },
+    "runbooks": {
+      "value": [
+        {
+          "name": "MONITORING-Create-RemediationTaskSecurityCenterExport",
+          "filename": "Create-RemediationTaskSecurityCenterExport.ps1",
+          "version": "1.0.0.0",
+          "type": "PowerShell",
+          "description": "Runbook - Create Remediation Task for non-compliant subscription and export ASC data to loganalytics",
+          "scheduleName": "MONITORING-Create-RemediationTaskSecurityCenterExport",
+          "startTime" : "PT30M",
+          "interval": "12",
+          "frequency": "Hour"
+        },
+        {
+          "name": "MONITORING-Create-RemediationTaskDiagnosticSettings",
+          "filename": "Create-RemediationTaskDiagnosticSettings.ps1",
+          "version": "1.0.0.0",
+          "type": "PowerShell",
+          "description": "Runbook - Create Remediation Task for non-compliant resources in the policy definition for Diagnostic Settings",
+          "scheduleName": "MONITORING-Create-RemediationTaskDiagnosticSettings",
+          "startTime" : "PT30M",
+          "interval": "6",
+          "frequency": "Hour"
+        },
+        {
+          "name": "MONITORING-Get-ServiceLimitsAndSendToLogAnalytics",
+          "filename": "Get-ServiceLimitsAndSendToLogAnalytics.ps1",
+          "version": "1.0.0.0",
+          "type": "PowerShell",
+          "description": "Runbook - Get Azure service limits for customer and send to Log Analytic workspace",
+          "scheduleName": "MONITORING-Get-ServiceLimitsAndSendToLogAnalytics",
+          "startTime" : "PT1H",
+          "interval": "6",
+          "frequency": "Hour"
+        },
+        {
+          "name": "MONITORING-CustomAlertsForLogAnalytics",
+          "filename": "Monitor-CustomAlertsForLogAnalytics.ps1",
+          "version": "1.0.0.0",
+          "type": "PowerShell",
+          "description": "Runbook - Monitoring runbook that performs various checks and send alerts to log analytics when needed",
+          "scheduleName": "MONITORING-CustomAlertsForLogAnalytics",
+          "startTime" : "PT1H",
+          "interval": "6",
+          "frequency": "Hour"
+        }
+      ]
+    },
+    "modules": {
+      "value": []
+    }
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "diagnosticRules": [
+    {
+      "shortName": "vm",
+      "displayName": "Virtual Machines",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Compute/virtualMachines"
+        },
+        {
+          "field": "tags.DatabricksEnvironment",
+          "exists": false
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Compute/virtualMachines/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "vmss",
+      "displayName": "Virtual Machine Scale Sets",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Compute/virtualMachineScaleSets"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Compute/virtualMachineScaleSets/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "recoveryvault",
+      "displayName": "Recovery Vaults",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.RecoveryServices/vaults"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.RecoveryServices/vaults/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "Health",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "AzureBackupReport",
+                "enabled": true
+              },
+              {
+                "category": "CoreAzureBackup",
+                "enabled": true
+              },
+              {
+                "category": "AddonAzureBackupJobs",
+                "enabled": true
+              },
+              {
+                "category": "AddonAzureBackupAlerts",
+                "enabled": true
+              },
+              {
+                "category": "AddonAzureBackupPolicy",
+                "enabled": true
+              },
+              {
+                "category": "AddonAzureBackupStorage",
+                "enabled": true
+              },
+              {
+                "category": "AddonAzureBackupProtectedInstance",
+                "enabled": true
+              },
+              {
+                "category": "AzureSiteRecoveryJobs",
+                "enabled": true
+              },
+              {
+                "category": "AzureSiteRecoveryEvents",
+                "enabled": true
+              },
+              {
+                "category": "AzureSiteRecoveryReplicatedItems",
+                "enabled": true
+              },
+              {
+                "category": "AzureSiteRecoveryReplicationStats",
+                "enabled": true
+              },
+              {
+                "category": "AzureSiteRecoveryRecoveryPoints",
+                "enabled": true
+              },
+              {
+                "category": "AzureSiteRecoveryReplicationDataUploadRate",
+                "enabled": true
+              },
+              {
+                "category": "AzureSiteRecoveryProtectedDiskDataChurn",
+                "enabled": true
+              }
+            ],
+            "logAnalyticsDestinationType": "Dedicated"
+          }
+        }
+      ]
+    }
+  ]
+}

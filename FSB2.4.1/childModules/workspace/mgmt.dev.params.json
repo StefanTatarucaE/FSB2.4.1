@@ -1,0 +1,84 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "workspaceName": {
+      "value": "cu8-mgmt-d-loganalytics"
+    },
+    "skuName": {
+      "value": "PerGB2018"
+    },
+    "capacityReservationLevel": {
+      "value": 100
+    },
+    "retentionInDays": {
+      "value": 31
+    },
+    "location": {
+      "value": "westus"
+    },
+    "tags": {
+      "value": {
+        "EvidenManaged": "true"
+      }
+    },
+    "automationAccountName": {
+      "value": "cu1-mgmt-d-aa-management"
+    },
+    "linkedServiceName": {
+      "value": "automation"
+    },
+    "datasources": {
+      "value": []
+    },
+    "solutions": {
+      "value": [
+        {
+          "name": "SecurityCenterFree",
+          "publisher": "Microsoft",
+          "planName": "SecurityCenterFree"
+        },
+        {
+          "name": "AgentHealthAssessment",
+          "publisher": "Microsoft",
+          "planName": "AgentHealthAssessment"
+        },
+        {
+          "name": "AzureActivity",
+          "publisher": "Microsoft",
+          "planName": "AzureActivity"
+        },
+        {
+          "name": "AlertManagement",
+          "publisher": "Microsoft",
+          "planName": "AlertManagement"
+        },
+        {
+          "name": "NetworkMonitoring",
+          "publisher": "Microsoft",
+          "planName": "NetworkMonitoring"
+        },
+        {
+          "name": "ADAssessment",
+          "publisher": "Microsoft",
+          "planName": "ADAssessment"
+        },
+        {
+          "name": "AzureSQLAnalytics",
+          "publisher": "Microsoft",
+          "planName": "AzureSQLAnalytics"
+        },
+        {
+          "name": "KeyVaultAnalytics",
+          "publisher": "Microsoft",
+          "planName": "KeyVaultAnalytics"
+        },
+        {
+          "name": "VMInsights",
+          "publisher": "Microsoft",
+          "planName": "VMInsights"
+        }
+      ]
+    }
+  }
+}

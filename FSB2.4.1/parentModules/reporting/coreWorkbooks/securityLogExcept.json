@@ -1,0 +1,202 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{SubscriptionPicker}"
+              ],
+              "parameters": [
+                {
+                  "id": "9af8a164-963c-4799-be8b-00751b4ae963",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SubscriptionPicker",
+                  "label": "Subscription",
+                  "type": 6,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "includeAll": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  }
+                },
+                {
+                  "id": "ea0960f9-43a8-4339-9e6c-0fa6882ad241",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "WorkspacePicker",
+                  "label": "Workspace",
+                  "type": 5,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "where type =~ 'microsoft.operationalinsights/workspaces'\n| project id",
+                  "crossComponentResources": [
+                    "{SubscriptionPicker}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "6309101a-8270-4201-bba2-4fdc199edd7b",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TimePicker",
+                  "label": "Time Range",
+                  "type": 4,
+                  "isRequired": true,
+                  "value": {
+                    "durationMs": 1209600000
+                  },
+                  "typeSettings": {
+                    "selectableValues": [
+                      {
+                        "durationMs": 3600000
+                      },
+                      {
+                        "durationMs": 14400000
+                      },
+                      {
+                        "durationMs": 43200000
+                      },
+                      {
+                        "durationMs": 86400000
+                      },
+                      {
+                        "durationMs": 259200000
+                      },
+                      {
+                        "durationMs": 604800000
+                      },
+                      {
+                        "durationMs": 1209600000
+                      }
+                    ],
+                    "allowCustom": true
+                  }
+                }
+              ],
+              "style": "above",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "name": "parameters - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Alert\n| where TimeGenerated {TimePicker} \n| project AlertName, AlertSeverity, AlertState = iff(TimeGenerated > ago(24h),\"New\",\"\"), ResourceType",
+              "size": 0,
+              "title": "Monitor Alerts",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspacePicker}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "AlertSeverity",
+                    "formatter": 8,
+                    "formatOptions": {
+                      "min": 0,
+                      "max": 4,
+                      "palette": "redGreen"
+                    }
+                  }
+                ],
+                "hierarchySettings": {
+                  "treeType": 1,
+                  "groupBy": [
+                    "AlertSeverity"
+                  ]
+                }
+              }
+            },
+            "name": "query - 4"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "SigninLogs \n| where TimeGenerated {TimePicker} \n|project TimeGenerated, Category, Identity, Location, IPAddress, Status\n| limit 10",
+              "size": 0,
+              "title": "Sign In Logs",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspacePicker}"
+              ]
+            },
+            "name": "query - 3"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "SigninLogs \n| where TimeGenerated {TimePicker} \n| where Status != '{\"errorCode\":0}'\n|project TimeGenerated, Category, Identity, Location, IPAddress, Status\n",
+              "size": 1,
+              "title": "Failed Logins",
+              "noDataMessage": "No Threat Login detected",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspacePicker}"
+              ],
+              "visualization": "barchart"
+            },
+            "name": "query - 6"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "SecurityAlert \n| where TimeGenerated {TimePicker} \n| project AlertLink, AlertName, AlertSeverity, Description, DisplayName, Type",
+              "size": 0,
+              "title": "Security Alerts",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{WorkspacePicker}"
+              ]
+            },
+            "name": "query - 0"
+          }
+        ]
+      },
+      "name": "Group"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

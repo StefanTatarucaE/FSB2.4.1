@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appServiceSettings": {
+      "value": {
+        "functionAppHttps": "Audit",
+        "appServiceFtpBasicAuthenticationDisabled": "AuditIfNotExists",
+        "appServiceUseVnet": "Audit",
+        "appServiceDisableTLS1": "Audit",
+        "appServiceAppsHttps": "Audit",
+        "remoteDebuggingForFunctionApp": "AuditIfNotExists",
+        "remoteDebuggingForWebApp": "AuditIfNotExists",
+        "appServiceEnableInternalEncryption": "Audit",
+        "appServiceEnvShouldNotBeReachableOverPublicInternet": "Audit",
+        "appServiceLatestVersion": "Audit",
+        "functionAppUseFileShare": "Audit",
+        "webAppUseFileShare": "Audit",
+        "enableResourceLogs": "AuditIfNotExists",
+        "denyCorsAccessFunctionApp": "AuditIfNotExists",
+        "denyCorsAccessWebApp": "AuditIfNotExists",
+        "appServiceSkuSupportsPrivateLink": "Audit",
+        "appServiceLatestTLS": "Audit",
+        "appServiceUsePrivateLink": "AuditIfNotExists",
+        "appServiceScmDisableLocalAuth": "AuditIfNotExists",
+        "appServiceSlotsDisableLocalAuth": "AuditIfNotExists",
+        "appServiceSlotsScmDisableLocalAuth": "AuditIfNotExists"
+      }
+    },
+    "appServiceAuditDenySetName": {
+      "value": "appservice.auditdeny.policy.set"
+    },
+    "appServiceAuditDenySetDisplayName": {
+      "value": "App service auditdeny policy set"
+    },
+    "appServiceAuditDenySetAssignmentName": {
+      "value": "appservice.auditdeny.policy.set.assignment"
+    },
+    "appServiceAuditDenySetAssignmentDisplayName": {
+      "value": "App service auditdeny policy set assignment"
+    },
+    "policyMetadata": {
+        "value": "EvidenELZ"
+    }
+  }
+}

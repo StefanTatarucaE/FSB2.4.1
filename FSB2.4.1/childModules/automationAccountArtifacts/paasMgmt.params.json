@@ -1,0 +1,83 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "runbooks": {
+            "value": [
+                {
+                    "name": "PAASMGMT-Create-OfflineReports-PAASmgmt",
+                    "filename": "Create-OfflineReports-PAASmgmt.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create offline PAAS reports, timerbased",
+                    "scheduleName": "PAASMGMT-Create-OfflineReports-PAASmgmt",
+                    "startTime" : "00:00",
+                    "interval": "24",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "PAASMGMT-Create-RemediationTaskACR",
+                    "filename": "Create-RemediationTaskPaas_Acr.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create Remediation Task for Container Registries.",
+                    "scheduleName": "PAASMGMT-Create-RemediationTaskACR",
+                    "startTime" : "PT30M",
+                    "interval": "24",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "PAASMGMT-Create-RemediationTaskAppService",
+                    "filename": "Create-RemediationTaskPaas_AppService.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create Remediation Task for AppService",
+                    "scheduleName": "PAASMGMT-Create-RemediationTaskAppService",
+                    "startTime" : "PT30M",
+                    "interval": "24",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "PAASMGMT-Create-RemediationTaskCosmosDB",
+                    "filename": "Create-RemediationTaskPaas_CosmosDB.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create Remediation Task for CosmosDb",
+                    "scheduleName": "PAASMGMT-Create-remediationTaskCosmosDB",
+                    "startTime" : "PT30M",
+                    "interval": "24",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "PAASMGMT-Create-RemediationTaskDF",
+                    "filename": "Create-RemediationTaskPaas_DF.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create Remediation Task for Datafactory",
+                    "scheduleName": "PAASMGMT-Create-remediationTaskDF",
+                    "startTime" : "PT30M",
+                    "interval": "24",
+                    "frequency": "Hour"
+                },
+                {
+
+                    "name":  "PAASMGMT-Create-RemediationTaskKubernetes",
+                    "filename":  "Create-RemediationTaskPaas_Kubernetes.ps1",
+                    "version":  "1.0.0.0",
+                    "type":  "PowerShell",
+                    "description":  "Runbook - Create Remediation Task for Kubneretes",
+                    "scheduleName":  "PAASMGMT-Create-remediationTaskKubernetes",
+                    "startTime" : "PT30M",
+                    "interval":  "24",
+                    "frequency":  "Hour"
+                }       
+            ]
+        },
+        "modules": {
+            "value": []
+        }
+    }
+}

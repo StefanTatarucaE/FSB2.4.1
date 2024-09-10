@@ -1,0 +1,184 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "b203ced0-a595-4957-afdb-7e38e0ecf6eb",
+            "version": "KqlParameterItem/1.0",
+            "name": "SubscriptionPicker",
+            "label": "Subscription",
+            "type": 6,
+            "description": "Use to select the subscriptions.",
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": true
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            }
+          },
+          {
+            "id": "52a0541b-d542-4260-8067-05ca09aea5a3",
+            "version": "KqlParameterItem/1.0",
+            "name": "ResourceTypePicker",
+            "label": "Resource Type",
+            "type": 7,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\n| where type != \"microsoft.insights/scheduledqueryrules\" \n| where type != \"microsoft.insights/activitylogalerts\"\n| where type != \"microsoft.insights/actiongroups\"\n| distinct type",
+            "crossComponentResources": [
+              "{SubscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "value": [
+              "value::all"
+            ]
+          },
+          {
+            "id": "b1e9dd15-e35e-41af-b9ed-57804cfabc01",
+            "version": "KqlParameterItem/1.0",
+            "name": "ResourceGroupPicker",
+            "label": "Resource Group",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\n| distinct resourceGroup",
+            "crossComponentResources": [
+              "{SubscriptionPicker}"
+            ],
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ]
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "version": "KqlParameterItem/1.0",
+            "name": "LocationPicker",
+            "label": "Location",
+            "type": 8,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\n| distinct location",
+            "crossComponentResources": [
+              "{SubscriptionPicker}"
+            ],
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ]
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "id": "031eb85b-a074-45ca-9a31-d128d8c4a5f8"
+          }
+        ],
+        "style": "above",
+        "queryType": 0,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 0"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\n| where type in~ ({ResourceTypePicker})\n| where resourceGroup in ({ResourceGroupPicker})\n| where location in ({LocationPicker})\n| project Subscription = subscriptionId, ResourceGroup = resourceGroup, Name = name, Type = type, Location = location",
+        "size": 3,
+        "title": "All resources active per subscription",
+        "showExportToExcel": true,
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{SubscriptionPicker}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Subscription",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null
+              }
+            },
+            {
+              "columnMatch": "ResourceGroup",
+              "formatter": 14,
+              "formatOptions": {
+                "linkTarget": null
+              }
+            },
+            {
+              "columnMatch": "Type",
+              "formatter": 16,
+              "formatOptions": {
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "Location",
+              "formatter": 17
+            }
+          ],
+          "rowLimit": 1000,
+          "filter": true,
+          "sortBy": [
+            {
+              "itemKey": "$gen_link_ResourceGroup_1",
+              "sortOrder": 1
+            }
+          ]
+        },
+        "sortBy": [
+          {
+            "itemKey": "$gen_link_ResourceGroup_1",
+            "sortOrder": 1
+          }
+        ]
+      },
+      "name": "query - 1",
+      "styleSettings": {
+        "showBorder": true
+      }
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

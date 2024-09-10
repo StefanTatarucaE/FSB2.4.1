@@ -1,0 +1,171 @@
+{
+    "version": "Notebook/1.0",
+    "items": [
+      {
+        "type": 12,
+        "content": {
+          "version": "NotebookGroup/1.0",
+          "groupType": "editable",
+          "items": [
+            {
+              "type": 9,
+              "content": {
+                "version": "KqlParameterItem/1.0",
+                "crossComponentResources": [
+                  "value::all"
+                ],
+                "parameters": [
+                  {
+                    "id": "a347b1c0-ad44-4bed-8890-df8a5dcee553",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "subscriptionPicker",
+                    "label": "Subscription",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| project subscriptionId, name\r\n| order by name asc",
+                    "crossComponentResources": [
+                      "value::all"
+                    ],
+                    "value": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  {
+                    "id": "2ed37975-1172-4097-ba61-cb0c39241c7c",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "resourceGroupPicker",
+                    "label": "Resource group",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| where subscriptionId in~ ({subscriptionPicker})\r\n| project resourceGroup, label = name\r\n| order by label asc",
+                    "crossComponentResources": [
+                      "value::selected"
+                    ],
+                    "value": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  {
+                    "id": "ab657e8e-d190-4d3c-8917-a0bef87d267b",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "resource",
+                    "label": "Redis enterprise",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resources\r\n| where type == \"microsoft.cache/redisenterprise\"\r\n| where resourceGroup in ({resourceGroupPicker})\r\n| project id, name",
+                    "crossComponentResources": [
+                      "value::selected"
+                    ],
+                    "value": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  {
+                    "id": "f9070668-edfc-46a3-a102-347c126858b3",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "[parameter(tagPrefix)]Managed",
+                    "label": "Managed by [parameter(companyName)]",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "value": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ]
+                    },
+                    "jsonData": "[\r\n{ \"value\":\"yes\", \"label\":\"yes\" },\r\n{ \"value\":\"no\", \"label\":\"no\" }\r\n]",
+                    "timeContext": {
+                      "durationMs": 86400000
+                    }
+                  }
+                ],
+                "style": "above",
+                "queryType": 1,
+                "resourceType": "microsoft.resourcegraph/resources"
+              },
+              "name": "parameters - 1"
+            },
+            {
+              "type": 3,
+              "content": {
+                "version": "KqlItem/1.0",
+                "query": "resources\r\n| where type == \"microsoft.cache/redisenterprise\"\r\n| where id in~ ({resource})\r\n| where subscriptionId in~ ({subscriptionPicker})\r\n| where resourceGroup in~ ({resourceGroupPicker})\r\n| extend rgName = split(id, \"/\", 4)[0]\r\n| extend ['Resource group'] = strcat('/subscriptions/', subscriptionId, '/resourceGroups/', rgName)\r\n| extend redisSKU = tostring(properties.sku.name)\r\n| extend Subscription = strcat('/subscriptions/', subscriptionId)\r\n| extend ['Availability zones'] = case\r\n(\r\nzones==\"\", \"N|A\", \r\ntostring(zones)\r\n)\r\n| extend [parameter(tagPrefix)]Managed = iff((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"yes\", \"no\")\r\n| where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]Managed})\r\n| project ['Resource'] = id, ['Name'] = name, \r\nType = 'Redis Enterprise', ['SKU'] = tostring(sku.name), ['Status'] = tostring(properties.resourceState),\r\n['Provisioning state'] = tostring(properties.provisioningState),\r\n['Location'] = location, \r\n['Availability zones'] ,\r\n[parameter(tagPrefix)]Managed, ['Resource group'], Subscription",
+                "size": 1,
+                "title": "Azure cache for Redis enterprise accounts",
+                "queryType": 1,
+                "resourceType": "microsoft.resourcegraph/resources",
+                "crossComponentResources": [
+                  "value::selected"
+                ]
+              },
+              "conditionalVisibility": {
+                "parameterName": "resource",
+                "comparison": "isNotEqualTo"
+              },
+              "name": "resourcelist"
+            },
+            {
+              "type": 1,
+              "content": {
+                "json": "#### No Azure Cache for Redis Enterprise are deployed in this environment yet"
+              },
+              "conditionalVisibility": {
+                "parameterName": "resource",
+                "comparison": "isEqualTo"
+              },
+              "name": "noresoutrces"
+            }
+          ]
+        },
+        "name": "group - 0"
+      }
+    ],
+    "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+  }

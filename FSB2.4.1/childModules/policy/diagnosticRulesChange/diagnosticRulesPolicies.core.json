@@ -1,0 +1,417 @@
+{
+  "diagnosticRules": [
+    {
+      "shortName": "adds",
+      "displayName": "Azure AD Domain Services",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.AAD/domainServices"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.AAD/domainServices/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [],
+            "logs": [
+              {
+                "category": "SystemSecurity",
+                "enabled": true
+              },
+              {
+                "category": "AccountManagement",
+                "enabled": true
+              },
+              {
+                "category": "LogonLogoff",
+                "enabled": true
+              },
+              {
+                "category": "ObjectAccess",
+                "enabled": true
+              },
+              {
+                "category": "PolicyChange",
+                "enabled": true
+              },
+              {
+                "category": "PrivilegeUse",
+                "enabled": true
+              },
+              {
+                "category": "DetailTracking",
+                "enabled": true
+              },
+              {
+                "category": "DirectoryServiceAccess",
+                "enabled": true
+              },
+              {
+                "category": "AccountLogon",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "activitylog",
+      "displayName": "Azure Activity Log",
+      "deployAtSubscriptionLevel": true,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": false,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Resources/subscriptions"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Insights/diagnosticSettings",
+          "name": "{diagnosticRuleName}",
+          "properties": {
+            "logs": [
+              {
+                "category": "Administrative",
+                "enabled": true
+              },
+              {
+                "category": "Security",
+                "enabled": true
+              },
+              {
+                "category": "ServiceHealth",
+                "enabled": true
+              },
+              {
+                "category": "Alert",
+                "enabled": true
+              },
+              {
+                "category": "Recommendation",
+                "enabled": true
+              },
+              {
+                "category": "Policy",
+                "enabled": true
+              },
+              {
+                "category": "Autoscale",
+                "enabled": true
+              },
+              {
+                "category": "ResourceHealth",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "keyvault",
+      "displayName": "Key Vaults",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.KeyVault/vaults"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.KeyVault/vaults/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "AuditEvent",
+                "enabled": true
+              },
+              {
+                "category": "AzurePolicyEvaluationDetails",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "storageaccount",
+      "displayName": "Storage Accounts",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Storage/storageAccounts"
+        },
+        {
+          "field": "tags[application]",
+          "notEquals": "databricks"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Storage/storageAccounts/providers/diagnosticsettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "workspaceId" : "[parameters('workspaceResourceID')]",
+            "metrics": [
+              {
+                "category": "Transaction",
+                "enabled": true
+              }
+            ]
+          }
+        },
+        {
+          "type": "Microsoft.Storage/storageAccounts/blobServices/providers/diagnosticsettings",
+          "name": "[concat(parameters('resourceName'), '/', 'default/Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "workspaceId" : "[parameters('workspaceResourceID')]",
+            "logs": [
+              {
+                "category": "StorageRead",
+                "enabled": false
+              },
+              {
+                "category": "StorageWrite",
+                "enabled": false
+              },
+              {
+                "category": "StorageDelete",
+                "enabled": false
+              }
+            ],
+            "metrics": [
+              {
+                "category": "Transaction",
+                "enabled": true
+              }
+            ]
+          }
+        },
+        {
+          "type": "Microsoft.Storage/storageAccounts/tableServices/providers/diagnosticsettings",
+          "name": "[concat(parameters('resourceName'), '/', 'default/Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "workspaceId" : "[parameters('workspaceResourceID')]",
+            "logs": [
+              {
+                "category": "StorageRead",
+                "enabled": false
+              },
+              {
+                "category": "StorageWrite",
+                "enabled": false
+              },
+              {
+                "category": "StorageDelete",
+                "enabled": false
+              }
+            ],
+            "metrics": [
+              {
+                "category": "Transaction",
+                "enabled": true
+              }
+            ]
+          }
+        },
+        {
+          "type": "Microsoft.Storage/storageAccounts/fileServices/providers/diagnosticsettings",
+          "name": "[concat(parameters('resourceName'), '/', 'default/Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "workspaceId" : "[parameters('workspaceResourceID')]",
+            "logs": [
+              {
+                "category": "StorageRead",
+                "enabled": false
+              },
+              {
+                "category": "StorageWrite",
+                "enabled": false
+              },
+              {
+                "category": "StorageDelete",
+                "enabled": false
+              }
+            ],
+            "metrics": [
+              {
+                "category": "Transaction",
+                "enabled": true
+              }
+            ]
+          }
+        },
+        {
+          "type": "Microsoft.Storage/storageAccounts/queueServices/providers/diagnosticsettings",
+          "name": "[concat(parameters('resourceName'), '/', 'default/Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "workspaceId" : "[parameters('workspaceResourceID')]",
+            "logs": [
+              {
+                "category": "StorageRead",
+                "enabled": false
+              },
+              {
+                "category": "StorageWrite",
+                "enabled": false
+              },
+              {
+                "category": "StorageDelete",
+                "enabled": false
+              }
+            ],
+            "metrics": [
+              {
+                "category": "Transaction",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "automationacc",
+      "displayName": "Azure Automation Accounts",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Automation/automationAccounts"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Automation/automationAccounts/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "timeGrain": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              }
+            ],
+            "logs": [
+              {
+                "category": "JobLogs",
+                "enabled": true
+              },
+              {
+                "category": "JobStreams",
+                "enabled": true
+              },
+              {
+                "category": "DscNodeStatus",
+                "enabled": true
+              },
+              {
+                "category": "AuditEvent",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "eventgridtopic",
+      "displayName": "Event Grid Topics",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.EventGrid/topics"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.EventGrid/topics/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "eventgridsub",
+      "displayName": "Event Grid Subscriptions",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.EventGrid/eventSubscriptions"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.EventGrid/eventSubscriptions/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    }
+  ]
+}

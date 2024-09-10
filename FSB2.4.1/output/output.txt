@@ -1,0 +1,2 @@
+This here 'output' folder is being used during the workflow to store the naming artifact in.
+This file is to have this folder initialized in git and synced up the repo.

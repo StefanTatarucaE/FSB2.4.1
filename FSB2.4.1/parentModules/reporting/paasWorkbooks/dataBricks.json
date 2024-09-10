@@ -1,0 +1,227 @@
+{
+    "version": "Notebook/1.0",
+    "items": [
+      {
+        "type": 12,
+        "content": {
+          "version": "NotebookGroup/1.0",
+          "groupType": "editable",
+          "items": [
+            {
+              "type": 9,
+              "content": {
+                "version": "KqlParameterItem/1.0",
+                "crossComponentResources": [
+                  "value::all"
+                ],
+                "parameters": [
+                  {
+                    "id": "f5f66862-c38c-4c25-98fa-ad1e7f463a0f",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "subscriptionPicker",
+                    "label": "Subscription",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| project subscriptionId, name\r\n| order by name asc\r\n",
+                    "crossComponentResources": [
+                      "value::all"
+                    ],
+                    "value": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  {
+                    "id": "b1ae8eeb-0570-482d-af41-aa81999ad44a",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "resourceGroupPicker",
+                    "label": "Resource Group",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| where subscriptionId in~ ({subscriptionPicker})\r\n| project resourceGroup, label = name\r\n| order by label asc",
+                    "crossComponentResources": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "value": [
+                      "value::all"
+                    ]
+                  },
+                  {
+                    "id": "ca5d90b1-6a4f-4e96-8835-8b516a7d9773",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "[parameter(tagPrefix)]Managed",
+                    "label": "Managed by [parameter(companyName)]",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "value": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "jsonData": "[\r\n    { \"value\":\"yes\", \"label\":\"yes\" },\r\n    { \"value\":\"no\", \"label\":\"no\" }\r\n]"
+                  },
+                  {
+                    "id": "2a6e9715-65ac-4e99-8087-36d38c6df94b",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "resource",
+                    "label": "Databricks workspace",
+                    "type": 5,
+                    "isRequired": true,
+                    "isGlobal": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resources\r\n| where type == \"microsoft.databricks/workspaces\"\r\n| where resourceGroup in ({resourceGroupPicker})\r\n| extend [parameter(tagPrefix)]Managed = iff((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"yes\", \"no\")\r\n| where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]Managed})\r\n| project id, name",
+                    "crossComponentResources": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  {
+                    "id": "f61cc7fa-ac6f-4d0b-8c7b-29baba692d98",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "workspacesId",
+                    "label": "Workspace ID",
+                    "type": 2,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resources \r\n| where type == \"microsoft.databricks/workspaces\"\r\n| where id in~ ({resource})\r\n| where subscriptionId in~ ({subscriptionPicker})\r\n| where resourceGroup in~ ({resourceGroupPicker})\r\n| extend ['Workspace Id'] = tostring(properties.workspaceId)\r\n| project ['Workspace Id']",
+                    "crossComponentResources": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  }
+                ],
+                "style": "above",
+                "queryType": 1,
+                "resourceType": "microsoft.resourcegraph/resources"
+              },
+              "name": "parameters - 1"
+            },
+            {
+              "type": 3,
+              "content": {
+                "version": "KqlItem/1.0",
+                "query": "resources\r\n    | where type == \"microsoft.databricks/workspaces\"\r\n\t| where id in~ ({resource})\r\n\t| where subscriptionId in~ ({subscriptionPicker})\r\n\t| where resourceGroup in~ ({resourceGroupPicker})\r\n    | extend ['Resource type'] = \"Workspace\"\r\n    | extend ['SKU'] = tostring(sku.name) \r\n    | extend Subscription = strcat('/subscriptions/', subscriptionId)\r\n    | extend rgName = split(id, \"/\", 4)[0]\r\n    | extend ['Resource group'] = strcat('/subscriptions/', subscriptionId, '/resourceGroups/', rgName)   \r\n    | extend [parameter(tagPrefix)]Managed = iff((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"yes\", \"no\")\r\n    | where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]Managed})   \r\n    | project ['Resource'] = id, ['Name'] = name, ['Resource type'], ['Provisioning state'] = tostring(properties.provisioningState), ['SKU'], ['Location'] = location, [parameter(tagPrefix)]Managed, Subscription, ['Resource group'], ['Workspace Id'] = tostring(properties.workspaceId)\r\n| order by Subscription, ['Workspace Id'], ['Resource type'] desc ",
+                "size": 1,
+                "title": "Azure Databricks environments",
+                "noDataMessage": "No resources deployed for chosen environment",
+                "queryType": 1,
+                "resourceType": "microsoft.resourcegraph/resources",
+                "crossComponentResources": [
+                  "value::all"
+                ],
+                "sortBy": []
+              },
+              "conditionalVisibility": {
+                "parameterName": "resource",
+                "comparison": "isNotEqualTo"
+              },
+              "name": "resourcelist"
+            },
+            {
+              "type": 3,
+              "content": {
+                "version": "KqlItem/1.0",
+                "query": "resources\r\n    | where type == \"microsoft.compute/virtualmachines\" and tostring(tags) has \"Databricks\"\r\n\t| where subscriptionId in~ ({subscriptionPicker})\r\n    | extend ['Resource type'] = \"Cluster\"    \r\n    | extend ['Cluster name'] = tostring(tags.ClusterName)\r\n    | extend ['SKU'] = tostring(properties.storageProfile.imageReference.sku)  \r\n    | extend ['Resource class'] = tostring(tags.ResourceClass)\r\n    | extend ['VM Size'] = tostring(properties.hardwareProfile.vmSize)\r\n    | extend ['Location'] = location\r\n    | extend Subscription = strcat('/subscriptions/', subscriptionId)\r\n    | extend rgName = split(id, \"/\", 4)[0]\r\n    | extend ['Resource group'] = strcat('/subscriptions/', subscriptionId, '/resourceGroups/', rgName) \r\n    | extend ['Workspace Id'] = substring(tags.DatabricksEnvironment, strlen(\"workerenv-\"), strlen(tags.DatabricksEnvironment) - strlen(\"workerenv-\")+1)  \r\n    | where ['Workspace Id'] in ({workspacesId})\r\n    | extend ['Provisioning state'] = tostring(properties.provisioningState)\r\n| project ['Resource'] = id, ['Name'] = name, ['Resource type'], ['Cluster name'], ['Provisioning state'], ['SKU'],  ['Resource class'], ['VM Size'], ['Location'], Subscription, ['Resource group'], ['Workspace Id']\r\n| order by Subscription, ['Workspace Id'], ['Cluster name'] desc ",
+                "size": 1,
+                "title": "Azure Databricks clusters and VMs",
+                "noDataMessage": "No running cluster or cluster was not created",
+                "queryType": 1,
+                "resourceType": "microsoft.resourcegraph/resources",
+                "crossComponentResources": [
+                  "value::all"
+                ]
+              },
+              "conditionalVisibilities": [
+                {
+                  "parameterName": "resource",
+                  "comparison": "isNotEqualTo"
+                },
+                {
+                  "parameterName": "workspacesId",
+                  "comparison": "isNotEqualTo"
+                }
+              ],
+              "name": "Clusterresources"
+            },
+            {
+              "type": 1,
+              "content": {
+                "json": "#### No Azure Databricks workspace deployed in this environment yet"
+              },
+              "conditionalVisibility": {
+                "parameterName": "resource",
+                "comparison": "isEqualTo"
+              },
+              "name": "noresources"
+            }
+          ]
+        },
+        "name": "group - 0",
+        "styleSettings": {
+          "showBorder": true
+        }
+      }
+    ],
+    "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+  }

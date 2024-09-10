@@ -1,0 +1,105 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualWanName": {
+            "value": "aaa-cnty-d-eune-vwan"
+        },
+        "location": {
+            "value": "uksouth"
+        },
+        "virtualWanHubName": {
+            "value": "aaa-cnty-d-eune-vhub"
+        },
+        "tags": {
+            "value": {
+                "EvidenManaged": "true"
+            }
+        },
+        "allowBranchToBranchTraffic": {
+            "value": true
+        },
+        "allowVnetToVnetTraffic": {
+            "value": true
+        },
+        "disableVpnEncryption": {
+            "value": true
+        },
+        "virtualWanType": {
+            "value": "Standard"
+        },
+        "virtualWanEnabled": {
+            "value": true
+        },
+        "virtualWanHubs": {
+            "value": [
+                {
+                    "virtualHubEnabled": true,
+                    "vpnGatewayEnabled": false,
+                    "bgpPeeringAddress": "",
+                    "peerWeight": 5,
+                    "VpnGatewayScaleUnit": 1,
+                    "expressRouteGatewayEnabled": false,
+                    "expressRouteGatewayScaleUnit": 1,
+                    "azFirewallEnabled": true,
+                    "azFirewallTier": "Standard",
+                    "azFirewallAvailabilityZones": [],
+                    "azFirewallPolicySku": "Standard",
+                    "azFirewallDnsProxyEnabled": true,
+                    "enableFirewallIntrusionDetection": false,
+                    "enableTlsInspection": false,
+                    "firewallIntrusionDetection": {
+                        "value": {
+                            "intrusionDetection": {
+                                "configuration": {
+                                    "bypassTrafficSettings": [
+                                        {
+                                            "description": "Example Bypass Rule Description",
+                                            "destinationAddresses": [
+                                                "10.4.5.x"
+                                            ],
+                                            "destinationIpGroups": [],
+                                            "destinationPorts": [
+                                                "80"
+                                            ],
+                                            "name": "Example Bypass Rule Name",
+                                            "protocol": "tcp",
+                                            "sourceAddresses": [
+                                                "10.1.3.x"
+                                            ],
+                                            "sourceIpGroups": []
+                                        }
+                                    ],
+                                    "privateRanges": [
+                                        "10.0.0.0/8"
+                                    ],
+                                    "signatureOverrides": []
+                                },
+                                "mode": "alert"
+                            }
+                        }
+                    },
+                    "threatIntelMode": "Alert",
+                    "firewallPolicyWhitelistFqdns": {
+                        "value": []
+                    },
+                    "firewallPolicyWhitelistIpAddresses": {
+                        "value": []
+                    },
+                    "virtualHubAddressPrefix": "10.200.0.0/23",
+                    "virtualHubSku": "Standard",
+                    "location": "uksouth",
+                    "hubRoutingPreference": "ASPath",
+                    "virtualRouterAutoScaleConfiguration": 2,
+                    "virtualHubRoutingIntentDestinations": [ "PrivateTraffic" ],
+                    "virtualHubRouteTableRouteName": "default-to-azfw",
+                    "virtualHubRouteTableDestinationType": "CIDR",
+                    "virtualHubRouteTableRouteDestinations": [
+                        "10.0.0.0/8, 192.168.0.0/16"
+                    ],
+                    "virtualHubRouteTableRouteNextHopType": "ResourceId"
+                }
+            ]
+        }
+    }
+}

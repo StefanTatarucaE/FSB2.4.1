@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName": {
+            "value": "cu8-lnd1-d-euwe-kvt-des"
+        },
+        "keyVaultSecretEnabled": {
+            "value": true
+        },
+        "keyVaultSecretName": {
+            "value": "testsecretnew"
+        },
+        "keyVaultSecretValue": {
+            "value": "Secret Value"
+        },
+        "keyVaultSecretType": {
+            "value": "Secret"
+        }
+    }
+}

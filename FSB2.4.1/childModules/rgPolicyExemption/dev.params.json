@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "policyAssignmentShortcode": {
+            "value": "cis"
+        },
+        "policyAssignmentId": {
+            "value": "/subscriptions/xxxc3-e0d8-416d-8331-da20bed4e8c3/providers/Microsoft.Authorization/policyAssignments/cis140.change.policy.set.assignment"
+        },
+        "policyDefinitionReferenceIds": {
+            "value": [
+                "34c877ad-507e-4c82-993e-3452a6e0ad3c",
+                "7fe3b40f-802b-4cdd-8bd4-fd799c948cc2"
+            ]
+        },
+        "resourceName": {
+            "value": "testresource"
+        },
+        "exemptionCategory": {
+            "value": "Waiver"
+        },
+        "addTime": {
+            "value": "P180D"
+        }
+    }
+}

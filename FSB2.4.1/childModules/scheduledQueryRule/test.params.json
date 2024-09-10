@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "alertName": {
+      "value": "Blob Storage - SuccessE2ELatency greater than thresholdV2"
+    },
+    "alertDescription": {
+      "value": "Cloud.IaaS.DCS-Azure-Storage - Part of standard set of log alerts - Category AZURE RESOURCES"
+    },
+    "tags": {
+      "value": {
+        "EvidenManaged": "true"
+      }
+    },
+    "alertSeverity": {
+      "value": 1
+    },
+    "isEnabled": {
+      "value": true
+    },
+    "resourceId": {
+      "value": "/subscriptions/b0238bae-57cc-492c-984d-aa153693a06b/resourceGroups/dv2-mgmt-d-rsg-monitoring/providers/Microsoft.OperationalInsights/workspaces/dv2-mgmt-d-loganalytics"
+    },
+    "query": {
+      "value": "AzureMetrics| where ResourceId contains \"/BLOBSERVICES/\" and MetricName == \"SuccessE2ELatency\"| summarize AggregatedValue = avg(Maximum) by _ResourceId, bin(TimeGenerated, 30m)| project TimeGenerated,Latency_ms=round(AggregatedValue, 1),AggregatedValue=round(AggregatedValue, 1),SubscriptionId=split(_ResourceId, \"/\", 2)[0],Resource_group=split(_ResourceId, \"/\", 4)[0],SA_name=tostring(split(_ResourceId, \"/\", 8)[0]),ResourceID = tostring(split(tolower(_ResourceId), \"/blobservices/\", 0)[0]),alerthash=hash_md5(strcat(\"blobE2Elatency\", _ResourceId))"
+    },
+    "operator": {
+      "value": "GreaterThan"
+    },
+    "threshold": {
+      "value": 500
+    },
+    "windowSize": {
+      "value": "PT30M"
+    },
+    "evaluationFrequency": {
+      "value": "PT30M"
+    },
+    "dimensionsName": {
+      "value": "ResourceID"
+    },
+    "timeAggregation": {
+      "value": "Average"
+    },
+    "metricMeasureColumn": {
+      "value": "AggregatedValue"
+    },
+    "isAutoMitigated": {
+      "value": false
+    },
+    "actionGroupId": {
+      "value": "/subscriptions/b0238bae-57cc-492c-984d-aa153693a06b/resourceGroups/dv2-mgmt-d-rsg-monitoring/providers/Microsoft.Insights/actionGroups/dv2-mgmt-d-actiongroup-itsm"
+    }
+  }
+}

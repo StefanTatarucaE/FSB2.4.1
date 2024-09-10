@@ -1,0 +1,17 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "allowHubToRemoteVnetTransit": {
+            "value": true
+        },
+        "allowRemoteVnetToUseHubVnetGateways": {
+            "value": true
+        },
+        "enableInternetSecurity": {
+            "value": false
+        },
+        "hubToLndzVirtualNetworkConnectionName" : {
+            "value": "dv4-cnty-t-euwe-vwan-hub/peering-to-dv4-cnty-t-ukso-vnet-hub"
+        }
+    }}

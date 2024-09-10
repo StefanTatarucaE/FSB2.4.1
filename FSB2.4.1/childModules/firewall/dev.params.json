@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "tags" : {
+      "value": {
+        "EvidenManaged": "true"
+      }
+    },
+    "firewallName": {
+      "value": "cu6-cnty-d-euwe-fw-hub"
+    },
+    "threatIntelMode": {
+      "value": "Alert"
+    },
+    "firewallPublicIpAddressName": {
+      "value": "cu6-cnty-d-euwe-pip-fw-hub"
+    },
+    "hubNetworkFirewallNumberOfPublicIPAddresses": {
+      "value": 1
+    },
+    "hubNetworkPublicIPAvailabilityZones": {
+      "value": []
+    },
+    "hubNetworkAzureFirewallAvailabilityZones": {
+      "value": []
+    },
+    "hubNetworkVnetName": {
+      "value": "cu6-cnty-d-euwe-vnet-hub"
+    },
+    "firewallPolicyName": {
+      "value": "cu6-cnty-d-euwe-policy-fw-hub"
+    },
+    "firewallPolicyResourceGroup": {
+      "value": "cu6-cnty-d-rsg-hub"
+    },
+    "location": {
+      "value": "westeurope"
+    }
+  }
+}

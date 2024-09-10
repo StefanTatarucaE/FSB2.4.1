@@ -1,0 +1,29 @@
+{
+    "resourceProvider": [
+        {
+            "core": [
+                {
+                    "namespace": "Microsoft.Compute",
+                    "optionalFeatures" : [
+                        "EncryptionAtHost"
+                    ]
+                },
+                {
+                    "namespace": "Microsoft.Automation"
+                },
+                {
+                    "namespace": "Microsoft.EventGrid"
+                },
+                {
+                    "namespace": "Microsoft.Insights"
+                },
+                {
+                    "namespace": "Microsoft.PolicyInsights"
+                }
+            ],
+            "network": [],
+            "osmgmt": [],
+            "paas": []
+        }
+    ]
+}

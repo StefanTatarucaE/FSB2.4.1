@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azRedisAuditSettings": {
+            "value": {
+                "disablePublicAccess": "Audit",
+                "useRedisPrivateLink": "AuditIfNotExists",
+                "enableSecureConnection": "Audit"
+            }
+        },
+        "azRedisAuditDenySetName": {
+            "value": "azredis.auditdeny.policy.set"
+        },
+        "azRedisAuditDenySetDisplayName": {
+            "value": "Redis auditdeny policy set"
+        },
+        "azRedisAuditDenySetAssignmentName": {
+            "value": "azredis.auditdeny.policy.set.assignment"
+        },
+        "azRedisAuditDenySetAssignmentDisplayName": {
+		    "value": "Redis auditdeny policy set assignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateEndpointName": {
+            "value": "testPrivateEndpoint-bicep-Marius"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "tags": {
+            "value": {
+            "tag1": "value1",
+            "tag2": "value2"
+            }
+        },
+        "privateLinkSvcName": {
+            "value": "cu1-sub3-d-pen-dscartifactstorage"
+        },
+        "privateLinkSvcExternalId": {
+            "value": "/subscriptions/54c0f1b6-842e-4d1c-884f-9c1ae0db98d9/resourceGroups/cu1-sub1-d-rsg-storage/providers/Microsoft.Storage/storageAccounts/cu1dstgdscpriv"
+        },
+        "privateLinkServiceGroupIDs":{
+            "value": "blob"
+        },
+        "virtualNetworkExternalId": {
+            "value": "/subscriptions/9fe6e26b-973e-4b08-990b-6f54d8bdefb2/resourceGroups/cu1-sub2-d-rsg-hub-network/providers/Microsoft.Network/virtualNetworks/cu1-sub2-d-euwe-vnet-hub"
+        },
+        "subnetName":{
+            "value": "cu1-sub2-d-euwe-snet-hub"
+        },
+        "privateEndpointDnsZoneGroupName":{
+            "value": "default"
+        },
+        "privateDnsZoneConfigsName":{
+            "value": "PrivateEndPoints"
+        },
+        "privateDnsExternalId": {
+            "value": "/subscriptions/9fe6e26b-973e-4b08-990b-6f54d8bdefb2/resourceGroups/cu1-sub2-d-rsg-hub-network/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net"
+        },
+        "requestMessage": {
+          "value": "Access to MSP Artifact Storage Account"
+        },
+        "connectionStateStatus": {
+          "value": "Approved"
+        },
+        "connectionStateDescription": {
+          "value": "Auto-Approved"
+        },
+        "connectionStateActionsRequired": {
+          "value": "None"
+        }
+    }
+}

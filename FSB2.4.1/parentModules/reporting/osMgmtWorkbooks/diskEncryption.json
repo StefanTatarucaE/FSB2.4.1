@@ -1,0 +1,351 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{SubscriptionPicker}"
+              ],
+              "parameters": [
+                {
+                  "id": "a3bb14a9-4d32-458e-a75a-b3432d44c10f",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SubscriptionPicker",
+                  "label": "Subscription",
+                  "type": 6,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "includeAll": true,
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all",
+                  "value": [
+                    "value::all"
+                  ]
+                },
+                {
+                  "id": "85cac832-be9f-4a32-9adf-cb1320c7af66",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "ResourceGroupPicker",
+                  "label": "Resource group",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| distinct resourceGroup\r\n| order by resourceGroup asc",
+                  "crossComponentResources": [
+                    "{SubscriptionPicker}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": [
+                    "value::all"
+                  ]
+                },
+                {
+                  "id": "4ebac839-7bb9-4bb1-913d-1c9fb4e3e7a0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "VMPicker",
+                  "label": "Virtual Machine",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "where type =~ 'Microsoft.Compute/virtualMachines'\n| where tostring(tags) !has '\"databricks-instance-name\"'\n| where resourceGroup in ({ResourceGroupPicker})\n| project id, name\n| order by name asc",
+                  "crossComponentResources": [
+                    "{SubscriptionPicker}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": [
+                    "value::all"
+                  ]
+                },
+                {
+                  "id": "c5ee7183-8243-4208-ae4c-66f82d03f46a",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "[parameter(tagPrefix)]EncryptionPicker",
+                  "label": "[parameter(tagPrefix)]Encryption",
+                  "type": 2,
+                  "description": "value of [parameter(tagPrefix)]Encryption tag",
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "jsonData": "[ \"Yes\",\r\n  \"Not set\",\r\n  \"Tag value invalid\"\r\n]",
+                  "defaultValue": "value::all"
+                }
+              ],
+              "style": "above",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "name": "parameters - 0"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "#### No virtual machines are deployed in this environment yet or are available for selected filters"
+            },
+            "conditionalVisibility": {
+              "parameterName": "VMPicker",
+              "comparison": "isEqualTo"
+            },
+            "name": "text - 3"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where id in~ ({VMPicker})\r\n| where resourceGroup in~({ResourceGroupPicker})\r\n| extend powerState = properties.extended.instanceView.powerState.displayStatus\r\n| extend encryptionAtHost = case( \r\n\tproperties.securityProfile.encryptionAtHost == true, \"Yes\", \r\n\t\"No\")\r\n| extend [parameter(tagPrefix)]Encryption = case(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Encryption\":\"true\"', \"Yes\",\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Encryption\":', \"Tag value invalid\", \r\n    \"Not set\")\r\n| where [parameter(tagPrefix)]Encryption in~ ({[parameter(tagPrefix)]EncryptionPicker})\r\n| order by name asc\r\n| project id, resourceGroup, location, subscriptionId, encryptionAtHost, [parameter(tagPrefix)]Encryption, powerState",
+              "size": 0,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{SubscriptionPicker}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "VMid1",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "id",
+                    "label": "VM"
+                  },
+                  {
+                    "columnId": "resourceGroup",
+                    "label": "Resource group"
+                  },
+                  {
+                    "columnId": "location",
+                    "label": "Location"
+                  },
+                  {
+                    "columnId": "subscriptionId",
+                    "label": "Subscription"
+                  },
+                  {
+                    "columnId": "encryptionAtHost",
+                    "label": "Encryption at host"
+                  },
+                  {
+                    "columnId": "[parameter(tagPrefix)]Encryption",
+                    "label": "[parameter(tagPrefix)]Encryption tag"
+                  },
+                  {
+                    "columnId": "powerState",
+                    "label": "Power state"
+                  }
+                ]
+              },
+              "sortBy": []
+            },
+            "conditionalVisibility": {
+              "parameterName": "VMPicker",
+              "comparison": "isNotEqualTo"
+            },
+            "name": "VMquery"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where id in~ ({VMPicker})\r\n| where resourceGroup in~({ResourceGroupPicker})\r\n| extend encryptionAtHost = case( \r\n\tproperties.securityProfile.encryptionAtHost == true, \"Yes\", \r\n\t\"No\")\r\n| extend [parameter(tagPrefix)]Encryption = case(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Encryption\":\"true\"', \"Yes\",\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Encryption\":', \"Tag value invalid\", \r\n    \"Not set\")\r\n| where [parameter(tagPrefix)]Encryption in~ ({[parameter(tagPrefix)]EncryptionPicker})\r\n| extend vmId = tolower(tostring(id))\r\n| join kind=leftouter (\r\n    resources\r\n    | where type == \"microsoft.compute/disks\"\r\n    | where isnotempty(managedBy)\r\n    | extend desId = tolower(tostring(properties.encryption.diskEncryptionSetId))\r\n    | join kind=leftouter (\r\n\t    resources\r\n\t    | where type == \"microsoft.compute/diskencryptionsets\"\r\n\t    | extend desId = tolower(tostring(id))\r\n    ) on desId\r\n    | extend diskEncryption = case( \r\n\t    properties.encryption.type == \"EncryptionAtRestWithPlatformKey\", \"SSE with PMK\",\r\n\t    properties.encryption.type == \"EncryptionAtRestWithCustomerKey\", \"SSE with CMK\", \r\n\t    properties.encryption.type == \"EncryptionAtRestWithPlatformAndCustomerKeys\", \"SSE with PMK and CMK\", \r\n\t    \"No Encryption at Rest\" )\r\n    | extend diskADE = case(properties.encryptionSettingsCollection.enabled == true,\"Yes\",\"No\")\r\n    | extend kvtId = case( diskADE == \"Yes\", \r\n        properties.encryptionSettingsCollection.encryptionSettings[0].diskEncryptionKey.sourceVault.id,\r\n        properties1.activeKey.sourceVault.id)\r\n    | extend diskEncryptionState = case( \r\n\t    properties.encryptionSettingsCollection.enabled == true, strcat(diskEncryption,\", ADE enabled\"), \r\n\t    diskEncryption)\r\n    | extend diskSKU = sku.name\r\n    | project id, properties.diskState, properties.diskSizeGB, managedBy, sku, diskSKU, properties, diskEncryption, desId, kvtId, diskADE\r\n    | extend vmId=tolower(tostring(managedBy))\r\n) on vmId\r\n| extend detectedAlerts = case(\r\n    ( [parameter(tagPrefix)]Encryption == \"Yes\" and diskADE == \"Yes\" ), \"[parameter(tagPrefix)]Encryption for ADE enabled disk not possible.\",\r\n    ( [parameter(tagPrefix)]Encryption == \"Yes\" and diskEncryption == \"SSE with PMK\" ), \"[parameter(tagPrefix)]Encryption set, but SSE-PMK detected.\",\r\n    ( [parameter(tagPrefix)]Encryption == \"Tag value invalid\" ), \"invalid tag value set for [parameter(tagPrefix)]Encryption.\",\r\n    \"\"\r\n)\r\n| order by name asc\r\n| project name, id, id1, diskEncryption, encryptionAtHost, diskADE, [parameter(tagPrefix)]Encryption, detectedAlerts, desId, kvtId, properties_diskSizeGB, diskSKU, properties_diskState\r\n",
+              "size": 0,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{SubscriptionPicker}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "name",
+                    "formatter": 5
+                  },
+                  {
+                    "columnMatch": "detectedAlerts",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "is Empty",
+                          "representation": "Blank",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "endsWith",
+                          "thresholdValue": ".",
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "Blank",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "desId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "kvtId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "desKvtId",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "hierarchySettings": {
+                  "treeType": 1,
+                  "groupBy": [
+                    "name"
+                  ],
+                  "expandTopLevel": true
+                },
+                "labelSettings": [
+                  {
+                    "columnId": "name",
+                    "label": "VM name"
+                  },
+                  {
+                    "columnId": "id",
+                    "label": "VM"
+                  },
+                  {
+                    "columnId": "id1",
+                    "label": "Disk"
+                  },
+                  {
+                    "columnId": "diskEncryption",
+                    "label": "Disk encryption"
+                  },
+                  {
+                    "columnId": "encryptionAtHost",
+                    "label": "Encryption at host"
+                  },
+                  {
+                    "columnId": "diskADE",
+                    "label": "ADE enabled"
+                  },
+                  {
+                    "columnId": "[parameter(tagPrefix)]Encryption",
+                    "label": "[parameter(tagPrefix)]Encryption tag"
+                  },
+                  {
+                    "columnId": "detectedAlerts",
+                    "label": "Attention"
+                  },
+                  {
+                    "columnId": "desId",
+                    "label": "Disk encryption set"
+                  },
+                  {
+                    "columnId": "kvtId",
+                    "label": "Key vault"
+                  },
+                  {
+                    "columnId": "properties_diskSizeGB",
+                    "label": "Disk size GB"
+                  },
+                  {
+                    "columnId": "diskSKU",
+                    "label": "Disk SKU"
+                  },
+                  {
+                    "columnId": "properties_diskState",
+                    "label": "Disk state"
+                  }
+                ]
+              },
+              "sortBy": []
+            },
+            "conditionalVisibility": {
+              "parameterName": "VMPicker",
+              "comparison": "isNotEqualTo"
+            },
+            "name": "diskQuery"
+          }
+        ]
+      },
+      "name": "group - 0"
+    }
+  ],
+  "defaultResourceIds": [
+    "/subscriptions/54c0f1b6-842e-4d1c-884f-9c1ae0db98d9/resourceGroups/cu1-sub1-d-rsg-monitoring/providers/Microsoft.OperationalInsights/workspaces/cu1-sub1-d-loganalytics"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

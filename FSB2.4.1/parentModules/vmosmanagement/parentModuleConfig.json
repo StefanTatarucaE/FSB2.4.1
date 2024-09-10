@@ -1,0 +1,132 @@
+{
+    "landingzone": {
+        "backupStorageConfig": {
+            "storageType": "GeoRedundant",
+            "storageTypeState": "Unlocked"
+        },
+        "diskEncryptionkeyVaultFeatures": {
+            "enabledForDeployment": true,
+            "enabledForDiskEncryption": true,
+            "enabledForTemplateDeployment": true,
+            "enablePurgeProtection": true,
+            "enableRbacAuthorization": false,
+            "enableSoftDelete": true
+        },
+        "diskEncryptionKeyVaultConfig": {
+            "skuName": "standard",
+            "publicNetworkAccess": "enabled",
+            "networkRuleBypassOptions": "AzureServices",
+            "networkRuleAction": "Allow",
+            "softDeleteRetentionInDays": 7
+        },
+        "diskEncryptionKeyVaultKeyConfig": {
+            "keyEnabled": true,
+            "keySize": 2048,
+            "keyType": "RSA"
+        }
+    },
+    "management": {
+        "maintenanceScope": "InGuestPatch",
+        "vmOsManagementAutomationAccountSkuName": "Free",
+        "vmOsManagementManagedIdentity": {
+            "systemAssignedIdentity": true,
+            "userAssignedIdentities": {}
+        },
+        "computeGalleryStorageAccountKind": "StorageV2",
+        "computeGalleryStorageAccountSku": "Standard_LRS",
+        "computeGalleryStorageAccountAccessTier": "Hot",
+        "computeGalleryStorageAccountAllowBlobPublicAccess": false,
+        "computeGalleryStorageAccountNetworkAcls": {
+            "bypass": "AzureServices, Logging, Metrics",
+            "defaultAction": "Allow",
+            "ipRules": []
+        },
+        "computeGalleryStorageAccountChangeFeed": {
+            "enabled": true,
+            "retentionInDays": 7
+        },
+        "computeGalleryStorageAccountBlobSvcDeleteRetentionPolicy": {
+            "enabled": true,
+            "days": 7
+        },
+        "computeGalleryStorageAccountShouldCreateContainers": true,
+        "computeGalleryStorageAccountArtifactContainerNames": [
+            {
+                "containerName": "vhdcheck",
+                "containerAccess": "None"
+            },
+            {
+                "containerName": "vhdupload",
+                "containerAccess": "None"
+            },
+            {
+                "containerName": "vhdready",
+                "containerAccess": "None"
+            }
+        ],
+        "osTaggingStorageAccountKind": "StorageV2",
+        "osTaggingStorageAccountSku": "Standard_LRS",
+        "osTaggingStorageAccountAccessTier": "Hot",
+        "osTaggingStorageAccountAllowBlobPublicAccess": false,
+        "osTaggingStorageAccountNetworkAcls": {
+            "bypass": "AzureServices, Logging, Metrics",
+            "defaultAction": "Allow",
+            "ipRules": []
+        },
+        "osTaggingStorageAccountChangeFeed": {
+            "enabled": true,
+            "retentionInDays": 7
+        },
+        "osTaggingStorageAccountBlobSvcDeleteRetentionPolicy": {
+            "enabled": true,
+            "days": 7
+        },
+        "osTaggingAppServicePlanConfig": {
+            "sku": {
+                "name": "Y1",
+                "tier": "Dynamic"
+            },
+            "kind": "Functionapp"
+        },
+        "osTaggingAppInsightsConfig": {
+            "kind": "web",
+            "properties": {
+                "Request_Source": "IbizaWebAppExtensionCreate"
+            }
+        },
+        "osTaggingAppServiceKind": "functionapp",
+        "osTaggingAppServiceProperties": [
+            {
+                "name": "FUNCTIONS_EXTENSION_VERSION",
+                "value": "~4"
+            },
+            {
+                "name": "FUNCTIONS_WORKER_RUNTIME",
+                "value": "powershell"
+            },
+            {
+                "name": "FUNCTIONS_WORKER_RUNTIME_VERSION",
+                "value": "7.2"
+            },
+            {
+                "name": "PSWorkerInProcConcurrencyUpperBound",
+                "value": "6"
+            },
+            {
+                "name": "WEBSITE_RUN_FROM_PACKAGE",
+                "value": "1"
+            }
+        ],
+        "osTaggingAppServiceSiteConfig": {
+            "http20Enabled": true,
+            "minTlsVersion": "1.2",
+            "ftpsState": "FtpsOnly",
+            "powerShellVersion": "7.2"
+        },
+        "osTaggingAppServiceConfig": {
+            "clientAffinityEnabled": false,
+            "clientCertEnabled": false,
+            "httpsOnly": true
+        }
+    }
+}

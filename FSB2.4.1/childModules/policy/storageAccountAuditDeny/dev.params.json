@@ -1,0 +1,53 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccountSettings": {
+            "value": {
+                "allowedStorageSkusAudit": "Audit",
+                "auditForClassicStorage": "Audit",
+                "geoRedundantStorageAccountsAudit": "Audit",
+                "storageAccountAllowCrossTenantReplicationAudit": "Audit",
+                "storageAccountAllowSharedKeyAccessAudit": "Audit",
+                "storageAccountInfrastructureEncryptionEnabledAudit": "Audit",
+                "storageAccountKeysExpiredRestrict": "Audit",
+                "storageAccountPrivateEndpointEnabledAudit": "AuditIfNotExists",
+                "storageAccountListOfAllowedSkus": [
+                    "Standard_LRS"
+                ],
+                "storageAccountSasPolicyRestrict": "Audit",
+                "storageEncryptionScopesShouldUseDoubleEncryptionAudit": "Audit",
+                "storageQueueCustomerManagedKeyEnabledAudit": "Audit",
+                "storageSyncIncomingTrafficPolicyAuditDeny": "Audit",
+                "storageSyncPrivateDnsZoneAuditIfNotExists": "Audit",
+                "storageSyncPrivateEndpointAuditIfNotExists": "AuditIfNotExists",
+                "storageTableCustomerManagedKeyEnabledAudit": "Audit",
+                "storageEncryptionScopesShouldUseCmkAudit": "Audit",
+                "virtualNetworkServiceEndpointStorageAccountAudit": "Audit"
+            }
+        },
+        "storageAccountAuditDenySetName": {
+            "value": "storageaccount.auditdeny.policy.set"
+        },
+        "storageAccountAuditDenySetDisplayName": {
+            "value": "Storage account auditdeny policy set"
+        },
+        "storageAccountAuditDenySetAssignmentName": {
+            "value": "storageaccount.auditdeny.policy.set.assignment"
+        },
+        "storageAccountAuditDenySetAssignmentDisplayName": {
+            "value": "storage account auditdeny policy set assignment"
+        }
+        ,
+        "storageAccountFilesyncprivatednszoneDefName": {
+            "value": "storageaccount.filesyncprivatednszone.auditdeny.policy.def"
+        }
+        ,
+        "storageAccountFilesyncprivatednszoneDefDisplayName": {
+            "value": "Storage account azure file sync auditdeny policy definition"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

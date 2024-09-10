@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "bastionHostName": {
+            "value": "bastionhost02"
+        },
+        "location": {
+            "value": "West Europe"
+        },
+        "tags": {
+            "value": {
+                "EvidenManaged": "true"
+            }
+        },
+        "virtualNetworkName": {
+            "value": "TestRG1-vnet"
+        },
+        "publicIpName": {
+            "value": "testBastionIp001"
+        },
+        "sku": {
+            "value": "Basic"
+        },
+        "disableCopyPaste": {
+            "value": false
+        },
+        "enableFileCopy": {
+            "value": true
+        },
+        "enableIpConnect": {
+            "value": true
+        },
+        "enableShareableLink": {
+            "value": true
+        },
+        "enableTunneling": {
+            "value": true
+        },
+        "scaleUnits": {
+            "value": 2
+        }
+    }
+}

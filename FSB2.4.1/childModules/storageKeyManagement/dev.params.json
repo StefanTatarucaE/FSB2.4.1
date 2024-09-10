@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "westeurope"
+    },
+    "subscriptionType": {
+      "value": "lndz"
+    },
+    "keyVaultAppObjectId": {
+      "value": "9c448bb3-fcfb-44be-8a74-f8c71939ff6e"
+    },
+    "keyManagementTags": {
+      "value": {
+        "EvidenManaged": "true"
+      }
+    },
+    "automationAccountIdentity": {
+      "value": "3e68a52b-72af-469c-b8db-a64dd23d25aa"
+    }
+  }
+}

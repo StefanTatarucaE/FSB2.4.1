@@ -1,0 +1,9 @@
+requests
+XlsxWriter
+azure-storage-blob==2.1.0
+pandas
+azure-functions
+azure-storage-file==2.1.0
+google-cloud-storage==1.36.0
+google-auth==1.26.1
+numpy

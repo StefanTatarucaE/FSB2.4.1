@@ -1,0 +1,29 @@
+{
+    "resourceType": "Microsoft.Logic/workflows",
+    "functionName": "",
+    "advancedFilters": [
+        {
+            "operator": "StringBeginsWith",
+            "key": "data.operationName",
+            "Values": [
+                "Microsoft.Network/applicationGateways/delete",
+                "Microsoft.Network/applicationGateways/write",
+                "Microsoft.Network/loadBalancers/write",
+                "Microsoft.Network/loadBalancers/delete",
+                "Microsoft.Network/networkSecurityGroups/write",
+                "Microsoft.Network/networkSecurityGroups/delete",
+                "Microsoft.Network/azureFirewalls/write",
+                "Microsoft.Network/azureFirewalls/delete",
+                "Microsoft.Network/virtualNetworkGateways/write",
+                "Microsoft.Network/virtualNetworkGateways/delete",
+                "Microsoft.Network/expressRouteCircuits/write",
+                "Microsoft.Network/expressRouteCircuits/delete"
+            ]
+        }
+    ],
+    "includedEventType": [
+        "Microsoft.Resources.ResourceDeleteSuccess",
+        "Microsoft.Resources.ResourceWriteSuccess",
+        "Microsoft.Resources.ResourceActionSuccess"
+    ]
+}

@@ -1,0 +1,272 @@
+{
+    "version": "Notebook/1.0",
+    "items": [
+      {
+        "type": 12,
+        "content": {
+          "version": "NotebookGroup/1.0",
+          "groupType": "editable",
+          "items": [
+            {
+              "type": 9,
+              "content": {
+                "version": "KqlParameterItem/1.0",
+                "crossComponentResources": [
+                  "value::all"
+                ],
+                "parameters": [
+                  {
+                    "id": "f5f66862-c38c-4c25-98fa-ad1e7f463a0f",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "subscriptionPicker",
+                    "label": "Subscription",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions\"\r\n| project subscriptionId, name\r\n| order by name asc\r\n",
+                    "crossComponentResources": [
+                      "value::all"
+                    ],
+                    "value": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  {
+                    "id": "b1ae8eeb-0570-482d-af41-aa81999ad44a",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "resourceGroupPicker",
+                    "label": "Resource Group",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resourcecontainers\r\n| where type == \"microsoft.resources/subscriptions/resourcegroups\"\r\n| where subscriptionId in~ ({subscriptionPicker})\r\n| project resourceGroup, label = name\r\n| order by label asc",
+                    "crossComponentResources": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "value": [
+                      "value::all"
+                    ]
+                  },
+                  {
+                    "id": "ca5d90b1-6a4f-4e96-8835-8b516a7d9773",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "[parameter(tagPrefix)]Managed",
+                    "label": "Managed by [parameter(companyName)]",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "value": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "jsonData": "[\r\n    { \"value\":\"yes\", \"label\":\"yes\" },\r\n    { \"value\":\"no\", \"label\":\"no\" }\r\n]"
+                  },
+                  {
+                    "id": "2a6e9715-65ac-4e99-8087-36d38c6df94b",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "resource",
+                    "label": "Synapse workspace",
+                    "type": 5,
+                    "isRequired": true,
+                    "isGlobal": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resources\r\n| where type == \"microsoft.synapse/workspaces\"\r\n| where resourceGroup in ({resourceGroupPicker})\r\n| extend [parameter(tagPrefix)]Managed = iff((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"yes\", \"no\")\r\n| where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]Managed})\r\n| project id, name",
+                    "crossComponentResources": [
+                      "value::all"
+                    ],
+                    "value": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  {
+                    "id": "3447b5e3-a378-4a56-a26b-a188ad265767",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "poolnameHidden",
+                    "type": 2,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resources\r\n| where type == 'microsoft.synapse/workspaces/bigdatapools' or type == 'microsoft.synapse/workspaces/sqlpools'\r\nor (type == 'microsoft.sql/servers/databases' and sku.tier == 'DataWarehouse')\r\nor type == 'microsoft.synapse/workspaces/kustopools'\r\n| extend poolName = tostring(split(id, \"/\", 10)[0])\r\n| extend workspaceName = strcat(\"/subscriptions/\", split(id, \"/\", 2)[0], \"/resourceGroups/\", split(id, \"/\", 4)[0],\r\n\"/providers/Microsoft.Synapse/workspaces/\",split(id, \"/\", 8)[0])\r\n| where workspaceName in ({resource})\r\n| project poolName\r\n| union ( \r\nresources\r\n| take 1\r\n| extend poolName = \"foobar\"\r\n| project poolName\r\n)",
+                    "crossComponentResources": [
+                      "value::all"
+                    ],
+                    "isHiddenWhenLocked": true,
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  {
+                    "id": "7a980e05-541c-4a14-9e88-b03737118b7f",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "synapsepools",
+                    "label": "Synapse Analytic pools",
+                    "type": 2,
+                    "isRequired": true,
+                    "isGlobal": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resources\r\n| where type == 'microsoft.synapse/workspaces/bigdatapools' or type == 'microsoft.synapse/workspaces/sqlpools' or (type == 'microsoft.sql/servers/databases' and sku.tier == 'DataWarehouse') or type == 'microsoft.synapse/workspaces/kustopools'\r\n| where resourceGroup in ({resourceGroupPicker})\r\n| extend workspaceName = strcat(\"/subscriptions/\", split(id, \"/\", 2)[0], \"/resourceGroups/\", split(id, \"/\", 4)[0], \"/providers/Microsoft.Synapse/workspaces/\",split(id, \"/\", 8)[0])\r\n| where workspaceName in ({resource}) or name in ({poolnameHidden})\r\n| extend [parameter(tagPrefix)]Managed = iff((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"yes\", \"no\")\r\n| where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]Managed})\r\n| extend value = id\r\n| extend label = name\r\n| project value, label\r\n| order by label asc\r\n",
+                    "crossComponentResources": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources",
+                    "value": null
+                  }
+                ],
+                "style": "above",
+                "queryType": 1,
+                "resourceType": "microsoft.resourcegraph/resources"
+              },
+              "name": "parameters - 1"
+            },
+            {
+              "type": 3,
+              "content": {
+                "version": "KqlItem/1.0",
+                "query": "resources\r\n| where type == 'microsoft.synapse/workspaces'\r\n| where resourceGroup in~ ({resourceGroupPicker})\r\n| where subscriptionId in ({subscriptionPicker})\r\n| where id in~ ({resource})\r\n| extend rgName = split(id, \"/\", 4)[0]\r\n| extend ['Resource group'] = strcat('/subscriptions/', subscriptionId, '/resourceGroups/', rgName)\r\n| extend Subscription = strcat('/subscriptions/', subscriptionId)\r\n| extend [parameter(tagPrefix)]Managed = iff((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"yes\", \"no\")\r\n| where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]Managed}) \r\n| project ['Resource'] = id, ['Name'] = name, ['Location'] = location, ['Provisioning state'] = tostring(properties.provisioningState), [parameter(tagPrefix)]Managed, ['Resource group'], Subscription\r\n| order by ['Resource group']",
+                "size": 1,
+                "title": "Azure Synapse workspaces",
+                "noDataMessage": "No resources deployed for chosen environment",
+                "queryType": 1,
+                "resourceType": "microsoft.resourcegraph/resources",
+                "crossComponentResources": [
+                  "value::all"
+                ],
+                "sortBy": []
+              },
+              "conditionalVisibility": {
+                "parameterName": "resource",
+                "comparison": "isNotEqualTo"
+              },
+              "name": "resourcelist"
+            },
+            {
+              "type": 3,
+              "content": {
+                "version": "KqlItem/1.0",
+                "query": "{\"version\":\"AzureHealthQuery/1.0\",\"queryType\":\"Detailed\"}",
+                "size": 1,
+                "title": "Synapse workspace health",
+                "queryType": 4,
+                "resourceType": "microsoft.synapse/workspaces",
+                "crossComponentResources": [
+                  "{resource}"
+                ]
+              },
+              "conditionalVisibility": {
+                "parameterName": "resource",
+                "comparison": "isNotEqualTo"
+              },
+              "name": "resourcehealth"
+            },
+            {
+              "type": 3,
+              "content": {
+                "version": "KqlItem/1.0",
+                "query": "resources\r\n| where id in ({synapsepools})\r\n| extend ['Resource type'] = case(type == 'microsoft.synapse/workspaces/bigdatapools', 'Apache spark pool', type == 'microsoft.synapse/workspaces/sqlpools', 'SQL Server', type == 'microsoft.sql/servers/databases', 'SQL Database', type == 'microsoft.synapse/workspaces/kustopools', 'Data Explorer pool', '')\r\n| extend propertiesState = iif(type == 'Microsoft.Sql/servers', tostring(properties.state), tostring(properties.status))\r\n| extend ['State'] = case(propertiesState == \"Degraded\", \"Degraded\",propertiesState == \"Warned\", \"Warned\",propertiesState == \"Disabled\", \"Disabled\",propertiesState == \"Ready\", \"Available\",propertiesState == \"Reserved\", \"Reserved\",propertiesState == \"Paused\", \"Paused\",propertiesState == \"Online\", \"Online\",isempty(propertiesState), \"\",\"Unknown\")\r\n| extend rgName = split(id, \"/\", 4)[0]\r\n| extend ['Resource group'] = strcat('/subscriptions/', subscriptionId, '/resourceGroups/', rgName)\r\n| order by id, ['Resource type'] asc\r\n| project ['Resource'] = id, ['Name'] = name, ['Resource type'], ['Kind'] = tostring(kind), ['Tier'] = tostring(sku.tier), ['Provisioning state'] = tostring(properties.provisioningState), ['State'], ['Location'] = location, ['Resource group']",
+                "size": 1,
+                "title": "Synapse Analytic pools",
+                "noDataMessage": "No pools deployed for selected environment",
+                "queryType": 1,
+                "resourceType": "microsoft.resourcegraph/resources",
+                "crossComponentResources": [
+                  "value::all"
+                ]
+              },
+              "conditionalVisibility": {
+                "parameterName": "synapsepools",
+                "comparison": "isNotEqualTo"
+              },
+              "name": "synapsepools"
+            },
+            {
+              "type": 1,
+              "content": {
+                "json": "#### No Azure Synapse Analytics workspace deployed in this environment yet"
+              },
+              "conditionalVisibility": {
+                "parameterName": "resource",
+                "comparison": "isEqualTo"
+              },
+              "name": "noresources"
+            }
+          ]
+        },
+        "name": "group - 0",
+        "styleSettings": {
+          "showBorder": true
+        }
+      }
+    ],
+    "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+  }

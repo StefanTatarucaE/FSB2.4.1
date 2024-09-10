@@ -1,0 +1,37 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"mspOffer": {
+			"value": "First Time"
+		},
+		"mspOfferDescription": {
+			"value": "First Time description"
+		},
+		"managedByTenantId": {
+			"value": "a47921a6-a2af-4dc4-ab75-dad1f90abb7e"
+		},
+		"authorizations": {
+			"value": [{
+				"principalId": "b202bc71-a5ce-4c94-a59f-7c76f03187fe",
+				"roleDefinitionId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
+				"principalIdDisplayName": "Name of the principal"
+			}]
+		},
+		"eligibleAuthorizations": {
+			"value": [{
+				"justInTimeAccessPolicy": {
+					"multiFactorAuthProvider": "Azure",
+					"maximumActivationDuration": "PT8H",
+					"managedByTenantApprovers": [{
+						"principalId": "5add9b65-8d29-4d3b-a71e-5892374ca1b9",
+						"principalIdDisplayName": "Eviden Approver Group"
+					}]
+				},
+				"principalId": "b19eb142-a5fa-4324-aec2-0ab782031ea3",
+				"principalIdDisplayName": "Contributor",
+				"roleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c"
+			}]
+		}
+	}
+}

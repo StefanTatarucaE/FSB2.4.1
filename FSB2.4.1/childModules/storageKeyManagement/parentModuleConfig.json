@@ -1,0 +1,39 @@
+{
+    "landingzone": {
+        "keyManagementKeyVaultFeatures": {
+            "enabledForDeployment": false,
+            "enabledForDiskEncryption": false,
+            "enabledForTemplateDeployment": false,
+            "enablePurgeProtection": true,
+            "enableRbacAuthorization": false,
+            "enableSoftDelete": true
+        },
+        "keyManagementKeyVaultConfig": {
+            "skuName": "standard",
+            "publicNetworkAccess": "enabled",
+            "networkRuleBypassOptions": "AzureServices",
+            "networkRuleAction": "Allow",
+            "softDeleteRetentionInDays": 7
+        },
+        "automationAccountIdentityPermissions": {
+            "permissions": {
+                "storage": [
+                    "get",
+                    "list",
+                    "delete",
+                    "set",
+                    "update",
+                    "regeneratekey",
+                    "getsas",
+                    "listsas",
+                    "deletesas",
+                    "setsas",
+                    "recover",
+                    "backup",
+                    "restore",
+                    "purge"
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "subscriptionDeployLocation": "westeurope",
+    "githubEnvironmentCode": "example-environment-name",
+    "organizationCode": "example-organization-code",
+    "mgmtSubscriptionCode":"mgmt",
+    "mgmtEnvironmentCode": "a",
+    "runMgmtCore": "Yes",
+    "runMgmtNetwork": "Yes",
+    "runMgmtOsMgmt": "Yes",
+    "runMgmtPaas": "Yes",
+    "runMgmtFinish": "Yes",
+    "cntySubscriptionCode":"cnty",
+    "cntyEnvironmentCode": "a",
+    "deployVwan":"no",
+    "runCntyCore": "Yes",
+    "runCntyNetwork": "Yes",
+    "runIpGroupsPreReq": "no",
+    "runCntyOsMgmt": "Yes",
+    "runCntyPaas": "Yes",
+    "runCntyFinish": "Yes",
+    "lndzSubscriptionCode":"lnd1",
+    "lndzEnvironmentCode": "a",
+    "runLndzCore": "Yes",
+    "runLndzNetwork": "Yes",
+    "runLndzOsMgmt": "Yes",
+    "runLndzPaas": "Yes",
+    "runLndzFinish": "Yes",
+    "toolSubscriptionCode":"tool",
+    "toolEnvironmentCode": "a",
+    "runToolCore": "Yes",
+    "runToolNetwork": "Yes",
+    "runToolOsMgmt": "Yes",
+    "runToolPaas": "Yes",
+    "runToolFinish": "Yes"
+}
+
+
+

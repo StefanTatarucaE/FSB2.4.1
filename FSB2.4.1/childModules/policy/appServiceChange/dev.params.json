@@ -1,0 +1,74 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appServiceDisableFtpDeployments": {
+      "value": "DeployIfNotExists"
+    },
+    "appServiceDisablePublicNetwork": {
+      "value": "DeployIfNotExists"
+    },
+    "appServiceDisableScmLocalAuthentication": {
+      "value": "Disabled"
+    },
+    "appServiceDisableSlotsFtpLocalAuthentication": {
+      "value": "Disabled"
+    },
+    "appServiceDisableSlotsScmLocalAuthentication": {
+      "value": "Disabled"
+    },
+    "appServiceChangeSetName": {
+      "value": "appservice.change.policy.set"
+    },
+    "appServiceChangeSetDisplayName": {
+      "value": "Azure app service change policy set."
+    },
+    "appServiceDisableFtpsDeploymentDefName": {
+      "value": "appservice.ftpsdisablebasicauth.change.policy.def"
+    },
+    "appServiceDisableFtpsDeploymentDefDisplayName": {
+      "value": "App service ftp disable basic auth change policy definition."
+    },
+    "appServiceDisablePublicNetworkAccessDefName": {
+      "value": "appservice.disablepublicnetworkaccess.change.policy.def"
+    },
+    "appServiceDisablePublicNetworkAccessDefDisplayName": {
+      "value": "App service disable public network access change policy definition."
+    },
+    "appServiceDisableScmLocalAuthenticationDefName": {
+      "value": "appservice.disablescmlocalauth.change.policy.def"
+    },
+    "appServiceDisableScmLocalAuthenticationDefDisplayName": {
+      "value": "App service disable scm local auth change policy definition."
+    },
+    "appServiceDisableSlotsFtpLocalAuthenticationDefName": {
+      "value": "appservice.disableslotsftplocalauth.change.policy.def"
+    },
+    "appServiceDisableSlotsFtpLocalAuthenticationDefDisplayName": {
+      "value": "App service disable slots ftp local auth change policy definition."
+    },
+    "appServiceDisableSlotsScmLocalAuthenticationDefName": {
+      "value": "appservice.disableslotsscmlocalauth.change.policy.def"
+    },
+    "appServiceDisableSlotsScmLocalAuthenticationDefDisplayName": {
+      "value": "App service disable slots scm local auth change policy definition."
+    },
+    "appServiceChangeSetAssignmentName": {
+      "value": "appservice.change.policy.set.assignment"
+    },
+    "appServiceChangeSetAssignmentDisplayName": {
+      "value": "Azure app service change policy set assignment"
+    },
+    "policyMetadata": {
+      "value": "EvidenELZ"
+    },
+    "policyRuleTag": {
+      "value": "EvidenManaged"
+    },
+    "excludedResources": {
+      "value": [
+        "/subscriptions/3e3ae977-9abe-4702-8132-b41d3107928b/resourceGroups/dv5-mgmt-d-rsg-ostagging/providers/Microsoft.Web/sites/dv5-mgmt-d-functionapp-ostagging"
+      ]
+    }
+  }
+}

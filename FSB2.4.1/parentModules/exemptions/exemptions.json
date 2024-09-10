@@ -1,0 +1,425 @@
+    {
+        "bootstrapSolution": {
+            "deployExemptionsForBootstrap": true,
+            "cisArtifactStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "6fac406b-40ca-413b-bf8e-0bf964659c25",
+                    "2a1a9cdf-e04d-429a-8416-3bfb72a1b26f",
+                    "34c877ad-507e-4c82-993e-3452a6e0ad3c",
+                    "4733ea7b-a883-42fe-8cac-97454c2a9e4a",
+                    "6edd7eda-6dd8-40f7-810d-67160c639cd9"
+                ]
+            },
+            "isoArtifactStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "iso",
+                "policyDefinitionReferenceIds": [
+                    "AuditUnrestrictedNetworkAccessToStorageAccounts"
+                ]
+            },
+            "asbArtifactStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "storageAccountShouldUseAPrivateLinkConnectionMonitoringEffect",
+                    "storageAccountsShouldRestrictNetworkAccessUsingVirtualNetworkRulesMonitoringEffect"
+                ]
+            }
+        },
+        "reportingSolution": {
+            "deployExemptionsForReporting": true,
+            "cisReportingStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "34c877ad-507e-4c82-993e-3452a6e0ad3c",
+                    "2a1a9cdf-e04d-429a-8416-3bfb72a1b26f",
+                    "6fac406b-40ca-413b-bf8e-0bf964659c25",
+                    "4fa4b6c0-31ca-4c0d-b10d-24b96f62a751",
+                    "4733ea7b-a883-42fe-8cac-97454c2a9e4a",
+                    "6edd7eda-6dd8-40f7-810d-67160c639cd9"
+                ]
+            },
+            "isoReportingStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "iso",
+                "policyDefinitionReferenceIds": [
+                    "AuditUnrestrictedNetworkAccessToStorageAccounts"
+                ]
+            },
+            "asbReportingStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "storageAccountsShouldRestrictNetworkAccessUsingVirtualNetworkRulesMonitoringEffect",
+                    "storageAccountShouldUseAPrivateLinkConnectionMonitoringEffect",
+                    "StorageDisallowPublicAccess"
+                ]
+            }
+        },
+        "meteringSolution": {
+            "deployExemptionsForMetering": true,
+            "cisMeteringAppService": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "c75248c1-ea1d-4a9c-8fc9-29a6aabd5da8",
+                    "eaebaea7-8013-4ceb-9d14-7eb32271373c"
+                ]
+            },
+            "cisBillingStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "6fac406b-40ca-413b-bf8e-0bf964659c25",
+                    "34c877ad-507e-4c82-993e-3452a6e0ad3c",
+                    "2a1a9cdf-e04d-429a-8416-3bfb72a1b26f",
+                    "4733ea7b-a883-42fe-8cac-97454c2a9e4a",
+                    "6edd7eda-6dd8-40f7-810d-67160c639cd9"
+                ]
+            },
+            "cisBillingKeyVault": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "98728c90-32c7-4049-8429-847dc0f4fe37",
+                    "a6abeaec-4d90-4a02-805f-6b26c4d3fbe9",
+                    "12d4fa5e-1f9f-4c21-97a9-b99b3c6611b5"
+                ]
+            },
+            "isoBillingStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "iso",
+                "policyDefinitionReferenceIds": [
+                    "AuditUnrestrictedNetworkAccessToStorageAccounts"
+                ]
+            },
+            "asbBillingStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "storageAccountsShouldRestrictNetworkAccessUsingVirtualNetworkRulesMonitoringEffect",
+                    "storageAccountShouldUseAPrivateLinkConnectionMonitoringEffect"
+                ]
+            },
+            "asbBillingKeyVault": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "privateEndpointShouldBeConfiguredForKeyVaultMonitoringEffect",
+                    "firewallShouldBeEnabledOnKeyVaultMonitoringEffect"
+                ]
+            },
+            "asbBillingAppService": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "functionAppsShouldHaveClientCertificatesEnabledMonitoringEffect"
+                ]
+            }
+        },
+        "itsmSolution": {
+            "deployExemptionsForItsm": true,
+            "cisItsmPwshStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "34c877ad-507e-4c82-993e-3452a6e0ad3c",
+                    "2a1a9cdf-e04d-429a-8416-3bfb72a1b26f",
+                    "6edd7eda-6dd8-40f7-810d-67160c639cd9",
+                    "4733ea7b-a883-42fe-8cac-97454c2a9e4a",
+                    "6fac406b-40ca-413b-bf8e-0bf964659c25"
+                ]
+            },
+            "cisItsmPwshFunctionApp": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "eaebaea7-8013-4ceb-9d14-7eb32271373c",
+                    "c75248c1-ea1d-4a9c-8fc9-29a6aabd5da8"
+                ]
+            },
+            "cisItsmKeyVault": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "98728c90-32c7-4049-8429-847dc0f4fe37",
+                    "a6abeaec-4d90-4a02-805f-6b26c4d3fbe9",
+                    "12d4fa5e-1f9f-4c21-97a9-b99b3c6611b5"
+                ]
+            },
+            "isoItsmPwshStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "iso",
+                "policyDefinitionReferenceIds": [
+                    "AuditUnrestrictedNetworkAccessToStorageAccounts"
+                ]
+            },
+            "asbItsmKeyVault": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "privateEndpointShouldBeConfiguredForKeyVaultMonitoringEffect",
+                    "firewallShouldBeEnabledOnKeyVaultMonitoringEffect"
+                ]
+            },
+            "asbItsmPwshStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "storageAccountsShouldRestrictNetworkAccessUsingVirtualNetworkRulesMonitoringEffect",
+                    "storageAccountShouldUseAPrivateLinkConnectionMonitoringEffect"
+                ]
+            },
+            "asbItsmPwshFunctionApp": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "functionAppsShouldHaveClientCertificatesEnabledMonitoringEffect"
+                ]
+            }
+        },
+        "networkingSolution": {
+            "deployExemptionsForNetworking": true,
+            "asbVnetNetworking": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "vnetEnableDDoSProtectionMonitoring"
+                ]
+            },
+            "cisVnetNetworking": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "4c3c6c5f-0d47-4402-99b8-aa543dd8bcee"
+                ]
+            },
+            "cisNsgNetworking": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "c251913d-7d24-4958-af87-478ed3b9ba41"
+                ]
+            },
+            "cisTlsKeyvault": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "12d4fa5e-1f9f-4c21-97a9-b99b3c6611b5",
+                    "a6abeaec-4d90-4a02-805f-6b26c4d3fbe9"
+                ]
+            }
+        },
+        "virtualWanSolution": {
+            "deployExemptionsForVirtualWan": true,
+            "asbVnetNetworking": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "vnetEnableDDoSProtectionMonitoring"
+                ]
+            },
+            "cisVnetNetworking": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "4c3c6c5f-0d47-4402-99b8-aa543dd8bcee"
+                ]
+            },
+            "cisNsgNetworking": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "c251913d-7d24-4958-af87-478ed3b9ba41"
+                ]
+            },
+            "cisTlsKeyvault": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "12d4fa5e-1f9f-4c21-97a9-b99b3c6611b5",
+                    "a6abeaec-4d90-4a02-805f-6b26c4d3fbe9"
+                ]
+            }
+        },
+        "computeGallerySolution": {
+            "deployExemptionsForComputeGallery": true,
+            "cisComputeGalleryStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "6fac406b-40ca-413b-bf8e-0bf964659c25",
+                    "2a1a9cdf-e04d-429a-8416-3bfb72a1b26f",
+                    "34c877ad-507e-4c82-993e-3452a6e0ad3c",
+                    "4733ea7b-a883-42fe-8cac-97454c2a9e4a",
+                    "6edd7eda-6dd8-40f7-810d-67160c639cd9"
+                ]
+            },
+            "isoComputeGalleryStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "iso",
+                "policyDefinitionReferenceIds": [
+                    "AuditUnrestrictedNetworkAccessToStorageAccounts"
+                ]
+            },
+            "asbComputeGalleryStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "storageAccountShouldUseAPrivateLinkConnectionMonitoringEffect",
+                    "storageAccountsShouldRestrictNetworkAccessUsingVirtualNetworkRulesMonitoringEffect"
+                ]
+            }
+        },
+        "osTaggingSolution": {
+            "deployExemptionsForOsTagging": true,
+            "cisOsTaggingStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "6fac406b-40ca-413b-bf8e-0bf964659c25",
+                    "2a1a9cdf-e04d-429a-8416-3bfb72a1b26f",
+                    "34c877ad-507e-4c82-993e-3452a6e0ad3c",
+                    "4733ea7b-a883-42fe-8cac-97454c2a9e4a",
+                    "6edd7eda-6dd8-40f7-810d-67160c639cd9"
+                ]
+            },
+            "isoOsTaggingStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "iso",
+                "policyDefinitionReferenceIds": [
+                    "AuditUnrestrictedNetworkAccessToStorageAccounts"
+                ]
+            },
+            "asbOsTaggingStorageAccount": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "storageAccountShouldUseAPrivateLinkConnectionMonitoringEffect",
+                    "storageAccountsShouldRestrictNetworkAccessUsingVirtualNetworkRulesMonitoringEffect"
+                ]
+            },
+            "cisOsTaggingFunctionApp": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "eaebaea7-8013-4ceb-9d14-7eb32271373c",
+                    "c75248c1-ea1d-4a9c-8fc9-29a6aabd5da8"
+                ]
+            },
+            "asbOsTaggingFunctionApp": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "functionAppsShouldHaveClientCertificatesEnabledMonitoringEffect"
+                ]
+            }
+        },
+        "mgmtSubscriptionExemptions": {
+            "deployExemptionsForMgmtSub": true,
+            "cisMgmtSubExemptions": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "c5447c04-a4d7-4ba8-a263-c9ee321a6858-0",
+                    "c5447c04-a4d7-4ba8-a263-c9ee321a6858-1",
+                    "b954148f-4c11-4c38-8221-be76711e194a-0",
+                    "b954148f-4c11-4c38-8221-be76711e194a-1",
+                    "b954148f-4c11-4c38-8221-be76711e194a-2",
+                    "b954148f-4c11-4c38-8221-be76711e194a-3",
+                    "b954148f-4c11-4c38-8221-be76711e194a-4",
+                    "b954148f-4c11-4c38-8221-be76711e194a-5",
+                    "b954148f-4c11-4c38-8221-be76711e194a-6",
+                    "b954148f-4c11-4c38-8221-be76711e194a-7",
+                    "b954148f-4c11-4c38-8221-be76711e194a-8",
+                    "b954148f-4c11-4c38-8221-be76711e194a-9",
+                    "3b980d31-7904-4bb7-8575-5665739a8052-0",
+                    "3b980d31-7904-4bb7-8575-5665739a8052-1",
+                    "3b980d31-7904-4bb7-8575-5665739a8052-2",
+                    "475aae12-b88a-4572-8b36-9b712b2b3a17"
+                ]
+            },
+            "asbMgmtSubExemptions": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "autoProvisioningOfTheLogAnalyticsAgentShouldBeEnabledOnYourSubscriptionMonitoringEffect"
+                ]
+            }
+        },
+        "cntySubscriptionExemptions": {
+            "deployExemptionsForCntytSub": true,
+            "asbCntySubExemptions": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "asb",
+                "policyDefinitionReferenceIds": [
+                    "autoProvisioningOfTheLogAnalyticsAgentShouldBeEnabledOnYourSubscriptionMonitoringEffect"
+                ]
+            },
+            "cisCntySubExemptions": {
+                "category": "Waiver",
+                "exemptionDuration": "P180D",
+                "shortCode": "cis",
+                "policyDefinitionReferenceIds": [
+                    "c5447c04-a4d7-4ba8-a263-c9ee321a6858-0",
+                    "c5447c04-a4d7-4ba8-a263-c9ee321a6858-1",
+                    "b954148f-4c11-4c38-8221-be76711e194a-0",
+                    "b954148f-4c11-4c38-8221-be76711e194a-1",
+                    "b954148f-4c11-4c38-8221-be76711e194a-2",
+                    "b954148f-4c11-4c38-8221-be76711e194a-3",
+                    "b954148f-4c11-4c38-8221-be76711e194a-4",
+                    "b954148f-4c11-4c38-8221-be76711e194a-5",
+                    "b954148f-4c11-4c38-8221-be76711e194a-6",
+                    "b954148f-4c11-4c38-8221-be76711e194a-7",
+                    "b954148f-4c11-4c38-8221-be76711e194a-8",
+                    "b954148f-4c11-4c38-8221-be76711e194a-9",
+                    "3b980d31-7904-4bb7-8575-5665739a8052-0",
+                    "3b980d31-7904-4bb7-8575-5665739a8052-1",
+                    "3b980d31-7904-4bb7-8575-5665739a8052-2",
+                    "475aae12-b88a-4572-8b36-9b712b2b3a17"
+                ]
+            }
+        }
+    }

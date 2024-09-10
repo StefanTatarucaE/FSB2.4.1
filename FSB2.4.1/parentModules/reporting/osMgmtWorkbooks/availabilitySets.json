@@ -1,0 +1,557 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "value::all"
+        ],
+        "parameters": [
+          {
+            "id": "422d62a1-9f4d-4c6d-8929-93973f09de0b",
+            "version": "KqlParameterItem/1.0",
+            "name": "name",
+            "label": "Name availability set",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| project name\r\n| distinct name",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "914e804d-1744-4ef0-9ff6-616aaa3133d5",
+            "version": "KqlParameterItem/1.0",
+            "name": "SubscriptionPicker",
+            "label": "Subscription",
+            "type": 6,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": true,
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "c69bc94f-5e4f-4cb9-9f79-0cd63d1ae12f",
+            "version": "KqlParameterItem/1.0",
+            "name": "location",
+            "label": "Location",
+            "type": 8,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| project location\r\n| distinct location",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "5d045ef9-9687-4af0-8042-e6d82762f834",
+            "version": "KqlParameterItem/1.0",
+            "name": "Status",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ]
+            },
+            "jsonData": "[\"Critical\", \"Healthy\", \"Unknown\", \"Warning\"]",
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "19279224-0cf8-4834-b163-10b5519b7e24",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]Managed",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Yes\", \"No\"]",
+            "defaultValue": "value::all",
+            "label": "Managed by [parameter(companyName)]"
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 2"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "#### No Availability Sets are deployed yet"
+      },
+      "conditionalVisibility": {
+        "parameterName": "name",
+        "comparison": "isEqualTo"
+      },
+      "name": "text - 4"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| extend [parameter(tagPrefix)]Managed=iif((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"Yes\", \"No\")\r\n| extend UpdateDomains = tostring(properties.platformUpdateDomainCount)\r\n| extend FaultDomains = tostring(properties.platformFaultDomainCount)\r\n| extend ProximityPlacementgroup = tostring(properties.proximityPlacementGroup.id)\r\n| extend AvailabilitySet=toupper(name)\r\n| project name, AvailabilitySet, subscriptionId, location, resourceGroup, UpdateDomains, FaultDomains, ProximityPlacementgroup, [parameter(tagPrefix)]Managed\r\n| join kind=leftouter (\r\nResources\r\n| where type == 'microsoft.compute/virtualmachines'\r\n| where properties.availabilitySet != \"\"\r\n| where split(properties.extended.instanceView.powerState.code, \"/\")[1]==\"running\"\r\n| extend AvailabilitySet=split( properties.availabilitySet.id,\"/\")[8]\r\n| extend powerstate=split(properties.extended.instanceView.powerState.code, \"/\")[1]\r\n| summarize runvms=count() by tostring(powerstate), tostring(AvailabilitySet)\r\n) on AvailabilitySet\r\n| project name, AvailabilitySet, subscriptionId, location, resourceGroup, UpdateDomains, FaultDomains, ProximityPlacementgroup, runvms, [parameter(tagPrefix)]Managed\r\n| join kind=leftouter (\r\nResources\r\n| where type == 'microsoft.compute/virtualmachines'\r\n| where properties.availabilitySet != \"\"\r\n| extend AvailabilitySet=split( properties.availabilitySet.id,\"/\")[8]\r\n| extend powerstate= split(properties.extended.instanceView.powerState.code, \"/\")[1]\r\n| summarize vms=count() by tostring(AvailabilitySet)\r\n) on AvailabilitySet\r\n| extend vms=iif(notnull(vms), tostring(vms),\"0\")\r\n| extend runvms=iif(notnull(runvms), tostring(runvms),\"0\")\r\n| extend Status = case(\r\ntostring(vms) == \"0\", \"Unknown\",\r\ntostring(runvms) == \"0\", \"Critical\",\r\ntostring(runvms) == \"1\", \"Warning\",\r\ntostring(runvms) != tostring(vms), \"Warning\", \"Healthy\")\r\n| where name in ({name})\r\n| where location in ({location})\r\n| where Status in ({Status})\r\n| where [parameter(tagPrefix)]Managed in ({[parameter(tagPrefix)]Managed})\r\n| distinct name, subscriptionId, location, resourceGroup, UpdateDomains, FaultDomains, vms, runvms, Status, [parameter(tagPrefix)]Managed\r\n\r\n\r\n\r\n\r\n",
+        "size": 0,
+        "title": "Overview availability sets",
+        "noDataMessage": "No Availability Sets found  for selected filter(s)",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{SubscriptionPicker}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "UpdateDomains",
+              "formatter": 1
+            },
+            {
+              "columnMatch": "FaultDomains",
+              "formatter": 1
+            },
+            {
+              "columnMatch": "vms",
+              "formatter": 1
+            },
+            {
+              "columnMatch": "Status",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Healthy",
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Critical",
+                    "representation": "4",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Warning",
+                    "representation": "2",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Unknown",
+                    "representation": "unknown",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "Subscription",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            }
+          ],
+          "sortBy": [
+            {
+              "itemKey": "runvms",
+              "sortOrder": 2
+            }
+          ],
+          "labelSettings": [
+            {
+              "columnId": "name",
+              "label": "Availability Set"
+            },
+            {
+              "columnId": "subscriptionId",
+              "label": "Subscription"
+            },
+            {
+              "columnId": "location",
+              "label": "Location"
+            },
+            {
+              "columnId": "resourceGroup",
+              "label": "Resource Group"
+            },
+            {
+              "columnId": "UpdateDomains",
+              "label": "Update Domains"
+            },
+            {
+              "columnId": "FaultDomains",
+              "label": "Fault Domains"
+            },
+            {
+              "columnId": "vms",
+              "label": "# VM's"
+            },
+            {
+              "columnId": "runvms",
+              "label": "# VM's running"
+            },
+            {
+              "columnId": "[parameter(tagPrefix)]Managed",
+              "label": "Managed by [parameter(companyName)]"
+            }
+          ]
+        },
+        "sortBy": [
+          {
+            "itemKey": "runvms",
+            "sortOrder": 2
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "name",
+        "comparison": "isNotEqualTo"
+      },
+      "name": "query - 1"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{SubscriptionPicker}"
+        ],
+        "parameters": [
+          {
+            "id": "a48ec512-289d-4763-afa3-3471a8116f09",
+            "version": "KqlParameterItem/1.0",
+            "name": "AvsetName",
+            "label": "Name availability set",
+            "type": 2,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type =~ 'Microsoft.Compute/availabilitySets'\r\n| distinct name",
+            "crossComponentResources": [
+              "{SubscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "eb63477b-70e1-4f3a-a827-14f0112485d6",
+            "version": "KqlParameterItem/1.0",
+            "name": "RGPicker",
+            "label": "Resource group",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where properties.availabilitySet != \"\"\r\n| distinct resourceGroup",
+            "crossComponentResources": [
+              "{SubscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "0d91d56a-dc01-46cb-8a03-bd1a32c18f9d",
+            "version": "KqlParameterItem/1.0",
+            "name": "OSPicker",
+            "label": "OS",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where properties.availabilitySet != \"\"\r\n| extend [parameter(tagPrefix)]OsVersion = iif(isnull(tags.[parameter(tagPrefix)]OsVersion), \"Not set\", tostring(tags.[parameter(tagPrefix)]OsVersion))\r\n| project [parameter(tagPrefix)]OsVersion\r\n| distinct [parameter(tagPrefix)]OsVersion",
+            "crossComponentResources": [
+              "{SubscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "4b6697eb-8bfa-48bb-9ccb-713da5c04c19",
+            "version": "KqlParameterItem/1.0",
+            "name": "Powerstate",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where properties.availabilitySet != \"\"\r\n| extend Powerstate= tostring(split(properties.extended.instanceView.powerState.code, \"/\")[1])\r\n| distinct Powerstate",
+            "crossComponentResources": [
+              "{SubscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "value": null
+          },
+          {
+            "id": "fcf6d4bc-7aac-41d5-9392-86fdc7286dc4",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]Managed",
+            "label": "Managed by [parameter(companyName)]",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Yes\", \"No\"]",
+            "defaultValue": "value::all"
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "conditionalVisibility": {
+        "parameterName": "name",
+        "comparison": "isNotEqualTo"
+      },
+      "name": "parameters - 3"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "#### No virtual machines are in selected Availability Sets"
+      },
+      "conditionalVisibilities": [
+        {
+          "parameterName": "RGPicker",
+          "comparison": "isEqualTo"
+        },
+        {
+          "parameterName": "name",
+          "comparison": "isNotEqualTo"
+        }
+      ],
+      "name": "text - 4"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where properties.availabilitySet != \"\"\r\n| extend [parameter(tagPrefix)]Managed=iif((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"Yes\", \"No\")\r\n| extend AvailabilitySet=split( properties.availabilitySet.id,\"/\")[8]\r\n| extend OS = iif((isnotnull(tags.[parameter(tagPrefix)]OsVersion)), tostring(tags.[parameter(tagPrefix)]OsVersion), \"Not Set\")\r\n| extend Powerstate= tostring(split(properties.extended.instanceView.powerState.code, \"/\")[1])\r\n| where AvailabilitySet in~ ({AvsetName})\r\n| where OS in~ ({OSPicker})\r\n| where resourceGroup in~ ({RGPicker})\r\n| where Powerstate in~ ({Powerstate})\r\n| where [parameter(tagPrefix)]Managed in~ ({[parameter(tagPrefix)]Managed})\r\n| project VMName= id, AvailabilitySet, resourceGroup, OS, Powerstate, [parameter(tagPrefix)]Managed\r\n",
+        "size": 0,
+        "title": "Overview virtual machines in availability sets",
+        "noDataMessage": "No Virtual Machines found for selected filter(s)",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{SubscriptionPicker}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Powerstate",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "running",
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "deallocated",
+                    "representation": "stopped",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            },
+            {
+              "columnMatch": "VMstate",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Healthy",
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Stopped",
+                    "representation": "stopped",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Unknown",
+                    "representation": "unknown",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            }
+          ],
+          "sortBy": [
+            {
+              "itemKey": "$gen_link_AvailabilitySet_1",
+              "sortOrder": 2
+            }
+          ],
+          "labelSettings": [
+            {
+              "columnId": "[parameter(tagPrefix)]Managed",
+              "label": "VM Managed by [parameter(companyName)]"
+            }
+          ]
+        },
+        "sortBy": [
+          {
+            "itemKey": "$gen_link_AvailabilitySet_1",
+            "sortOrder": 2
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "RGPicker",
+        "comparison": "isNotEqualTo"
+      },
+      "name": "query - 2"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

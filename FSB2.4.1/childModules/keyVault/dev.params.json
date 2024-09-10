@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName": {
+            "value": "cu6-cnty-d-keyvault"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "skuName": {
+            "value": "standard"
+        },
+        "tags": {
+            "value": {
+                "EvidenManaged": "true"
+            }
+        },
+        "keyVaultFeatures": {
+            "value": {
+                "enabledForDeployment": true,
+                "enabledForDiskEncryption": false,
+                "enabledForTemplateDeployment": true,
+                "enablePurgeProtection": true,
+                "enableRbacAuthorization": false,
+                "enableSoftDelete": true
+            }
+        },
+        "publicNetworkAccess": {
+            "value": "enabled"
+        },
+        "networkRuleBypassOptions": {
+            "value": "AzureServices"
+        },
+        "networkRuleAction": {
+            "value": "Allow"
+        },
+        "softDeleteRetentionInDays": {
+            "value": 15
+        }
+    }
+}

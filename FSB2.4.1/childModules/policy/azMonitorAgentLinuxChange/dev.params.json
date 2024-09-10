@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "scopeToSupportedImages": {
+            "value": false
+        },
+        "dataCollectionRuleResourceId": {
+            "value": "/subscriptions/80005cf6-dc03-4329-bbfe-bd61a19e6ef2/resourceGroups/dv2-mgmt-d-rsg-monitoring/providers/Microsoft.Insights/dataCollectionRules/dv2-mgmt-d-dcr-linux"
+        },
+        "managementSubscriptionId": {
+            "value": "80005cf6-dc03-4329-bbfe-bd61a19e6ef2"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        },
+        "enableAmAgentLinuxVmDefName": {
+            "value": "vm-enableamagentlnx-change-policy-def"
+        },
+        "enableAmAgentLinuxVmDefDisplayName": {
+            "value": "Enable Azure Monitor Agent for Linux Virtual Machines change policy definition"
+        },
+        "enableAmAgentLinuxVmDefEffect": {
+            "value": "DeployIfNotExists"
+        },
+        "enableAmAgentLinuxVmssDefName": {
+            "value": "vmss-enableamagentlnx-change-policy-def"
+        },
+        "enableAmAgentLinuxVmssDefDisplayName": {
+            "value": "Enable Azure Monitor Agent for Linux Virtual Machine Scale Sets change policy definition"
+        },
+        "enableAmAgentLinuxVmssDefEffect": {
+            "value": "DeployIfNotExists"
+        },
+        "dcrAssociationLinuxDefName": {
+            "value": "dcr-amagent-association-lnx-change-policy-def"
+        },
+        "dcrAssociationLinuxDefDisplayName": {
+            "value": "DCR - Azure Monitor Agent association linux change policy definition"
+        },
+        "dcrAssociationLinuxDefEffect": {
+            "value": "DeployIfNotExists"
+        },
+        "enableAmAgentLinuxSetName": {
+            "value": "amagent-linux-change-policy-set"
+        },
+        "enableAmAgentLinuxSetDisplayName": {
+            "value": "Azure Monitor Agent Linux change policy set"
+        },
+        "enableAmAgentLinuxSetAssignmentName": {
+            "value": "amagent-linux-change-policy-set-assignment"
+        },
+        "enableAmAgentLinuxSetAssignmentDisplayName": {
+            "value": "Azure Monitor Agent Linux change policy set assignment"
+        }
+    }
+  }

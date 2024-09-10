@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "postgreSqlSettings": {
+            "value": {
+                "enableConnectionThrottlingEffect": "AuditIfNotExists",
+                "disconnectionLoggedEffect": "AuditIfNotExists",
+                "enforceSslConnectionEffect": "Audit",
+                "geoRedundantBackupEffect": "Audit",
+                "enableInfrastructureEncryptionEffect": "Audit",
+                "enableLogCheckpointsEffect": "Audit",
+                "enableLogConnectionEffect": "AuditIfNotExists",
+                "enableLogDurationEffect": "AuditIfNotExists",
+                "useVirtualNetworkServiceEndpointEffect": "AuditIfNotExists",
+                "usePostgreCustomerManagedkeyEffect": "AuditIfNotExists",
+                "enablePrivateEndpointEffect": "AuditIfNotExists",
+                "disablePublicAccessFlexiEffect": "Audit",
+                "disablePostgresPublicAccessEffect": "Audit"
+            }
+        },
+        "postgreSqlAuditDenySetName" :{
+            "value": "postgresql.auditdeny.policy.set"
+        },
+        "postgreSqlAuditDenySetDisplayName" :{
+            "value": "Postgresql auditdeny policy set"
+        },
+        "postgreSqlAuditDenySetAssignmentName" :{
+            "value": "postgresql.auditdeny.policy.set.assignment"
+        },
+        "postgreSqlAuditDenySetAssignmentDisplayName" :{
+            "value": "Postgresql auditdeny policy set assignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

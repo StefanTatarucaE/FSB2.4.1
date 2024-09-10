@@ -1,0 +1,37 @@
+{
+    "resourceType": "Microsoft.Logic/workflows",
+    "functionName": "",
+    "advancedFilters": [
+        {
+            "operator": "StringBeginsWith",
+            "key": "data.operationName",
+            "Values": [
+                "Microsoft.Web/serverfarms/Delete",
+                "Microsoft.Web/serverfarms/Write",
+                "Microsoft.Web/sites/Write",
+                "Microsoft.Web/sites/Delete",
+                "Microsoft.Storage/storageAccounts/write",
+                "Microsoft.Storage/storageAccounts/delete",
+                "Microsoft.Sql/servers/write",
+                "Microsoft.Sql/servers/delete",
+                "Microsoft.Sql/servers/databases/write",
+                "Microsoft.Sql/servers/databases/delete",
+                "Microsoft.Sql/managedInstances/write",
+                "Microsoft.Sql/managedInstances/delete",
+                "Microsoft.Sql/managedInstances/databases/write",
+                "Microsoft.Sql/managedInstances/databases/delete",
+                "Microsoft.SqlVirtualMachine/SqlVirtualMachines/write",
+                "Microsoft.SqlVirtualMachine/SqlVirtualMachines/delete",
+                "Microsoft.Cache/Redis/write",
+                "Microsoft.Cache/Redis/Delete",
+                "Microsoft.DocumentDB/databaseAccounts/write",
+                "Microsoft.DocumentDB/databaseAccounts/delete"
+            ]
+        }
+    ],
+    "includedEventType": [
+        "Microsoft.Resources.ResourceDeleteSuccess",
+        "Microsoft.Resources.ResourceWriteSuccess",
+        "Microsoft.Resources.ResourceActionSuccess"
+    ]
+}

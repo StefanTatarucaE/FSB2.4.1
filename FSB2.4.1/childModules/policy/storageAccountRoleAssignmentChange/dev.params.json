@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "policyMetaData": {
+      "value": "EvidenELZ"
+    },
+    "keyVaultAppObjectId": {
+      "value": "9c448bb3-fcfb-44be-8a74-f8c71939ff6e"
+    },
+    "storageAccountRoleAssignmentChangePolicyName": {
+      "value": "storage-roleassg-change-policy-def"
+    },
+    "storageAccountRoleAssignmentChangePolicyDisplayName": {
+      "value": "Storage account role assignment change policy definition"
+    },
+    "storageAccountRoleAssignmentChangePolicyAssignmentName": {
+      "value": "storage-roleassg-change-policy-def-assignment"
+    },
+    "storageAccountRoleAssignmentChangePolicyAssignmentDisplayName": {
+      "value": "Storage account role assignment change policy definition assignment"
+    },
+    "policyRuleTag": {
+      "value": [
+        "EvidenManaged",
+        "EvidenStorageAccountKeyRotation"
+      ]
+    }
+  }
+}

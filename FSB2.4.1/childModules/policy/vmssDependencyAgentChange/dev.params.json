@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmssEnableDependencyAgentWinDefName": {
+            "value": "vmss-enabledependencyagentwin-change-policy-def"
+        },
+        "vmssEnableDependencyAgentWinDefDisplayName": {
+            "value": "Virtual Machine Scale Set enable Windows dependency agent change policy definition"
+        },
+        "vmssEnableDependencyAgentWinDefEffect": {
+            "value": "DeployIfNotExists"
+        },
+        "vmssEnableDependencyAgentLinuxDefName": {
+            "value": "vmss-enabledependencyagentlinux-change-policy-def"
+        },
+        "vmssEnableDependencyAgentLinuxDefDisplayName": {
+            "value": "Virtual Machine Scale Set enable Linux dependency agent change policy definition"
+        },
+        "vmssEnableDependencyAgentLinuxDefEffect": {
+            "value": "DeployIfNotExists"
+        },
+        "vmssEnableDependencyAgentSetName": {
+            "value": "vmssdependencyagent-change-policy-set"
+        },
+        "vmssEnableDependencyAgentSetDisplayName": {
+            "value": "Virtual Machine Scale Set dependency agent change policy initiative"
+        },
+        "vmssEnableDependencyAgentSetAssignmentName": {
+            "value": "vmssdependencyagent-change-policy-set-assignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        },
+        "policyRuleTag": {
+            "value": "EvidenManaged"
+        }
+    }
+}

@@ -1,0 +1,103 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "cisSettings": {
+            "value": {
+                "virtualMachineExtensionsAllowed": [
+                    "AzureDiskEncryption"
+                ],
+                "effectVirtualMachineExtensionsAllowed": "Audit",
+                "resourceLogsRequiredRetentionDays": "160",
+                "defenderForServersEnabled": "AuditIfNotExists",
+                "defenderForAppServiceEnabled": "AuditIfNotExists",
+                "defenderForSqlDbEnabled": "AuditIfNotExists",
+                "defenderForSqlServerEnabled": "AuditIfNotExists",
+                "defenderForStorageEnabled": "AuditIfNotExists",
+                "defenderForContainersEnabled": "AuditIfNotExists",
+                "defenderForKeyvaultsEnabled": "AuditIfNotExists",
+                "autoProvisionLaAgentEnabled": "AuditIfNotExists",
+                "subscriptionSecurityContact": "AuditIfNotExists",
+                "emailHighSeverityAlert": "AuditIfNotExists",
+                "secureTransferStorageAccount": "Audit",
+                "storagePublicAccessDisallowed": "Audit",
+                "storageAccountRestrictNetworkAccess": "Audit",
+                "storageAccountRestrictNetworkAccessVirtualNetworkRules": "Audit",
+                "storageAccountAllowTrustedMsServices": "Audit",
+                "storageAccountCmkForEncryption": "Audit",
+                "auditSqlEnabled": "AuditIfNotExists",
+                "tdeOnSqlEnabled": "AuditIfNotExists",
+                "sqlServerAuditLogRetention": "AuditIfNotExists",
+                "defenderForSqlOnUnprotectedSqlServersEnabled": "AuditIfNotExists",
+                "defenderForSqlOnUnprotectedSqlMiEnabled": "AuditIfNotExists",
+                "vulnerabilityAssessmentEnabledOnSqlServers": "AuditIfNotExists",
+                "vulnerabilityAssessmentEnabledOnMiInstances": "AuditIfNotExists",
+                "enforcedSslEnabledPostgresSql": "Audit",
+                "enabledLogCheckpointsPostgresSql": "AuditIfNotExists",
+                "enabledLogConnectionsPostgresSql": "AuditIfNotExists",
+                "enabledLogDisconnectionsPostgresSql": "AuditIfNotExists",
+                "enabledConnectionThrottlingPostgresSql": "AuditIfNotExists",
+                "azureAdAdminShouldbeProvisionForSqlServer": "AuditIfNotExists",
+                "sqlServersShouldUseCmkAtRest": "Audit",
+                "sqlMiShouldUseCmkAtRest": "Audit",
+                "storageAccountWithActivityLogsShouldUseCmk": "AuditIfNotExists",
+                "resourceLogsInKeyvaultsEnabled": "AuditIfNotExists",
+                "activityLogAlertForPolicyWrite": "AuditIfNotExists",
+                "activityLogAlertForPolicyDelete": "AuditIfNotExists",
+                "activityLogAlertForNsgWrite": "AuditIfNotExists",
+                "activityLogAlertForNsgDelete": "AuditIfNotExists",
+                "activityLogAlertForNsgRuleWrite": "AuditIfNotExists",
+                "activityLogAlertForNsgRuleDelete": "AuditIfNotExists",
+                "activityLogAlertForFirewallRulesWrite": "AuditIfNotExists",
+                "activityLogAlertForFirewallRulesDelete": "AuditIfNotExists",
+                "appServiceResourceLogsEnabled": "AuditIfNotExists",
+                "batchAccountsResourceLogsEnabled": "AuditIfNotExists",
+                "azureDatalakeStoreResourceLogsEnabled": "AuditIfNotExists",
+                "dataLakeAnalyticsResourceLogsEnabled": "AuditIfNotExists",
+                "eventHubsResourceLogsEnabled": "AuditIfNotExists",
+                "iotHubResourceLogsEnabled": "AuditIfNotExists",
+                "logicAppResourceLogsEnabled": "AuditIfNotExists",
+                "searchServicesResourceLogsEnabled": "AuditIfNotExists",
+                "serviceBusResourceLogsEnabled": "AuditIfNotExists",
+                "streamAnalyticsResourceLogsEnabled": "AuditIfNotExists",
+                "encryptDataFlowsBetweenComputeAndStorage": "AuditIfNotExists",
+                "keyVaultKeysShouldHaveExpiration": "Audit",
+                "keyVaultSecretsShouldHaveExpiration": "Audit",
+                "keyvaultPurgeProtectionEnabled": "Audit",
+                "functionAppsAuthenticationEnabled": "AuditIfNotExists",
+                "appServicesAuthenticationEnabled": "AuditIfNotExists",
+                "appServiceAccessibleOverHttps": "Audit",
+                "functionAppsLatestTlsVersion": "AuditIfNotExists",
+                "appServiceAppsLatestTlsVersion": "AuditIfNotExists",
+                "functionAppsClientCertificatesEnabled": "Audit",
+                "appServiceAppsClientCertificatesEnabled": "Audit",
+                "functionAppShouldUseManagedIdentity": "AuditIfNotExists",
+                "appServiceAppShouldUseManagedIdentity": "AuditIfNotExists",
+                "functionAppShouldUseLatestHttpVersion": "AuditIfNotExists",
+                "appServiceAppShouldUseLatestHttpVersion": "AuditIfNotExists",
+                "functionAppShouldRequireFtpsOnly": "AuditIfNotExists",
+                "appServiceAppShouldRequireFtpsOnly": "AuditIfNotExists",
+                "networkWatcherShouldBeEnabled": "NetworkWatcherRG",
+                "requiredAuditSettingsforSqlServers": "disabled",
+                "guestOwnerPermissionRemoved": "AuditIfNotExists",
+                "guestWritePermissionRemoved": "AuditIfNotExists",
+                "guestReadPermissionRemoved": "AuditIfNotExists",
+                "mfaWithWritePermissionEnabled": "AuditIfNotExists",
+                "mfaWithOwnerPermissionEnabled": "AuditIfNotExists",
+                "maximumDaysToRotateKeys":"Audit"
+            }
+        },
+        "cisPolicyDefinitionId": {
+            "value": "/providers/Microsoft.Authorization/policySetDefinitions/06f19060-9e68-4070-92ca-f15cc126059e"
+        },
+        "cisAuditDenySetAssignmentDisplayName": {
+            "value": "Cis 2.0.0 auditdeny policy set assignment"
+        },
+        "cisAuditDenySetAssignmentName": {
+            "value": "mgmt-d-cis200-auditdeny-policy-set-assignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

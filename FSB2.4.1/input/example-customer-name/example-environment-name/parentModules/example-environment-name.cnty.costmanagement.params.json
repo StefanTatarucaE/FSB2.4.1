@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "budgetAlerts": {
+      "value": [
+        {
+          "budgetName": "budgetAlert-cus-cnty-001",
+          "budgetAmount": 200,
+          "budgetPeriod": "monthly",
+          "startDate": "2024-04-01",
+          "endDate": "2029-04-01",
+          "filters": {},
+          "notifications": {
+            "notificationForExceededbudget": {
+              "alertEnabled": true,
+              "operator": "GreaterThan",
+              "threshold": 50,
+              "thresholdType": "actual",
+              "contactEmails": [
+                "xxxxxx@xxxxxxx.com",
+                "yyyyyy@yyyyyyy.com"
+              ],
+              "contactRoles": [
+                "Owner"
+              ],
+              "contactGroups": [
+                "itsmactiongroup"
+              ]
+            }
+          }
+        },
+        {
+          "budgetName": "budgetAlert-cus-cnty-002",
+          "budgetAmount": 200,
+          "budgetPeriod": "monthly",
+          "startDate": "2024-04-01",
+          "endDate": "2029-04-01",
+          "filters": {},
+          "notifications": {
+            "notificationForExceededbudget": {
+              "alertEnabled": true,
+              "operator": "GreaterThan",
+              "threshold": 50,
+              "thresholdType": "forecasted",
+              "contactEmails": [
+                "xxxxxx@xxxxxxx.com",
+                "yyyyyy@yyyyyyy.com"
+              ],
+              "contactRoles": [
+                "Owner"
+              ],
+              "contactGroups": []
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "networkSecurityGroupName": {
+      "value": "ddi-cnty-d-eune-nsg-hub"
+    },
+    "location": {
+      "value": "northeurope"
+    },
+    "tags":{
+      "value": {
+        "DCSVersion": "2.2"
+      }
+    },
+    "virtualNetworkName": {
+      "value": "ddi-cnty-d-eune-vnet-hub"
+    },
+    "virtualNetworkAddressPrefixes": {
+      "value": [
+        "172.16.0.0/16"
+      ]
+    },
+    "ddosProtectionPlanResourceId":{
+      "value": ""
+    },
+    "dnsServers": {
+      "value": [
+        "111.111.11.11",
+        "22.22.8.8"
+      ]
+    },
+    "enableVmProtection": {
+      "value": false
+    },
+    "subnetNamePrefix":{
+      "value": "ddi-cnty-d-eune-snet-hub"
+    },
+    "subnets": {
+      "value": [
+        {
+          "name": "network",
+          "addressPrefix": "172.16.0.0/24",
+          "useNamingConventionModule": true,
+          "securityRules": [
+            {
+              "name": "BLOCK_ALL_TCP",
+              "properties": {
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Deny",
+                "priority": 4000,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "BLOCK_ALL_UDP",
+              "properties": {
+                "protocol": "UDP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Deny",
+                "priority": 3995,
+                "direction": "Inbound"
+              }
+            }
+          ]
+        },
+        {
+          "name": "AzureFirewallSubnet",
+          "addressPrefix": "172.16.3.0/26",
+          "useNamingConventionModule": true
+        },
+        {
+          "name": "GatewaySubnet",
+          "addressPrefix": "172.16.4.0/26",
+          "useNamingConventionModule": true
+        }
+      ]
+    }
+  }
+}

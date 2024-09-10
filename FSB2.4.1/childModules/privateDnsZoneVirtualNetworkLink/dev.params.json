@@ -1,0 +1,23 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateDnsZoneName": {
+            "value": "dcsprivatednszone.com"
+        },
+        "virtualNetworkLinkName": {
+            "value": "spoke-vnet-link"
+        },
+        "registrationEnabled": {
+            "value": false
+        },
+        "virtualNetworkId": {
+            "value": "/subscriptions/acb557ca-ad2e-4fbe-b32e-96464f10d0a6/resourceGroups/abd-lnd1-t-rsg-spoke-network/providers/Microsoft.Network/virtualNetworks/abd-lnd1-t-euwe-vnet-spoke"
+        },
+        "tags": {
+            "value": {
+                "DCSVersion": "2.2"
+            }
+        }
+    }
+}

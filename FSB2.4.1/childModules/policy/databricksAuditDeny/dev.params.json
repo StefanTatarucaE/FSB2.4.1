@@ -1,0 +1,28 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "databricksSettings": {
+      "value": {
+        "disablePublicNetworkAccessEffect": "Audit",
+        "disablePublicIpEffect": "Audit",
+        "enableWorkspaceResourceLogsEffect": "AuditIfNotExists"
+      }
+    },
+    "databricksAuditDenySetName": {
+      "value": "databricks.auditdeny.policy.set"
+    },
+    "databricksAuditDenySetDisplayName": {
+      "value": "Databricks auditdeny policy set"
+    },
+    "databricksAuditDenySetAssignmentName": {
+      "value": "databricks.auditdeny.policy.set.assignment"
+    },
+    "databricksAuditDenySetAssignmentDisplayName": {
+      "value": "Databricks auditdeny policy set assignment"
+    },
+    "policyMetadata": {
+        "value": "EvidenELZ"
+    }
+  }
+}

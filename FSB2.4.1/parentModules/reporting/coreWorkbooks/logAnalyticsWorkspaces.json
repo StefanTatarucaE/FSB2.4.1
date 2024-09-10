@@ -1,0 +1,934 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "## Log Analytics Workspace Configuration Overview"
+      },
+      "name": "text - 5"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{Subscription}"
+        ],
+        "parameters": [
+          {
+            "id": "1f74ed9a-e3ed-498d-bd5b-f68f3836a117",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subscription",
+            "type": 6,
+            "description": "All subscriptions",
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| summarize Count = count() by subscriptionId\r\n| order by Count desc\r\n| extend Rank = row_number()\r\n| project value = subscriptionId, label = subscriptionId, selected = Rank == 1",
+            "crossComponentResources": [
+              "value::selected"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "df4a3e18-45e6-41fd-ab9b-903226867436",
+            "version": "KqlParameterItem/1.0",
+            "name": "ResourceGroup",
+            "label": " Resource Group",
+            "type": 5,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| summarize Count = count() by resourceGroup\r\n| order by Count desc\r\n| extend Rank = row_number()\r\n| project value = resourceGroup, label = resourceGroup, selected = Rank == 1",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "f60ea0a0-3703-44ca-a59b-df0246423f41",
+            "version": "KqlParameterItem/1.0",
+            "name": "Workspace",
+            "type": 5,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| order by name asc\r\n| extend Rank = row_number()\r\n| project value = id, label = id, selected = Rank <= 5",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "46dfcfa4-d5d4-47c2-9dfd-ca0fcb935dc7",
+            "version": "KqlParameterItem/1.0",
+            "name": "ResourceName",
+            "type": 1,
+            "description": "Used for 'No Subscriptions' workbook template",
+            "isRequired": true,
+            "isHiddenWhenLocked": true,
+            "criteriaData": [
+              {
+                "criteriaContext": {
+                  "operator": "Default",
+                  "rightValType": "param",
+                  "resultValType": "static",
+                  "resultVal": "Log Analytics Workspace"
+                }
+              }
+            ]
+          },
+          {
+            "id": "1c84117c-7449-4484-b693-00f41a578bd6",
+            "version": "KqlParameterItem/1.0",
+            "name": "ResourceImageUrl",
+            "type": 1,
+            "description": "Used for 'No Subscriptions' workbook template",
+            "isHiddenWhenLocked": true,
+            "timeContext": {
+              "durationMs": 0
+            },
+            "timeContextFromParameter": "TimeRange"
+          },
+          {
+            "id": "97f59c2a-568d-42a4-ba55-5cb80f548fed",
+            "version": "KqlParameterItem/1.0",
+            "name": "Retention",
+            "label": "Retention (days)",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| extend retentionInDays = trim(' ', tostring(properties.retentionInDays))\r\n| order by retentionInDays asc\r\n| project value = retentionInDays\r\n| distinct value",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "36f2e46e-b031-465c-874c-7448dfa66224",
+            "version": "KqlParameterItem/1.0",
+            "name": "License",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| where resourceGroup in ({ResourceGroup:value})\r\n| extend capacityReservationLevel = toint(properties.sku.capacityReservationLevel)\r\n| extend sku = tolower(properties.sku.name)\r\n| extend pricingTier = case(\r\nsku == 'capacityreservation' and capacityReservationLevel == 100,\r\n'100 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel == 200,\r\n'200 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel == 300,\r\n'300 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel == 400,\r\n'400 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel >= 500 and capacityReservationLevel < 1000,\r\n'500 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel >= 1000 and capacityReservationLevel < 2000,\r\n'1000 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel >= 2000 and capacityReservationLevel < 5000,\r\n'2000 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel >= 5000,\r\n'5000 GB/day Commitment Tier',\r\nsku == 'free',\r\n'Free',\r\nsku == 'standard',\r\n'Standard',\r\nsku == 'premium',\r\n'Premium',\r\nsku == 'standalone',\r\n'Standalone',\r\nsku == 'pernode',\r\n'Per Node',\r\nsku == 'lacluster',\r\n'Cluster Level Commitment Tier',\r\nsku == 'pergb2018',\r\n'Pay-as-you-go',\r\n'Unknown')\r\n| order by pricingTier asc\r\n| distinct pricingTier",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "a149f7b9-fdd3-4a81-972d-20c7396a7b2d",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]Purpose",
+            "type": 2,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type == \"microsoft.operationalinsights/workspaces\"\r\n|extend Taglength = strlen(\"[parameter(tagPrefix)]Purpose\")\r\n | extend [parameter(tagPrefix)]Purpose = iff(tostring(tags) has '\"[parameter(tagPrefix)]Purpose\":', substring((substring (tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]purpose\")+Taglength+3)),0,indexof(substring(tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]purpose\")+Taglength+3),'\"')), \"-\")\r\n| extend [parameter(tagPrefix)]Patching = iif((([parameter(tagPrefix)]Purpose!=\"\") and ([parameter(tagPrefix)]Purpose !startswith \" \")), tostring([parameter(tagPrefix)]Purpose), \"Tag value invalid\")\r\n| project [parameter(tagPrefix)]Purpose\r\n| distinct [parameter(tagPrefix)]Purpose",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "3dc544f2-7ac6-486d-bf65-26af47b18a16",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]Managed",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Yes\", \"No\"]",
+            "defaultValue": "value::all"
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "Log Analytics Workspace parameters",
+      "styleSettings": {
+        "margin": "15px 0 0 0"
+      }
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "template",
+        "loadFromTemplateId": "community-Workbooks/Common/noSubscriptions",
+        "items": []
+      },
+      "conditionalVisibility": {
+        "parameterName": "Subscription",
+        "comparison": "isEqualTo",
+        "value": ""
+      },
+      "name": "No Subscriptions group"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| where '{Workspace:name}' has name\r\n| extend \r\n  state = trim(' ', tostring(properties.provisioningState)),\r\n  retentionDays = trim(' ', tostring(properties.retentionInDays)),\r\n  dailyquotaGB  = trim(' ', tostring(properties.workspaceCapping.dailyQuotaGb)),\r\n  capacityReservationLevel = toint(properties.sku.capacityReservationLevel),\r\n  sku = tolower(properties.sku.name)\r\n| extend pricingTier = case(\r\nsku == 'capacityreservation' and capacityReservationLevel == 100,\r\n'100 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel == 200,\r\n'200 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel == 300,\r\n'300 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel == 400,\r\n'400 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel >= 500 and capacityReservationLevel < 1000,\r\n'500 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel >= 1000 and capacityReservationLevel < 2000,\r\n'1000 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel >= 2000 and capacityReservationLevel < 5000,\r\n'2000 GB/day Commitment Tier',\r\nsku == 'capacityreservation' and capacityReservationLevel >= 5000,\r\n'5000 GB/day Commitment Tier',\r\nsku == 'free',\r\n'Free',\r\nsku == 'standard',\r\n'Standard',\r\nsku == 'premium',\r\n'Premium',\r\nsku == 'standalone',\r\n'Standalone',\r\nsku == 'pernode',\r\n'Per Node',\r\nsku == 'lacluster',\r\n'Cluster Level Commitment Tier',\r\nsku == 'pergb2018',\r\n'Pay-as-you-go',\r\n'Unknown')\r\n|extend Taglength = strlen(\"[parameter(tagPrefix)]Purpose\")\r\n| extend dailyquotaGB = iif(dailyquotaGB !=-1.0, dailyquotaGB,\"Cap not set\")\r\n| extend [parameter(tagPrefix)]ManagedTagValue = iff(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Managed\":', substring((substring (tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]managed\")+Taglength+3)),0,indexof(substring(tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]managed\")+Taglength+3),'\"')), \r\n    \"-\")\r\n| extend [parameter(tagPrefix)]Managed = iif(([parameter(tagPrefix)]ManagedTagValue contains \"true\"), \"Yes\", iif(([parameter(tagPrefix)]ManagedTagValue contains \"[parameter(tagValuePrefixLc)]\"), \"Yes\", \"No\"))\r\n| extend [parameter(tagPrefix)]Purpose = iff(\r\n    tostring(tags) has '\"[parameter(tagPrefix)]Purpose\":', substring((substring (tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]purpose\")+Taglength+3)),0,indexof(substring(tostring(tags), indexof(tolower(tags),\"[parameter(tagPrefixLc)]purpose\")+Taglength+3),'\"')), \r\n    \"-\")\r\n| extend [parameter(tagPrefix)]Purpose = iif((\r\n    ([parameter(tagPrefix)]Purpose!=\"\") and ([parameter(tagPrefix)]Purpose !startswith \" \")), tostring([parameter(tagPrefix)]Purpose), \r\n    \"Tag value invalid\")\r\n| extend Subscription=strcat(\"/subscriptions/\", subscriptionId)\r\n| where retentionDays in ({Retention})\r\n| where pricingTier in ({License})\r\n| where [parameter(tagPrefix)]Purpose in ({[parameter(tagPrefix)]Purpose})\r\n| where [parameter(tagPrefix)]Managed in ({[parameter(tagPrefix)]Managed})\r\n| project ['Workspace Name']=id, Subscription, ['Resource Group']=strcat(\"/subscriptions/\", subscriptionId, \"/resourceGroups/\", resourceGroup), ['Location']=location, ['Retention (days)']=retentionDays, ['Daily Cap (GB)']=dailyquotaGB, ['Licence']=pricingTier, [parameter(tagPrefix)]Purpose, [parameter(tagPrefix)]Managed\r\n",
+        "size": 3,
+        "noDataMessage": "No log analytics workspaces  found that meet the selected filters",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscription}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Resource Group",
+              "formatter": 14,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": false,
+                "customColumnWidthSetting": "10%"
+              }
+            },
+            {
+              "columnMatch": "Location",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "15%"
+              }
+            },
+            {
+              "columnMatch": "Retention (days)",
+              "formatter": 4,
+              "formatOptions": {
+                "min": 1,
+                "max": 730,
+                "palette": "blue",
+                "customColumnWidthSetting": "10%"
+              }
+            },
+            {
+              "columnMatch": "Daily Cap (GB)",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "10%"
+              }
+            },
+            {
+              "columnMatch": "Licence",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "10%"
+              }
+            }
+          ],
+          "labelSettings": [
+            {
+              "columnId": "Licence",
+              "label": "License"
+            }
+          ]
+        },
+        "sortBy": []
+      },
+      "conditionalVisibility": {
+        "parameterName": "Workspace",
+        "comparison": "isNotEqualTo"
+      },
+      "customWidth": "100",
+      "name": "Workspaces Overview"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "## \t\r\n## \t\r\n## Log Analytics Workspace Workloads"
+            },
+            "name": "text - 5"
+          },
+          {
+            "type": 11,
+            "content": {
+              "version": "LinkItem/1.0",
+              "style": "tabs",
+              "links": [
+                {
+                  "id": "91fb5be7-945a-430b-9eee-c50f1bcdebba",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Health Overview",
+                  "subTarget": "Overview"
+                },
+                {
+                  "id": "96580929-798e-4e8a-b824-2e30ff6665b2",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Usage Overview",
+                  "subTarget": "Usage",
+                  "style": "link"
+                },
+                {
+                  "id": "90311a86-1f80-4ea2-aa36-85053828c921",
+                  "cellValue": "selectedTab",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Detailed Usage",
+                  "subTarget": "DetailedUsage",
+                  "style": "link"
+                }
+              ]
+            },
+            "name": "Navigation links",
+            "styleSettings": {
+              "margin": "10px 0 0 0"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\":\"AzureHealthQuery/1.0\",\"queryType\":\"Detailed\"}",
+              "size": 1,
+              "title": "Log analytics Workspace resource health",
+              "noDataMessage": "No resources deployed for chosen environment",
+              "queryType": 4,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Availability state",
+                    "formatter": 11
+                  },
+                  {
+                    "columnMatch": "Title",
+                    "formatter": 5
+                  }
+                ],
+                "filter": true,
+                "sortBy": [
+                  {
+                    "itemKey": "Reason chronicity",
+                    "sortOrder": 1
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "Reason chronicity",
+                  "sortOrder": 1
+                }
+              ]
+            },
+            "conditionalVisibilities": [
+              {
+                "parameterName": "Workspace",
+                "comparison": "isNotEqualTo",
+                "value": ""
+              },
+              {
+                "parameterName": "selectedTab",
+                "comparison": "isEqualTo",
+                "value": "Overview"
+              }
+            ],
+            "name": "resourcehealth"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "parameters": [
+                {
+                  "id": "ccd5adcd-8d59-4cfe-99ec-98075de2e253",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "DefaultSubscription_Internal",
+                  "type": 1,
+                  "isRequired": true,
+                  "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| take 1\r\n| project subscriptionId",
+                  "crossComponentResources": [
+                    "value::selected"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "1ca69445-60fc-4806-b43d-ac7e6aad630a",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Subscription",
+                  "type": 6,
+                  "isRequired": true,
+                  "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| summarize by subscriptionId\r\n| project value = strcat(\"/subscriptions/\", subscriptionId), label = subscriptionId, selected = iff(subscriptionId =~ '{DefaultSubscription_Internal}', true, false)\r\n",
+                  "crossComponentResources": [
+                    "value::selected"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "86066f62-07ec-4cf6-be3a-34cfc4c96d8b",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "DefaultWorkspace_Internal",
+                  "type": 1,
+                  "isRequired": true,
+                  "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| take 1\r\n| project name",
+                  "crossComponentResources": [
+                    "{Subscription}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "e94aafa3-c5d9-4523-89f0-4e87aa754511",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Workspace",
+                  "type": 5,
+                  "isRequired": true,
+                  "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| summarize by name, id\r\n| project value = id, label = name, selected = iff(name =~ '{DefaultWorkspace_Internal}', true, false)",
+                  "crossComponentResources": [
+                    "{Subscription}"
+                  ],
+                  "typeSettings": {
+                    "resourceTypeFilter": {
+                      "microsoft.operationalinsights/workspaces": true
+                    },
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "c4b69c01-2263-4ada-8d9c-43433b739ff3",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TimeRange",
+                  "type": 4,
+                  "value": {
+                    "durationMs": 604800000
+                  },
+                  "typeSettings": {
+                    "selectableValues": [
+                      {
+                        "durationMs": 14400000
+                      },
+                      {
+                        "durationMs": 43200000
+                      },
+                      {
+                        "durationMs": 86400000
+                      },
+                      {
+                        "durationMs": 172800000
+                      },
+                      {
+                        "durationMs": 259200000
+                      },
+                      {
+                        "durationMs": 604800000
+                      },
+                      {
+                        "durationMs": 1209600000
+                      },
+                      {
+                        "durationMs": 2592000000
+                      }
+                    ],
+                    "allowCustom": true
+                  }
+                }
+              ],
+              "style": "above",
+              "queryType": 1,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isNotEqualTo",
+              "value": "Overview"
+            },
+            "name": "parameters - 1"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "parameters": [
+                {
+                  "id": "414e00bc-4d49-4e20-8c44-3b7b6dfb59fa",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "ResourceType",
+                  "label": "Resource type",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "union *\r\n| extend ResourceType = tostring(split(_ResourceId,\"/\")[7])\r\n| where isnotempty(ResourceType)\r\n| project ResourceType\r\n| distinct ResourceType\r\n| sort by ResourceType asc",
+                  "crossComponentResources": [
+                    "{Workspace}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "selectAllValue": "",
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 0
+                  },
+                  "timeContextFromParameter": "TimeRange",
+                  "defaultValue": "value::all",
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                },
+                {
+                  "id": "aad4ff50-055e-40ab-8fc7-9aa8b919eda5",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "WorkspaceLog",
+                  "label": "Workspace Log",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "union *\r\n| where tostring(split(_ResourceId,\"/\")[7]) in ({ResourceType})\r\n| project Type\r\n| distinct Type\r\n| sort by Type asc",
+                  "crossComponentResources": [
+                    "{Workspace}"
+                  ],
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 0
+                  },
+                  "timeContextFromParameter": "TimeRange",
+                  "defaultValue": "value::all",
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                },
+                {
+                  "id": "a3e8e781-67f7-4e31-b24e-3c4dbccc016a",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Billable",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "value": [
+                    "Yes"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "jsonData": "[\"Yes\", \"No\"]",
+                  "timeContext": {
+                    "durationMs": 0
+                  },
+                  "timeContextFromParameter": "TimeRange",
+                  "defaultValue": "value::all"
+                }
+              ],
+              "style": "formHorizontal",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "customWidth": "20",
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "DetailedUsage"
+            },
+            "name": "parameters - 7",
+            "styleSettings": {
+              "maxWidth": "20"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "union *\r\n| extend ResourceType = tostring(split(_ResourceId,\"/\")[7])\r\n//| extend ResourceName = tostring(split(_ResourceId,\"/\")[8])\r\n| extend Billable = iff(_IsBillable==\"True\", \"Yes\", \"No\")\r\n| where ResourceType in ({ResourceType})\r\n| where Type in ({WorkspaceLog})\r\n| where Billable in ({Billable})\r\n//| summarize IngestedVolume = sum(_BilledSize) by ['Resource Name'] = ResourceName, ResourceType, ['Workspace Log'] = Type, Billable \r\n| summarize IngestedVolume = sum(_BilledSize) by _ResourceId, ResourceType, Type, Billable \r\n| project ['Resource Name'] = tostring(split(_ResourceId,\"/\")[8]), ['Resource Id'] = _ResourceId, ResourceType, ['Workspace Log'] = Type, Billable, IngestedVolume\r\n| sort by IngestedVolume desc\r\n",
+              "size": 0,
+              "title": "Workspace log usage per resource - be aware that some resources may be deleted already at this moment.",
+              "noDataMessage": "No data found for selected filters",
+              "timeContextFromParameter": "TimeRange",
+              "exportFieldName": "Table Name",
+              "exportParameterName": "Table",
+              "exportDefaultValue": "All Tables",
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Table Entries",
+                    "formatter": 3,
+                    "formatOptions": {
+                      "min": 0,
+                      "palette": "green",
+                      "showIcon": true
+                    },
+                    "numberFormat": {
+                      "unit": 17,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "Table Size",
+                    "formatter": 3,
+                    "formatOptions": {
+                      "min": 0,
+                      "palette": "blue",
+                      "showIcon": true
+                    },
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "Size per Entry",
+                    "formatter": 3,
+                    "formatOptions": {
+                      "min": 0,
+                      "palette": "orange",
+                      "showIcon": true
+                    },
+                    "numberFormat": {
+                      "unit": 2,
+                      "options": {
+                        "style": "decimal",
+                        "maximumFractionDigits": 2
+                      }
+                    }
+                  }
+                ],
+                "rowLimit": 500,
+                "filter": true,
+                "sortBy": [
+                  {
+                    "itemKey": "IngestedVolume",
+                    "sortOrder": 2
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "IngestedVolume",
+                  "sortOrder": 2
+                }
+              ],
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "Resource Name",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "IngestedVolume",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "Resource Name",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "IngestedVolume",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              }
+            },
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "DetailedUsage"
+            },
+            "name": "query - 2"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Usage\r\n| summarize IngestedGB=sum(Quantity)/1024\r\n| project RoundedIngestedGB=case(IngestedGB < 1, tostring(round(IngestedGB, 2)),\r\n                                 IngestedGB < 10, tostring(round(IngestedGB, 1)),\r\n                                 tostring(toint(round(IngestedGB, 0))))\r\n| project strcat(RoundedIngestedGB, \" GB\")",
+              "size": 3,
+              "title": "Ingestion Volume",
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "card",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "TotalMB",
+                    "formatter": 11,
+                    "numberFormat": {
+                      "unit": 38,
+                      "options": {
+                        "style": "decimal",
+                        "maximumFractionDigits": 0
+                      }
+                    }
+                  }
+                ]
+              },
+              "tileSettings": {
+                "showBorder": false
+              },
+              "textSettings": {
+                "style": "bignumber"
+              }
+            },
+            "customWidth": "33",
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Usage"
+            },
+            "name": "IngestionVolumeTotal",
+            "styleSettings": {
+              "padding": "10px",
+              "maxWidth": "33"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Usage\r\n| where TimeGenerated > ago(30d)\r\n| summarize IngestedGB=sum(Quantity)/1024\r\n| project RoundedIngestedGB=case(IngestedGB < 1, tostring(round(IngestedGB, 2)),\r\n                                 IngestedGB < 10, tostring(round(IngestedGB, 1)),\r\n                                 tostring(toint(round(IngestedGB, 0))))\r\n| project strcat(RoundedIngestedGB, \" GB\")",
+              "size": 3,
+              "title": "Ingestion Volume over last 30 days",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "card",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "TotalMB",
+                    "formatter": 11,
+                    "numberFormat": {
+                      "unit": 38,
+                      "options": {
+                        "style": "decimal",
+                        "maximumFractionDigits": 0
+                      }
+                    }
+                  }
+                ]
+              },
+              "tileSettings": {
+                "showBorder": false
+              },
+              "textSettings": {
+                "style": "bignumber"
+              }
+            },
+            "customWidth": "33",
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Usage"
+            },
+            "name": "IngestionVolumeTotal",
+            "styleSettings": {
+              "padding": "10px",
+              "maxWidth": "33"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Usage\r\n| project TimeGenerated, DataType, Quantity\r\n| summarize IngestionVolumeMB=sum(Quantity) by TimeGenerated, DataType  ",
+              "size": 0,
+              "showAnalytics": true,
+              "title": "Ingestion Over Time (MB)",
+              "timeContextFromParameter": "TimeRange",
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "areachart",
+              "graphSettings": {
+                "type": 0,
+                "topContent": {
+                  "columnMatch": "Solution",
+                  "formatter": 1
+                },
+                "centerContent": {
+                  "columnMatch": "TotalVolumeGB",
+                  "formatter": 1,
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              },
+              "chartSettings": {
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 38,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "100",
+            "conditionalVisibility": {
+              "parameterName": "selectedTab",
+              "comparison": "isEqualTo",
+              "value": "Usage"
+            },
+            "name": "Ingestion TimeChart of Top Data Types",
+            "styleSettings": {
+              "margin": "10px",
+              "padding": "10px",
+              "showBorder": true
+            }
+          }
+        ]
+      },
+      "name": "group - 4"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "workbookPin": "Overview",
+  "fromTemplateId": "community-Workbooks/LogAnalytics Workspace/AtScale",
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

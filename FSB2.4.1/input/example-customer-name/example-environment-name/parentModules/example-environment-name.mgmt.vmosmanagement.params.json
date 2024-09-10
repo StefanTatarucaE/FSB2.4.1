@@ -1,0 +1,81 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "deployUpdateManager": {
+            "value": true
+        },
+        "deployComputeGallery": {
+            "value": true
+        },
+        "additionalUpdateManagerTags": {
+            "value": {}
+        },
+        "additionalmaintenanceConfigurationsTags": {
+            "value": {}
+        },
+        "maintenanceConfigurations": {
+            "value": [
+                {
+                    "maintenanceConfigurationName": "linux-dev",
+                    "installPatches": {
+                        "linuxParameters": {
+                            "classificationsToInclude": ["Security",
+                            "Critical"],
+                            "packageNameMasksToExclude": [],
+                            "packageNameMasksToInclude": []
+                        },
+                        "rebootSetting": "ifRequired",
+                        "windowsParameters": {
+                            "classificationsToInclude": [],
+                            "excludeKbsRequiringReboot": false,
+                            "kbNumbersToExclude": [],
+                            "kbNumbersToInclude": []
+                        }
+                    },
+                    "maintenanceWindow": {
+                        "duration": "03:55",
+                        "expirationDateTime": "9999-12-31 23:59:59",
+                        "recurEvery": "1Day",
+                        "startTime": "15:00",
+                        "timeZone": "W. Europe Standard Time"
+                    }
+                },
+                {
+                    "maintenanceConfigurationName": "windows-dev",
+                    "installPatches": {
+                        "linuxParameters": {
+                            "classificationsToInclude": [],
+                            "packageNameMasksToExclude": [],
+                            "packageNameMasksToInclude": []
+                        },
+                        "rebootSetting": "ifRequired",
+                        "windowsParameters": {
+                            "classificationsToInclude": ["Security",
+                            "Critical"],
+                            "excludeKbsRequiringReboot": false,
+                            "kbNumbersToExclude": [],
+                            "kbNumbersToInclude": []
+                        }
+                    },
+                    "maintenanceWindow": {
+                        "duration": "03:55",
+                        "expirationDateTime": "9999-12-31 23:59:59",
+                        "recurEvery": "1Day",
+                        "startTime": "15:00",
+                        "timeZone": "W. Europe Standard Time"
+                    }
+                }
+            ]
+        },
+        "computeGalleryDescription": {
+            "value": "Shared Image Gallery"
+        },
+        "additionalComputeGalleryTags": {
+            "value": {}
+        },
+        "additionalOsTaggingTags": {
+            "value": {}
+        }
+    }
+}

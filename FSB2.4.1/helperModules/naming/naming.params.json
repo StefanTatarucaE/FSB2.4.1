@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azureLocation": {
+            "value": "westeurope"
+        },
+        "suffix":{
+            "value": []
+        },
+        "company":{
+            "value": "Eviden"
+        },
+        "companyCode":{
+            "value": "Eviden"
+        },
+        "product":{
+            "value": "Eviden Landing Zones for Azure"
+        },
+        "productCode":{
+            "value": "ELZ"
+        }
+    }
+}

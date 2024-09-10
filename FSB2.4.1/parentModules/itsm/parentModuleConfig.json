@@ -1,0 +1,221 @@
+{
+    "storageAccountKind": "StorageV2",
+    "storageAccountSku": "Standard_LRS",
+    "storageAccountAccessTier": "Hot",
+    "storageAccountAllowBlobPublicAccess": false,
+    "storageAccountNetworkAcls": {
+        "bypass": "AzureServices, Logging, Metrics",
+        "defaultAction": "Allow",
+        "ipRules": []
+    },
+    "storageAccountChangeFeed": {
+        "enabled": true,
+        "retentionInDays": 7
+    },
+    "storageAccountBlobSvcDeleteRetentionPolicy": {
+        "enabled": true,
+        "days": 7
+    },
+    "itsmListenerAppServicePlanKind": "FunctionApp",
+    "itsmListenerAppServiceKind": "functionapp",
+    "itsmListenerAppServiceProperties": [
+        {
+            "name": "FUNCTIONS_EXTENSION_VERSION",
+            "value": "~4"
+        },
+        {
+            "name": "FUNCTIONS_WORKER_RUNTIME",
+            "value": "powershell"
+        },
+        {
+            "name": "FUNCTIONS_WORKER_RUNTIME_VERSION",
+            "value": "7.2"
+        },
+        {
+            "name": "PSWorkerInProcConcurrencyUpperBound",
+            "value": "5"
+        },
+        {
+            "name": "CFG_SECRET_NAME",
+            "value": "global-monitoring-snow-event"
+        },
+        {
+            "name": "CFG_SNOW_URLS",
+            "value": "{\"PROD\":\"https://atosglobal.service-now.com\",\"CAT\":\"https://atosglobalcat.service-now.com\",\"INT\":\"https://atosglobalint.service-now.com\",\"DEV\":\"https://atosglobaldev.service-now.com\",\"SAND\":\"https://atosglobalsandbox.service-now.com\"}"
+        },
+        {
+            "name": "WEBSITE_RUN_FROM_PACKAGE",
+            "value": "1"
+        },
+        {
+          "name": "DEBUG",
+          "value": "FALSE"
+        },
+        {
+          "name": "CFG_DEFAULT_INC_CRITICALITY",
+          "value": "warning"
+        },
+        {
+          "name": "CFG_DEFAULT_INC_TYPE",
+          "value": "availability"
+        },
+        {
+          "name": "CFG_DEFAULT_INC_MONITORING_TOOL",
+          "value": "ATF-AZURE"
+        },
+        {
+          "name": "CFG_DEFAULT_INC_CAT_SUFFIX",
+          "value": ""
+        },
+        {
+          "name": "CFG_CMDB_ENABLE_CI_CREATION",
+          "value": "TRUE"
+        },
+        {
+          "name": "CFG_DEFAULT_CMDB_CI_CRITICALITY",
+          "value": "medium"
+        },
+        {
+          "name": "CFG_NATIVE_SECRET_NAME",
+          "value": "native-monitoring-snow-event"
+        },
+        {
+          "name": "CFG_CMDB_VM_CI_VMINSTANCE_NAME_SUFFIX",
+          "value": ""
+        },
+        {
+          "name": "CFG_CMDB_VM_CI_SERVER_NAME_SUFFIX",
+          "value": "-VSR"
+        },
+        {
+          "name": "CFG_CMDB_CI_VMINSTANCE_MODELID",
+          "value": "00_Virtual_Machine_Instance_Generic_Product"
+        },
+        {
+          "name": "CFG_CMDB_CI_VMSERVER_MODELID",
+          "value": "00_Virtual_Machine_Instance_Generic_Product"
+        },
+        {
+          "name": "CFG_CMDB_CI_APPSERVICEPLAN_MODELID",
+          "value": "00_Application_Generic_Product"
+        },		  
+        {
+          "name": "CFG_CMDB_CI_APPSERVICE_MODELID",
+          "value": "00_Application_Generic_Product"
+        },
+        {
+          "name": "CFG_CMDB_CI_BASTION_MODELID",
+          "value": "00_Application_Generic_Product"
+        },
+        {
+          "name": "CFG_CMDB_CI_ANALYSISSVC_MODELID",
+          "value": "00_Application_Generic_Product"
+        },
+        {
+          "name": "CFG_CMDB_CI_APPGATEWAY_MODELID",
+          "value": "00_Load_Balancer_Applications_Generic_Product"
+        },
+        {
+          "name": "CFG_CMDB_CI_LOADBALANCER_MODELID",
+          "value": "00_Load_Balancer_Applications_Generic_Product"
+        },
+        {
+          "name": "CFG_CMDB_CI_CONTAINEREGISTRY_MODELID",
+          "value": "00_Generic_Storage_Container_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_STORAGEACCOUNT_MODELID",
+          "value": "00_Generic_Storage_Container_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_KEYVAULT_MODELID",
+          "value": "00_Database_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_REDISCACHE_MODELID",
+          "value": "00_Database_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_COSMOSDB_MODELID",
+          "value": "00_Database_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_MARIADB_MODELID",
+          "value": "00_Database_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_MYSQLDB_MODELID",
+          "value": "00_Database_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_POSTGRESQLDB_MODELID",
+          "value": "00_Database_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_DATABRICKS_MODELID",
+          "value": "00_Database_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_DATAFACTORY_MODELID",
+          "value": "00_Database_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_SQLDB_MODELID",
+          "value": "00_Database_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_SQLSRVDB_MODELID",
+          "value": "00_Database_Instance_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_K8CLUSTER_MODELID",
+          "value": ""
+        },          
+        {
+          "name": "CFG_CMDB_CI_NSG_MODELID",
+          "value": "00_Network_Gear_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_FIREWALL_MODELID",
+          "value": "00_Network_Gear_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_VIRTUALNETGATEWAY_MODELID",
+          "value": "00_Network_Gear_Generic_Product"
+        },          
+        {
+          "name": "CFG_CMDB_CI_EXPRESSROUTE_MODELID",
+          "value": "00_Network_Gear_Generic_Product"
+        }
+    ],
+    "itsmListenerAppServiceSiteConfig": {
+        "http20Enabled": true,
+        "minTlsVersion": "1.2",
+        "ftpsState": "FtpsOnly",
+        "powerShellVersion": "7.2"
+    },
+    "appServicePlanSku": {
+        "name": "Y1",
+        "tier": "Dynamic"
+    },
+    "appServiceClientAffinityEnabled": false,
+    "appServiceHttpsOnly": true,
+    "appServiceClientCertEnabled": false,
+    "appInsightsKind": "web",
+    "appInsightsProperties": {
+        "Request_Source": "IbizaWebAppExtensionCreate"
+    },
+    "keyVaultSkuName": "standard",
+    "keyVaultFeatures": {
+        "enabledForDeployment": false,
+        "enabledForDiskEncryption": false,
+        "enabledForTemplateDeployment": false,
+        "enablePurgeProtection": true,
+        "enableRbacAuthorization": false,
+        "enableSoftDelete": true
+    },
+    "keyVaultSoftDeleteRetentionInDays": 7,
+    "keyVaultPublicNetworkAccess": "enabled",
+    "keyVaultNetworkRuleBypassOptions": "AzureServices",
+    "keyVaultNetworkRuleAction": "Allow"
+}

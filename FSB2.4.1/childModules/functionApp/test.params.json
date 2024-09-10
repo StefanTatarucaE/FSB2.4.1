@@ -1,0 +1,159 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appServicePlanName": {
+            "value": "cu1-msp1-d-hostplan-itsm"
+        },
+        "appServiceName": {
+            "value": "cu1-msp1-d-functionapp-itsm"
+        },
+        "appInsightsName": {
+            "value": "cu6-msp3-d-insightsapp-itsm"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "appInsightsProperties": {
+            "value": {
+                "ApplicationId": "cu6-msp3-d-insightsapp-itsm",
+                "Request_Source": "IbizaWebAppExtensionCreate"
+            }
+        },
+        "tags": {
+            "value": {
+                "EvidenManaged": "true",
+                "tag2": "value2"
+            }
+        },
+        "hostingPlanSku": {
+            "value": {
+                "name": "Y1",
+                "tier": "Dynamic"
+            }
+        },
+        "hostingPlanKind": {
+            "value": "linux"
+        },
+        "appInsightsKind": {
+            "value": "web"
+        },
+        "appServiceStorageName": {
+            "value": "saccfunctionapp"
+        },
+        "appServiceKeyVaultName": {
+            "value": "box-msp1-t-kvt-001"
+        },
+        "appServiceKind": {
+            "value": "functionapp,linux"
+        },
+        "appServiceProperties": {
+            "value": [
+                {
+                    "name": "FUNCTIONS_WORKER_RUNTIME",
+                    "value": "python"
+                },
+                {
+                    "name": "FUNCTIONS_EXTENSION_VERSION",
+                    "value": "~4"
+                },
+                {
+                    "name": "SECRET_NAME_EVENT",
+                    "value": "global-monitoring-snow-event"
+                },
+                {
+                    "name": "SECRET_NAME_CMDB",
+                    "value": "global-monitoring-snow-event"
+                },
+                {
+                    "name": "SNOW_URLS",
+                    "value": "{\"PROD\":\"https://atosglobal.service-now.com\",\"CAT\":\"https://atosglobalcat.service-now.com\",\"DEV\":\"https://atosglobaldev.service-now.com\",\"SAND\":\"https://atosglobalsandbox.service-now.com\"}"
+                }
+            ]
+        },
+        "appServiceClientAffinityEnabled": {
+            "value": true
+        },
+        "appServiceHttpsOnly": {
+            "value": true
+        },
+        "appServiceClientCertEnabled": {
+            "value": false
+        },
+        "appServiceSiteConfig": {
+            "value": {
+                "numberOfWorkers": -1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "PYTHON|3.8",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "remoteDebuggingVersion": "VS2019",
+                "httpLoggingEnabled": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$ats-sub1-d-func-billing",
+                "azureStorageAccounts": {},
+                "scmType": "None",
+                "use32BitWorkerProcess": false,
+                "webSocketsEnabled": false,
+                "alwaysOn": false,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": false
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "cors": {
+                    "allowedOrigins": [
+                        "https://functions.azure.com",
+                        "https://functions-staging.azure.com",
+                        "https://functions-next.azure.com"
+                    ],
+                    "supportCredentials": false
+                },
+                "localMySqlEnabled": false,
+                "managedServiceIdentityId": 6564,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": true,
+                "minTlsVersion": "1.2",
+                "ftpsState": "FtpsOnly",
+                "preWarmedInstanceCount": 0
+            }
+        }
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "additionalItsmTags": {
+            "value": {}
+        },
+        "snowTenantCode": {
+            "value": "Eviden Cloud ELZ-Azure"
+        },
+        "snowEventCategories": {
+            "value": "Cloud.IaaS.DCS-Azure"
+        },
+        "snowSupportGroup": {
+          "value": ""
+        },
+        "snowEnvironmentCode": {
+          "value": "PROD"
+        },
+        "snowNativeEnable": {
+          "value": "FALSE"
+        },
+        "snowNativeIncSupportGroup": {
+          "value": "Help Desk"
+        },
+        "snowNativeUrls": {
+          "value": "{\"PROD\":\"https://customerinstance.example.com\"}"
+        },
+        "enableItsmAlerting": {
+          "value": true
+        },
+        "enableItsmCmdb": {
+          "value": true
+        }
+    }
+}

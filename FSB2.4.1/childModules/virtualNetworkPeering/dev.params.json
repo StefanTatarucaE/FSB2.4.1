@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "peeringName": {
+      "value": "aaa-lnd2-t-eune-vnet-spoke/peering-to-aaa-cnty-t-eune-vnet-hub"
+    },
+    "remoteVirtualNetworkName": {
+      "value": "aaa-cnty-t-eune-vnet-hub"
+    },
+    "remoteVirtualNetworkResourceGroupName": {
+      "value": "aaa-cnty-t-rsg-hub-network"
+    },
+    "remotePeeringSubscriptionId": {
+      "value": ""
+    },
+    "allowVirtualNetworkAccess": {
+      "value": true
+    },
+    "allowForwardedTraffic": {
+      "value": false
+    },
+    "allowGatewayTransit": {
+      "value": false
+    },
+    "useRemoteGateways": {
+      "value": false
+    }
+  }
+}

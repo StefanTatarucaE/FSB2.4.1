@@ -1,0 +1,122 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccountName": {
+            "value": "sargpsc130522"
+        },
+        "kind": {
+            "value": "StorageV2"
+        },
+        "sku": {
+            "value": "Standard_LRS"
+        },
+        "accessTier": {
+            "value": "Hot"
+        },
+        "isHnsEnabled": {
+            "value": false
+        },
+        "shouldCreateContainers": {
+            "value": true
+        },
+        "changeFeed": {
+            "value": {
+                "enabled": true,
+                "retentionInDays": 7
+            }
+        },
+        "blobSvcDeleteRetentionPolicy": {
+            "value": {
+                "enabled": true,
+                "days": 7
+            }
+        },
+        "networkAcls": {
+            "value": {
+                "bypass": "AzureServices, Logging, Metrics",
+                "defaultAction": "Allow",
+                "ipRules": [
+                    {
+                        "action": "Allow",
+                        "value": "84.106.218.12"
+                    },
+                    {
+                        "action": "Allow",
+                        "value": "147.161.183.00"
+                    }
+                ]
+            }
+        },
+        "shouldCreateShares": {
+            "value": true
+        },
+        "shouldCreateQueues": {
+            "value": true
+        },
+        "shouldCreateTables": {
+            "value": true
+        },
+        "containerNames": {
+            "value": [
+                {
+                    "containerName": "devcontainer001",
+                    "containerAccess": "None"
+                },
+                {
+                    "containerName": "devcontainer002",
+                    "containerAccess": "None"
+                },
+                {
+                    "containerName": "devcontainer003",
+                    "containerAccess": "None"
+                },
+                {
+                    "containerName": "artifactcontainer",
+                    "containerAccess": "Blob"
+                },
+                {
+                    "containerName": "publicaccesscontainer",
+                    "containerAccess": "Container"
+                }
+            ]
+        },
+        "shareNames": {
+            "value": [
+                "devshare01",
+                "devshare02",
+                "devshare03"
+            ]
+        },
+        "fileShareQuota": {
+            "value": 100
+        },
+        "queueNames": {
+            "value": [
+                "devqueue01",
+                "devqueue02",
+                "devqueue03"
+            ]
+        },
+        "tableNames": {
+            "value": [
+                "devtable01",
+                "devtable02",
+                "devtable03",
+                "devtable04"
+            ]
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "tags": {
+            "value": {}
+        },
+        "allowBlobPublicAccess": {
+            "value": true
+        },
+        "allowSharedKeyAccess": {
+            "value": true
+        }
+    }
+}

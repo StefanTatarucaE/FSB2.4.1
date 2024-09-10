@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "automationAccountName": {
+            "value": "test321"
+        },
+        "artifactStorageAccount": {
+            "value": "atsc3h4bvbaksbiq"
+        },
+        "artifactStorageAccountResourceGroup": {
+            "value": "ats-msp3-d-rsg-artifact-repository"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "runbooks": {
+            "value": [
+                {
+                    "name": "PAASMGMT-Create-OfflineReports-PAASmgmt",
+                    "filename": "Create-OfflineReports-PAASmgmt.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create offline PAAS reports, timerbased",
+                    "scheduleName": "PAASMGMT-Create-OfflineReports-PAASmgmt",
+                    "interval": "24",
+                    "frequency": "Hour"
+                }
+            ]
+        },
+        "modules": {
+            "value": [
+                {
+                    "name": "Az.Automation",
+                    "url": "https://devopsgallerystorage.blob.core.windows.net/packages/az.automation.1.3.7.nupkg"
+                },
+                {
+                    "name": "Az.Network",
+                    "url": "https://devopsgallerystorage.blob.core.windows.net/packages/az.network.3.2.0.nupkg"
+                },
+                {
+                    "name": "Az.Compute",
+                    "url": "https://devopsgallerystorage.blob.core.windows.net/packages/az.compute.4.2.1.nupkg"
+                },
+                {
+                    "name": "Eviden.RunbookAutomation",
+                    "url": ""
+                }
+            ]
+        }
+    }
+}

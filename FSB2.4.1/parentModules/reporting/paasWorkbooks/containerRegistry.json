@@ -1,0 +1,530 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "## Azure Container Registry Overview"
+      },
+      "name": "text - 1"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{subscriptionPicker}"
+        ],
+        "parameters": [
+          {
+            "id": "f5f66862-c38c-4c25-98fa-ad1e7f463a0f",
+            "version": "KqlParameterItem/1.0",
+            "name": "subscriptionPicker",
+            "label": "Subscription",
+            "type": 6,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": false,
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "b1ae8eeb-0570-482d-af41-aa81999ad44a",
+            "version": "KqlParameterItem/1.0",
+            "name": "resourceGroupPicker",
+            "label": "Resource Group",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where type == \"microsoft.containerregistry/registries\"\r\n| project resourceGroup\r\n| distinct resourceGroup",
+            "crossComponentResources": [
+              "{subscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "af203fe9-f903-40c7-8d81-f9842eccfde4",
+            "version": "KqlParameterItem/1.0",
+            "name": "Location",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where type == \"microsoft.containerregistry/registries\"\r\n| distinct location",
+            "crossComponentResources": [
+              "{subscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "2a6e9715-65ac-4e99-8087-36d38c6df94b",
+            "version": "KqlParameterItem/1.0",
+            "name": "SKU",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where type == \"microsoft.containerregistry/registries\"\r\n| extend Name=tostring(sku.name)\r\n| distinct Name",
+            "crossComponentResources": [
+              "{subscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "fdfa8678-a5f5-48cb-8dad-d5de4a0fde8c",
+            "version": "KqlParameterItem/1.0",
+            "name": "PublicNetWorkAccess",
+            "label": "Public Network Access",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where type == \"microsoft.containerregistry/registries\"\r\n| extend name=tostring(properties.publicNetworkAccess)\r\n| distinct name\r\n\r\n",
+            "crossComponentResources": [
+              "{subscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "c5cdfd6b-4b9e-4d8b-83f1-cf59a9d64b6f",
+            "version": "KqlParameterItem/1.0",
+            "name": "ProvisioningState",
+            "label": "Provisioning State",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where type == \"microsoft.containerregistry/registries\"\r\n| extend State=tostring(properties.provisioningState)\r\n| distinct State",
+            "crossComponentResources": [
+              "{subscriptionPicker}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "cfea8840-7445-43c0-9181-448c3cb0d681",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]Managed",
+            "label": "Managed by [parameter(companyName)]",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Yes\", \"No\"]",
+            "defaultValue": "value::all"
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 1"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources \r\n | where type == \"microsoft.containerregistry/registries\"\r\n | extend Subscription = split(id,\"/\")[2]\r\n | extend [parameter(tagPrefix)]Managed = iif((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"Yes\", \"No\")\r\n | extend sku=tostring(sku.name)\r\n | extend pubnetwAccess=tostring(properties.publicNetworkAccess)\r\n | extend State=tostring(properties.provisioningState)\r\n | where resourceGroup in ({resourceGroupPicker})\r\n | where sku in ({SKU})\r\n | where State in ({ProvisioningState})\r\n | where [parameter(tagPrefix)]Managed in ({[parameter(tagPrefix)]Managed})\r\n | project [\"Container Registry Name\"]=id, Subscription, [\"Resource Group\"]=resourceGroup,Location=location, [\"SKU\"]=sku, LoginServer=properties.loginServer, [\"Public NetWorkAccess\"]=pubnetwAccess, [\"Provisioning State\"]=State, [\"Managed by [parameter(companyName)]\"]=[parameter(tagPrefix)]Managed\r\n",
+        "size": 0,
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "value::all"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Subscription",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "Provisioning State",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Failed",
+                    "representation": "4",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "contains",
+                    "thresholdValue": "Succeeded",
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "2",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "resourceGroupPicker",
+        "comparison": "isNotEqualTo"
+      },
+      "name": "query - 5"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "#### No Azure Container Registries are deployed in selected subscription(s).",
+        "style": "info"
+      },
+      "conditionalVisibility": {
+        "parameterName": "resourceGroupPicker",
+        "comparison": "isEqualTo"
+      },
+      "name": "text - 2",
+      "styleSettings": {
+        "margin": "0"
+      }
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## Azure Container Registry operations"
+      },
+      "name": "text - 1"
+    },
+    {
+      "type": 11,
+      "content": {
+        "version": "LinkItem/1.0",
+        "style": "tabs",
+        "links": [
+          {
+            "id": "14f409cc-7d2e-4642-bfb6-a515ea40a382",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Storage Used",
+            "subTarget": "storage",
+            "style": "link"
+          },
+          {
+            "id": "3112b27b-458b-47c9-b027-18811a697ff7",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Deleted Repos",
+            "subTarget": "deleted",
+            "preText": "Deleted ",
+            "style": "link"
+          },
+          {
+            "id": "177f2bb7-effa-491b-8f25-d323461b6344",
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Failed Logins",
+            "subTarget": "failedlogin",
+            "style": "link"
+          }
+        ]
+      },
+      "name": "links - 2"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "value::all"
+        ],
+        "parameters": [
+          {
+            "id": "a8aa524d-cab6-438d-bc8d-f668bf014fcd",
+            "version": "KqlParameterItem/1.0",
+            "name": "LAWorkspace",
+            "type": 5,
+            "query": "resources\r\n| where type == \"microsoft.operationalinsights/workspaces\"\r\n| where (tostring(tags) has ('\"[parameter(tagValuePrefix)]LogAnalytics\"')) or (tostring(tags) has ('\"[parameter(tagValuePrefix)]Monitoring\"'))\r\n| project id",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "isHiddenWhenLocked": true,
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::1"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::1",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "430071fe-b489-43db-a523-8d188c17d000",
+            "version": "KqlParameterItem/1.0",
+            "name": "repository",
+            "type": 5,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "resources\r\n| where type == \"microsoft.containerregistry/registries\"\r\n| project id",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "selectAllValue": "",
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "label": "Container Registry"
+          },
+          {
+            "id": "339b472c-bd8c-42ca-beb1-bad4d7dbbbf1",
+            "version": "KqlParameterItem/1.0",
+            "name": "timeRange",
+            "type": 4,
+            "value": {
+              "durationMs": 172800000
+            },
+            "typeSettings": {
+              "selectableValues": [
+                {
+                  "durationMs": 300000
+                },
+                {
+                  "durationMs": 900000
+                },
+                {
+                  "durationMs": 1800000
+                },
+                {
+                  "durationMs": 3600000
+                },
+                {
+                  "durationMs": 14400000
+                },
+                {
+                  "durationMs": 43200000
+                },
+                {
+                  "durationMs": 86400000
+                },
+                {
+                  "durationMs": 172800000
+                },
+                {
+                  "durationMs": 259200000
+                },
+                {
+                  "durationMs": 604800000
+                },
+                {
+                  "durationMs": 1209600000
+                },
+                {
+                  "durationMs": 2419200000
+                },
+                {
+                  "durationMs": 2592000000
+                },
+                {
+                  "durationMs": 5184000000
+                },
+                {
+                  "durationMs": 7776000000
+                }
+              ]
+            },
+            "label": "TimeRange"
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 0"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "ContainerRegistryRepositoryEvents\r\n| where TimeGenerated {timeRange}\r\n| where OperationName == \"DeleteRepository\"\r\n| where _ResourceId in~ ({repository})\r\n| project TimeGenerated, LoginServer, CallerIpAddress, OperationName, Repository, Region",
+        "size": 0,
+        "showAnalytics": true,
+        "title": "Deleted Repositories",
+        "noDataMessage": "No deleted repositories found for selected repositorie(s) and time range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LAWorkspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "deleted"
+      },
+      "showPin": true,
+      "name": "Deleted Repository"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "ContainerRegistryLoginEvents\r\n| where TimeGenerated {timeRange}\r\n| where ResultDescription != \"200\"\r\n| project TimeGenerated, LoginServer, CallerIpAddress, Identity, OperationName, ResultDescription, ResultType",
+        "size": 0,
+        "showAnalytics": true,
+        "title": "Failed Logins",
+        "noDataMessage": "No failed logins found for selected repositorie(s) and time range",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LAWorkspace}"
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "failedlogin"
+      },
+      "showPin": true,
+      "name": "failed-login"
+    },
+    {
+      "type": 10,
+      "content": {
+        "chartId": "workbook03a21801-c24e-4044-9e40-2e4c4834856f",
+        "version": "MetricsItem/2.0",
+        "size": 0,
+        "chartType": 2,
+        "resourceType": "microsoft.containerregistry/registries",
+        "metricScope": 0,
+        "resourceParameter": "repository",
+        "resourceIds": [
+          "{repository}"
+        ],
+        "timeContext": {
+          "durationMs": 3600000
+        },
+        "metrics": [
+          {
+            "namespace": "microsoft.containerregistry/registries",
+            "metric": "microsoft.containerregistry/registries--StorageUsed",
+            "aggregation": 4,
+            "splitBy": null,
+            "columnName": "Storage used"
+          }
+        ],
+        "showCreateAlertRule": true,
+        "gridSettings": {
+          "rowLimit": 10000
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "storage"
+      },
+      "name": "acr-storage-used"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

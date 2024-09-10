@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "disableLocalAuthenticationEffect": {
+      "value": "Modify"
+    },
+    "advancedThreatProtectionEffect": {
+      "value": "DeployIfNotExists"
+    },
+    "disableMetadataWriteAccessEffect": {
+      "value": "Append"
+    },
+    "cosmosdbChangeSetName": {
+      "value": "cosmosdb.change.policy.set"
+    },
+    "cosmosdbChangeSetDisplayName": {
+      "value": "Cosmosdb change policy set"
+    },
+    "cosmosdbChangeSetAssignmentName": {
+      "value": "cosmosdb.change.policy.set.assignment"
+    },
+    "cosmosdbChangeSetAssignmentDisplayName": {
+      "value": "Cosmosdb change policy set assignment"
+    },
+    "cosmosdbAdvancedThreatProtectionDefName": {
+      "value": "cosmosdb.advancedthreatprotection.change.policy.def"
+    },
+    "cosmosdbAdvancedThreatProtectionDefDisplayName": {
+      "value": "Cosmosdb advanced threat protection change policy definition."
+    },
+    "cosmosDbDisableMetadataWriteAccessDefName": {
+      "value": "cosmosdb.disablemetadatawriteaccess.change.policy.def"
+    },
+    "cosmosDbDisableMetadataWriteAccessDefDisplayName": {
+      "value": "Cosmosdb Metadate disable write access change policy definition."
+    },
+    "cosmosdbDisableLocalAuthenticationDefName": {
+      "value": "cosmosdb.disablelocalauthentication.change.policy.def"
+    },
+    "cosmosdbDisableLocalAuthenticationDefDisplayName": {
+      "value": "Cosmosdb disable local authentication change policy definition."
+    },
+    "policyMetadata": {
+      "value": "EvidenELZ"
+    },
+    "policyRuleTag": {
+      "value": "EvidenManaged"
+    }
+  }
+}

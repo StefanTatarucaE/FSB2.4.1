@@ -1,0 +1,221 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "value::all"
+              ],
+              "parameters": [
+                {
+                  "id": "a49f7e90-e5b0-45b7-a0e2-b06668ed41eb",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SubscriptionPicker",
+                  "label": "Subscription",
+                  "type": 6,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "includeAll": true,
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  }
+                },
+                {
+                  "id": "c102f8d6-56e0-4070-b158-28f7fa7df4c4",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "SharedImageGallery",
+                  "label": "Shared Image Gallery",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\r\n| where type =~ \"microsoft.compute/galleries/images\" \r\n| extend GalleryInfo = split(id,\"/\")\r\n| extend GalleryName = tostring(GalleryInfo[8])\r\n| project GalleryName\r\n| distinct GalleryName",
+                  "crossComponentResources": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": [
+                    "value::all"
+                  ]
+                },
+                {
+                  "id": "a1f54c2d-a514-4832-9aff-0b2f61461e78",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "ImageName",
+                  "label": "Image Name",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\r\n| where type =~ \"microsoft.compute/galleries/images\" \r\n| extend GalleryInfo = split(id,\"/\")\r\n| extend ImageName = tostring(GalleryInfo[10])\r\n| project ImageName",
+                  "crossComponentResources": [
+                    "value::all"
+                  ],
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "d34fdde4-418f-4fd4-afa1-344ee75ee6b5",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "OSType",
+                  "label": "OS type",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\r\n| where type =~ \"microsoft.compute/galleries/images\" \r\n| extend OSType = tostring(properties.osType)\r\n| project OSType\r\n| distinct OSType",
+                  "crossComponentResources": [
+                    "value::all"
+                  ],
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                }
+              ],
+              "style": "above",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "name": "parameters - 1"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "#### No Azure compute galleries containing images are deployed yet"
+            },
+            "conditionalVisibility": {
+              "parameterName": "SharedImageGallery",
+              "comparison": "isEqualTo"
+            },
+            "name": "text - 4"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type =~ \"microsoft.compute/galleries/images\" \r\n| extend OSType = properties.osType\r\n| extend Gallery = tostring(split(id,\"/images\")[0])\r\n| extend ResourceId = tostring (id)\r\n| extend GalleryInfo = split(id,\"/\")\r\n| extend ImageName = tostring(GalleryInfo[10])\r\n| extend GalleryName = tostring(GalleryInfo[8])\r\n| extend ResourceGroup = GalleryInfo[4]\r\n| where GalleryName in ({SharedImageGallery})\r\n| where ImageName in ({ImageName})\r\n| where OSType in ({OSType})\r\n| project Gallery, GalleryName, ImageName, OSType, ResourceId, ResourceGroup\r\n| join kind=leftouter(\r\nresources \r\n| where type =~ \"microsoft.compute/galleries/images/versions\" \r\n| extend VersionId = tostring(id)\r\n| extend GalleryInfo = split(id,\"/\")\r\n| extend ImageName = tostring(GalleryInfo[10])\r\n| extend ImageVersion = iif(notnull(GalleryInfo[12]),tostring(GalleryInfo[12]),tostring(\"\"))\r\n| project ImageName, ImageVersion, VersionId\r\n) on ImageName\r\n| extend ImageId = iif(VersionId!=\"\", VersionId, ResourceId)\r\n| project GalleryName, LinkGallery=Gallery, ImageName, ImageVersion, OSType, ResourceGroup, LinkImage=ImageId, ImageId\r\n| order by GalleryName\r\n| project-away GalleryName\r\n",
+              "size": 0,
+              "noDataMessage": "No VM OS Image galleries are deployed yet",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{SubscriptionPicker}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "LinkImage",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "45ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "ImageId",
+                    "formatter": 7,
+                    "formatOptions": {
+                      "linkTarget": "CellDetails",
+                      "linkIsContextBlade": true,
+                      "customColumnWidthSetting": "80ch"
+                    }
+                  }
+                ],
+                "sortBy": [
+                  {
+                    "itemKey": "ImageVersion",
+                    "sortOrder": 2
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "LinkGallery",
+                    "label": "Shared Image Gallery"
+                  },
+                  {
+                    "columnId": "LinkImage",
+                    "label": "OS Image Link"
+                  },
+                  {
+                    "columnId": "ImageId",
+                    "label": "ResourceId",
+                    "comment": ""
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "ImageVersion",
+                  "sortOrder": 2
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "SharedImageGallery",
+              "comparison": "isNotEqualTo"
+            },
+            "name": "query - 0"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "__[parameter(productName)] Customer Guidance documents__<br><br>[Open file](https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-prepare-custom-image-customer-guidance.pdf) Prepare & upload custom image<br><br>\r\n[Open file](https://[parameter(storageAccountName)].blob.core.windows.net/artifacts/[parameter(companyName)]-Create-VM-from-image-customer-guidance.pdf) Portal create VM from image\r\n",
+              "style": "info"
+            },
+            "name": "documentationLinks"
+          }
+        ]
+      },
+      "name": "group - 0"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

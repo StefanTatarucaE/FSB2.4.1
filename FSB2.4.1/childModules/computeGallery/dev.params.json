@@ -1,0 +1,20 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "computeGalleryName": {
+      "value": "ats-lnd1-t-cg-001"
+    },
+    "location": {
+      "value": "westeurope"
+    },
+    "computeGalleryDescription": {
+      "value": "This is a test deploy"
+    },
+    "tags": {
+      "value": {
+        "EvidenManaged": "true"
+      }
+    }
+  }
+}

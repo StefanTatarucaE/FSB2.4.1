@@ -1,0 +1,148 @@
+{
+    "storageAccountKind": "StorageV2",
+    "storageAccountSku": "Standard_LRS",
+    "storageAccountAccessTier": "Hot",
+    "storageAccountAllowBlobPublicAccess": false,
+    "storageAccountNetworkAcls": {
+        "bypass": "AzureServices, Logging, Metrics",
+        "defaultAction": "Allow",
+        "ipRules": []
+    },
+    "storageAccountChangeFeed": {
+        "enabled": true,
+        "retentionInDays": 7
+    },
+    "storageAccountBlobSvcDeleteRetentionPolicy": {
+        "enabled": true,
+        "days": 7
+    },
+    "storageAccountshouldCreateTables": true,
+    "storageAccounttableNames": [
+        "FITTable"
+    ],
+    "appServicePlanSku": {
+        "name": "Y1",
+        "tier": "Dynamic"
+    },
+    "appServicePlanKind": "linux",
+    "appInsightsKind": "web",
+    "appInsightsProperties": {
+        "Request_Source": "IbizaWebAppExtensionCreate"
+    },
+    "appServiceKind": "functionapp,linux",
+    "appServiceProperties": [
+        {
+            "name": "FUNCTIONS_WORKER_RUNTIME",
+            "value": "python"
+        },
+        {
+            "name": "FUNCTIONS_EXTENSION_VERSION",
+            "value": "~4"
+        },
+        {
+            "name": "GOOGLE_BUCKET_KEY_SECRET_NAME",
+            "value": "billing-google-bucket-key"
+        },
+        {
+            "name": "GOOGLE_BUCKET_NAME_SECRET_NAME",
+            "value": "billing-google-bucket-name"
+        },
+        {
+            "name": "SERVICES_SPLIT_DATA",
+            "value": "[[{\"ServiceCategoryName\":\"IaaS\",\"Providers\":[\"Microsoft.Security\",\"Microsoft.Compute\",\"Microsoft.RecoveryServices\",\"Microsoft.Compute/restorePointCollections\",\"Microsoft.Network\",\"Microsoft.Storage\"]},{\"ServiceCategoryName\":\"PaaS\",\"Providers\":[\"Microsoft.Web\",\"Microsoft.DataFactory\",\"Microsoft.EventGrid\",\"Microsoft.ServiceBus\",\"Microsoft.EventHub\",\"Microsoft.Databricks\",\"Microsoft.AnalysisServices\",\"Microsoft.PowerBI\",\"Microsoft.MachineLearningServices\",\"Microsoft.Automation\",\"Microsoft.Blueprint\",\"Microsoft.KeyVault\",\"Microsoft.OperationalInsights\",\"Microsoft.Insights\",\"Microsoft.Logic\"]},{\"ServiceCategoryName\":\"PaaS+\",\"Providers\":[\"Microsoft.DocumentDB\",\"Microsoft.Sql\",\"Microsoft.DBforPostgreSQL\",\"Microsoft.DBforMySQL\"]}]]"
+        },
+        {
+            "name": "FITTable",
+            "value": "FITTable"
+        }
+    ],
+    "appServiceClientAffinityEnabled": true,
+    "appServiceHttpsOnly": true,
+    "appServiceClientCertEnabled": false,
+    "appServiceSiteConfig": {
+        "numberOfWorkers": -1,
+        "defaultDocuments": [
+            "Default.htm",
+            "Default.html",
+            "Default.asp",
+            "index.htm",
+            "index.html",
+            "iisstart.htm",
+            "default.aspx",
+            "index.php"
+        ],
+        "netFrameworkVersion": "v4.0",
+        "linuxFxVersion": "PYTHON|3.11",
+        "requestTracingEnabled": false,
+        "remoteDebuggingEnabled": false,
+        "remoteDebuggingVersion": "VS2019",
+        "httpLoggingEnabled": false,
+        "logsDirectorySizeLimit": 35,
+        "detailedErrorLoggingEnabled": false,
+        "publishingUsername": "$ats-sub1-d-func-billing",
+        "azureStorageAccounts": {},
+        "scmType": "None",
+        "use32BitWorkerProcess": false,
+        "webSocketsEnabled": false,
+        "alwaysOn": false,
+        "managedPipelineMode": "Integrated",
+        "virtualApplications": [
+            {
+                "virtualPath": "/",
+                "physicalPath": "site\\wwwroot",
+                "preloadEnabled": false
+            }
+        ],
+        "loadBalancing": "LeastRequests",
+        "experiments": {
+            "rampUpRules": []
+        },
+        "autoHealEnabled": false,
+        "cors": {
+            "allowedOrigins": [
+                "https://functions.azure.com",
+                "https://functions-staging.azure.com",
+                "https://functions-next.azure.com"
+            ],
+            "supportCredentials": false
+        },
+        "localMySqlEnabled": false,
+        "managedServiceIdentityId": 6564,
+        "ipSecurityRestrictions": [
+            {
+                "ipAddress": "Any",
+                "action": "Allow",
+                "priority": 1,
+                "name": "Allow all",
+                "description": "Allow all access"
+            }
+        ],
+        "scmIpSecurityRestrictions": [
+            {
+                "ipAddress": "Any",
+                "action": "Allow",
+                "priority": 1,
+                "name": "Allow all",
+                "description": "Allow all access"
+            }
+        ],
+        "scmIpSecurityRestrictionsUseMain": false,
+        "http20Enabled": true,
+        "minTlsVersion": "1.2",
+        "ftpsState": "FtpsOnly",
+        "preWarmedInstanceCount": 0
+    },
+    "skuName": "standard",
+    "keyVaultFeatures": {
+        "enabledForDeployment": true,
+        "enabledForDiskEncryption": false,
+        "enabledForTemplateDeployment": true,
+        "enablePurgeProtection": true,
+        "enableRbacAuthorization": false,
+        "enableSoftDelete": true
+    },
+    "publicNetworkAccess": "enabled",
+    "networkRuleBypassOptions": "AzureServices",
+    "networkRuleAction": "Allow",
+    "softDeleteRetentionInDays": 15
+}

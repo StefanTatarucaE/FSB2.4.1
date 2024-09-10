@@ -1,0 +1,138 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "dataCollectionRules": {
+        "value": [
+          {
+            "dataCollectionRuleName": "dcrlinux001",
+            "kind": "Linux",
+            "dataSource": {
+              "performanceCounters" : [
+                {
+                  "name": "DS_LinuxPerformanceObject_1",
+                  "streams": [
+                    "Microsoft-Perf"
+                  ],
+                  "samplingFrequencyInSeconds" : 120,
+                  "counterSpecifiers" : [
+                    "\\Memory(*)\\Available MBytes Memory",
+                    "\\Memory(*)\\% Used Memory",
+                    "\\Memory(*)\\% Used Swap Space"
+                  ],
+                  "platformType" : "Linux"
+                },
+                {
+                  "name" : "DS_LinuxPerformanceObject_2",
+                  "streams" : [
+                    "Microsoft-Perf"
+                  ],
+                  "samplingFrequencyInSeconds" : 120,
+                  "counterSpecifiers" : [
+                    "\\Network(*)\\Total Bytes Transmitted",
+                    "\\Network(*)\\Total Bytes Received"
+                  ],
+                  "platformType" : "Linux"
+                },
+                {
+                  "name" : "DS_LinuxPerformanceObject_3",
+                  "streams" : [
+                    "Microsoft-Perf"
+                  ],
+                  "samplingFrequencyInSeconds" : 10 ,
+                  "counterSpecifiers" : [
+                    "\\Processor(*)\\% Processor Time",
+                    "\\Processor(*)\\% Privileged Time"
+                  ],
+                  "platformType": "Linux"
+                },
+                {
+                  "name" : "DS_LinuxPerformanceObject_4",
+                  "streams" : [
+                    "Microsoft-Perf"
+                  ],
+                  "samplingFrequencyInSeconds" : 120,
+                  "counterSpecifiers" : [
+                    "\\Logical Disk(*)\\% Free Space",
+                    "\\Logical Disk(*)\\% Used Inodes",
+                    "\\Logical Disk(*)\\Free Megabytes",
+                    "\\Logical Disk(*)\\% Used Space",
+                    "\\Logical Disk(*)\\Disk Transfers/sec",
+                    "\\Logical Disk(*)\\Disk Reads/sec",
+                    "\\Logical Disk(*)\\Disk Writes/sec"
+                  ],
+                  "platformType" : "Linux"
+                }
+              ]
+            },
+            "dataFlows" : {
+              "streams" : [
+                "Microsoft-Perf",
+                "Microsoft-Syslog"
+              ],
+              "destinations": [
+                "dv5-mgmt-d-loganalytics"
+              ]
+            }
+          },
+          {
+            "dataCollectionRuleName": "dcrwindows001",
+            "kind": "Windows",
+            "dataSource": {
+              "windowsEventLogs": [
+              {
+                "name": "DS_WindowsEventLogs",
+                "streams": [
+                    "Microsoft-Event"
+                ],
+                "xPathQueries" :[
+                    "Microsoft-Windows-Security-Audit-Configuration-Client/Diagnostic!*[System[(Level=1 or Level=2 or Level=3)]]",
+                    "Microsoft-Windows-Security-Audit-Configuration-Client/Operational!*[System[(Level=1 or Level=2 or Level=3)]]",
+                    "Microsoft-Windows-Security-Configuration-Wizard/Diagnostic!*[System[(Level=1 or Level=2 or Level=3)]]",
+                    "Microsoft-Windows-Security-Netlogon/Operational!*[System[(Level=1 or Level=2 or Level=3)]]",
+                    "Microsoft-Windows-Security-Configuration-Wizard/Operational!*[System[(Level=1 or Level=2 or Level=3)]]",
+                    "System!*[System[(Level=1 or Level=2 or Level=3)]]"
+                ]
+              }
+            ],
+              "performanceCounters":[
+              {
+                  "name": "DS_WindowsPerformanceCounter_1",
+                  "streams" : [
+                    "Microsoft-Perf"
+                  ],
+                  "samplingFrequencyInSeconds" : 120,
+                  "counterSpecifiers" : [
+                    "\\LogicalDisk(*)\\Avg. Disk sec/Read",
+                    "\\LogicalDisk(*)\\Avg. Disk sec/Write",
+                    "\\LogicalDisk(*)\\Current Disk Queue Length",
+                    "\\LogicalDisk(*)\\Disk Reads/sec",
+                    "\\LogicalDisk(*)\\Disk Transfers/sec",
+                    "\\LogicalDisk(*)\\Disk Writes/sec",
+                    "\\LogicalDisk(*)\\Free Megabytes",
+                    "\\LogicalDisk(*)\\% Free Space",
+                    "\\Memory\\% Committed Bytes In Use",
+                    "\\Memory\\Available mbytes",
+                    "\\Network Adapter(*)\\Bytes Received/sec",
+                    "\\Network Adapter(*)\\Bytes Sent/sec",
+                    "\\Network Adapter(*)\\Bytes Total/sec",
+                    "\\Processor(*)\\% Processor Time",
+                    "\\System(*)\\Processor Queue Length"
+                  ],
+                  "platformType" : "Windows"
+              }]
+            },
+            "dataFlows" : {
+              "streams" : [
+                "Microsoft-Perf",
+                "Microsoft-Event"
+              ],
+              "destinations": [
+                "dv5-mgmt-d-loganalytics"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }

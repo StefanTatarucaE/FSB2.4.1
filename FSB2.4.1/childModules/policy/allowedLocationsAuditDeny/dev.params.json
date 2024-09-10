@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azureRegionsAllowed": {
+            "value": [
+                "global",
+                "northeurope",
+                "westeurope"
+            ]
+        },
+        "allowedLocationResourcesDefAssignmentName": {
+            "value": "allowedlocationresources.auditdeny.policy.def.assignment"
+        },
+        "allowedLocationResourcesDefAssignmentDisplayName": {
+            "value": "Allowed location resources auditdeny policy definition"
+        },
+        "allowedLocationRGDefAssignmentName": {
+            "value": "allowedlocationrsg.auditdeny.policy.def.assignment"
+        },
+        "allowedLocationRGDefAssignmentDisplayName": {
+            "value": "Allowed location resource groups auditdeny policy definition"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

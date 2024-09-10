@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "alertName": {
+      "value": "Azure Resource Health alert rule - Virtual machines OS"
+    },
+    "alertDescription": {
+      "value": "Cloud.IaaS.DCS-Azure-OS - This Resource Health alert is triggered when an issue occurs in Azure platform "
+    },
+    "tags": {
+      "value": {
+        "EvidenManaged": "true"
+      }
+    },
+    "actionGroupId": {
+      "value": "/subscriptions/54c0f1b6-842e-4d1c-884f-9c1ae0db98d9/resourceGroups/cu1-mgmt-d-rsg-monitoring-CESAZURE-219/providers/microsoft.insights/actionGroups/cu1-mgmt-d-actiongroup-itsm"
+    },
+    "alertType": {
+      "value": "ServiceHealth"
+    },
+    "resourceTypesCondition": {
+      "value" : [
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.compute/virtualmachines",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.classiccompute/virtualmachines",
+          "containsAny": null
+        },
+        {
+          "field": "resourceType",
+          "equals": "Microsoft.classiccompute/domainnames",
+          "containsAny": null
+        }
+      ]
+    }      
+  }
+}

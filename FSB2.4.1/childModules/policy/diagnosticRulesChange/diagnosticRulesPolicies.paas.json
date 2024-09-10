@@ -1,0 +1,2072 @@
+{
+  "diagnosticRules": [
+    {
+      "shortName": "synapsesql",
+      "displayName": "Azure Synapse SQL Pools",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Synapse/workspaces/sqlPools"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Synapse/workspaces/sqlPools/providers/diagnosticSettings",
+          "name": "[concat(split(parameters('resourceId'),'/')[8], '/', parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [],
+            "logs": [
+              {
+                "category": "SqlRequests",
+                "enabled": true
+              },
+              {
+                "category": "RequestSteps",
+                "enabled": true
+              },
+              {
+                "category": "ExecRequests",
+                "enabled": true
+              },
+              {
+                "category": "DmsWorkers",
+                "enabled": true
+              },
+              {
+                "category": "Waits",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "synapse",
+      "displayName": "Azure Synapse Workbooks",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Synapse/workspaces"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Synapse/workspaces/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [],
+            "logs": [
+              {
+                "category": "SynapseRbacOperations",
+                "enabled": true
+              },
+              {
+                "category": "GatewayApiRequests",
+                "enabled": true
+              },
+              {
+                "category": "BuiltinSqlReqsEnded",
+                "enabled": true
+              },
+              {
+                "category": "IntegrationPipelineRuns",
+                "enabled": true
+              },
+              {
+                "category": "IntegrationActivityRuns",
+                "enabled": true
+              },
+              {
+                "category": "IntegrationTriggerRuns",
+                "enabled": true
+              },
+              {
+                "category": "SQLSecurityAuditEvents",
+                "enabled": true
+              },
+              {
+                "category": "SynapseLinkEvent",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "synapsebd",
+      "displayName": "Azure Synapse Big Data Pools",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Synapse/workspaces/bigDataPools"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Synapse/workspaces/bigDataPools/providers/diagnosticSettings",
+          "name": "[concat(split(parameters('resourceId'),'/')[8], '/', parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [],
+            "logs": [
+              {
+                "category": "BigDataPoolAppsEnded",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "cognitive",
+      "displayName": "Cognitive Services",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.CognitiveServices/accounts"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.CognitiveServices/accounts/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "Audit",
+                "enabled": true
+              },
+              {
+                "category": "RequestResponse",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "datalakeanalytics",
+      "displayName": "Data Lake Analytics",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.DataLakeAnalytics/accounts"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.DataLakeAnalytics/accounts/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "Audit",
+                "enabled": true
+              },
+              {
+                "category": "Requests",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "datalakestore",
+      "displayName": "Data Lake Storage",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.DataLakeStore/accounts"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.DataLakeStore/accounts/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "Audit",
+                "enabled": true
+              },
+              {
+                "category": "Requests",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "eventhub",
+      "displayName": "Event Hub Namespaces",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.EventHub/namespaces"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.EventHub/namespaces/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "ArchiveLogs",
+                "enabled": true
+              },
+              {
+                "category": "OperationalLogs",
+                "enabled": true
+              },
+              {
+                "category": "AutoScaleLogs",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "iothub",
+      "displayName": "IoT Hubs",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Devices/IotHubs"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Devices/IotHubs/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "Connections",
+                "enabled": true
+              },
+              {
+                "category": "DeviceTelemetry",
+                "enabled": true
+              },
+              {
+                "category": "C2DCommands",
+                "enabled": true
+              },
+              {
+                "category": "DeviceIdentityOperations",
+                "enabled": true
+              },
+              {
+                "category": "FileUploadOperations",
+                "enabled": true
+              },
+              {
+                "category": "Routes",
+                "enabled": true
+              },
+              {
+                "category": "D2CTwinOperations",
+                "enabled": true
+              },
+              {
+                "category": "C2DTwinOperations",
+                "enabled": true
+              },
+              {
+                "category": "TwinQueries",
+                "enabled": true
+              },
+              {
+                "category": "JobsOperations",
+                "enabled": true
+              },
+              {
+                "category": "DirectMethods",
+                "enabled": true
+              },
+              {
+                "category": "E2EDiagnostics",
+                "enabled": true
+              },
+              {
+                "category": "Configurations",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "logicappsworkflow",
+      "displayName": "Logic Apps workflows",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Logic/workflows"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Logic/workflows/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "WorkflowRuntime",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "logicappsintacc",
+      "displayName": "Logic Apps Integration Accounts",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Logic/integrationAccounts"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Logic/integrationAccounts/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [],
+            "logs": [
+              {
+                "category": "IntegrationAccountTrackingEvents",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "searchservices",
+      "displayName": "Search Services",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Search/searchServices"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Search/searchServices/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "OperationLogs",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "servicebus",
+      "displayName": "Service Bus namespaces",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.ServiceBus/namespaces"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.ServiceBus/namespaces/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "OperationalLogs",
+                "enabled": true
+              },
+              {
+                "category": "VNetAndIPFilteringLogs",
+                "enabled": true
+              },
+              {
+                "category": "RuntimeAuditLogs",
+                "enabled": true
+              },
+              {
+                "category": "ApplicationMetricsLogs",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "sqldbs",
+      "displayName": "SQL Databases",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Sql/servers/databases"
+        },
+        {
+          "field": "kind",
+          "notContains": "datawarehouse"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Sql/servers/databases/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceFullName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "Basic",
+                "enabled": true
+              },
+              {
+                "category": "InstanceAndAppAdvanced",
+                "enabled": true
+              },
+              {
+                "category": "WorkloadManagement",
+                "enabled": true
+              }
+            ],
+            "logs": [
+              {
+                "category": "SQLInsights",
+                "enabled": true
+              },
+              {
+                "category": "AutomaticTuning",
+                "enabled": true
+              },
+              {
+                "category": "QueryStoreRuntimeStatistics",
+                "enabled": true
+              },
+              {
+                "category": "QueryStoreWaitStatistics",
+                "enabled": true
+              },
+              {
+                "category": "Errors",
+                "enabled": true
+              },
+              {
+                "category": "DatabaseWaitStatistics",
+                "enabled": true
+              },
+              {
+                "category": "Timeouts",
+                "enabled": true
+              },
+              {
+                "category": "Blocks",
+                "enabled": true
+              },
+              {
+                "category": "Deadlocks",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "sqldbsdw",
+      "displayName": "Dedicated SQL Pools",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Sql/servers/databases"
+        },
+        {
+          "field": "kind",
+          "contains": "datawarehouse"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Sql/servers/databases/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceFullName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "Basic",
+                "enabled": true
+              },
+              {
+                "category": "InstanceAndAppAdvanced",
+                "enabled": true
+              },
+              {
+                "category": "WorkloadManagement",
+                "enabled": true
+              }
+            ],
+            "logs": [
+              {
+                "category": "SQLSecurityAuditEvents",
+                "enabled": true
+              },
+              {
+                "category": "DmsWorkers",
+                "enabled": true
+              },
+              {
+                "category": "ExecRequests",
+                "enabled": true
+              },
+              {
+                "category": "RequestSteps",
+                "enabled": true
+              },
+              {
+                "category": "SqlRequests",
+                "enabled": true
+              },
+              {
+                "category": "Waits",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "sqlelasticpools",
+      "displayName": "SQL Elastic Pools",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": true,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Sql/servers/elasticPools"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Sql/servers/elasticPools/providers/diagnosticSettings",
+          "name": "[concat(split(parameters('resourceId'),'/')[8], '/', parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "Basic",
+                "enabled": true
+              },
+              {
+                "category": "InstanceAndAppAdvanced",
+                "enabled": true
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "apimgmt",
+      "displayName": "API Management services",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.ApiManagement/service"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.ApiManagement/service/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceFullName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "Gateway Requests",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              },
+              {
+                "category": "Capacity",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              },
+              {
+                "category": "EventHub Events",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "GatewayLogs",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "batch",
+      "displayName": "Azure Batch accounts",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Batch/batchAccounts"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Batch/batchAccounts/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "ServiceLog",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "mysql",
+      "displayName": "MySQL Databases",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.DBforMySQL/servers"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.DBforMySQL/servers/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "MySqlSlowLogs",
+                "enabled": true
+              },
+              {
+                "category": "MySqlAuditLogs",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "mysqlflexiblesrv",
+      "displayName": "MySQL Flexible Servers- Log Analytics",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.DBforMySQL/flexibleServers"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.DBforMySQL/flexibleServers/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "MySqlSlowLogs",
+                "enabled": true
+              },
+              {
+                "category": "MySqlAuditLogs",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "postgresql",
+      "displayName": "PostgreSQL Databases",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.DBforPostgreSQL/servers"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.DBforPostgreSQL/servers/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "PostgreSQLLogs",
+                "enabled": true
+              },
+              {
+                "category": "QueryStoreRuntimeStatistics",
+                "enabled": true
+              },
+              {
+                "category": "QueryStoreWaitStatistics",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "postgresqlflexiblesrv",
+      "displayName": "PostgreSQL Flexible Server Databases",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.DBforPostgreSQL/flexibleServers"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.DBforPostgreSQL/flexibleServers/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "PostgreSQLLogs",
+                "enabled": true
+              },
+              {
+                "category": "PostgreSQLFlexSessions",
+                "enabled": true
+              },
+              {
+                "category": "PostgreSQLFlexQueryStoreRuntime",
+                "enabled": true
+              },
+              {
+                "category": "PostgreSQLFlexQueryStoreWaitStats",
+                "enabled": true
+              },
+              {
+                "category": "PostgreSQLFlexTableStats",
+                "enabled": true
+              },
+              {
+                "category": "PostgreSQLFlexDatabaseXacts",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "cosmosdbs",
+      "displayName": "Cosmos DB",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.DocumentDB/databaseAccounts"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.DocumentDB/databaseAccounts/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "Requests",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "MongoRequests",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              },
+              {
+                "category": "DataPlaneRequests",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              },
+              {
+                "category": "QueryRuntimeStatistics",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              },
+              {
+                "category": "PartitionKeyStatistics",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              },
+              {
+                "category": "PartitionKeyRUConsumption",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              },
+              {
+                "category": "CassandraRequests",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              },
+              {
+                "category": "GremlinRequests",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              },
+              {
+                "category": "TableApiRequests",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              },
+              {
+                "category": "ControlPlaneRequests",
+                "categoryGroup": null,
+                "enabled": true,
+                "retentionPolicy": {
+                  "enabled": false,
+                  "days": 0
+                }
+              }
+            ],
+            "logAnalyticsDestinationType": "Dedicated"
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "datafactory",
+      "displayName": "Data Factory",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.DataFactory/factories"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.DataFactory/factories/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "ActivityRuns",
+                "enabled": true
+              },
+              {
+                "category": "PipelineRuns",
+                "enabled": true
+              },
+              {
+                "category": "TriggerRuns",
+                "enabled": true
+              },
+              {
+                "category": "SandboxPipelineRuns",
+                "enabled": true
+              },
+              {
+                "category": "SandboxActivityRuns",
+                "enabled": true
+              },
+              {
+                "category": "SSISPackageEventMessages",
+                "enabled": true
+              },
+              {
+                "category": "SSISPackageExecutableStatistics",
+                "enabled": true
+              },
+              {
+                "category": "SSISPackageEventMessageContext",
+                "enabled": true
+              },
+              {
+                "category": "SSISPackageExecutionComponentPhases",
+                "enabled": true
+              },
+              {
+                "category": "SSISPackageExecutionDataStatistics",
+                "enabled": true
+              },
+              {
+                "category": "SSISIntegrationRuntimeLogs",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "powerbiembedded",
+      "displayName": "Power BI Embedded",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.PowerBIDedicated/capacities"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.PowerBIDedicated/capacities/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "Engine",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "streamanalytics",
+      "displayName": "Stream Analytics",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.StreamAnalytics/streamingjobs"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.StreamAnalytics/streamingjobs/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "Execution",
+                "enabled": true
+              },
+              {
+                "category": "Authoring",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "aci",
+      "displayName": "Azure Container Instances",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.ContainerInstance/containerGroups"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.ContainerInstance/containerGroups/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "acr",
+      "displayName": "Azure Container Registries",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.ContainerRegistry/registries"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.ContainerRegistry/registries/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "ContainerRegistryRepositoryEvents",
+                "enabled": true
+              },
+              {
+                "category": "ContainerRegistryLoginEvents",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "aks",
+      "displayName": "Azure Kubernetes Service",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.ContainerService/managedClusters"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.ContainerService/managedClusters/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "guard",
+                "enabled": true
+              },
+              {
+                "category": "kube-apiserver",
+                "enabled": true
+              },
+              {
+                "category": "kube-controller-manager",
+                "enabled": true
+              },
+              {
+                "category": "kube-scheduler",
+                "enabled": true
+              },
+              {
+                "category": "cluster-autoscaler",
+                "enabled": true
+              },
+              {
+                "category": "kube-audit",
+                "enabled": true
+              },
+              {
+                "category": "kube-audit-admin",
+                "enabled": true
+              },
+              {
+                "category": "cloud-controller-manager",
+                "enabled": true
+              },
+              {
+                "category": "csi-azuredisk-controller",
+                "enabled": true
+              },
+              {
+                "category": "csi-azurefile-controller",
+                "enabled": true
+              },
+              {
+                "category": "csi-snapshot-controller",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "website",
+      "displayName": "Azure Web Sites and App Services",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Web/sites"
+        },
+        {
+          "field": "kind",
+          "equals": "app"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "AppServiceHTTPLogs",
+                "enabled": true
+              },
+              {
+                "category": "AppServiceConsoleLogs",
+                "enabled": true
+              },
+              {
+                "category": "AppServiceAppLogs",
+                "enabled": true
+              },
+              {
+                "category": "AppServiceAuditLogs",
+                "enabled": true
+              },
+              {
+                "category": "AppServiceIPSecAuditLogs",
+                "enabled": true
+              },
+              {
+                "category": "AppServicePlatformLogs",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "analysisservice",
+      "displayName": "Azure Analysis Services",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.AnalysisServices/servers"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.AnalysisServices/servers/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "Engine",
+                "enabled": true
+              },
+              {
+                "category": "Service",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "hdinsight",
+      "displayName": "HDInsight",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.HDInsight/clusters"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.HDInsight/clusters/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "rediscache",
+      "displayName": "Redis Cache",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Cache/redis"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Cache/redis/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "ConnectedClientList",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "redisenterprise",
+      "displayName": "Redis Enterprise Cache",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Cache/redisEnterprise"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Cache/redisEnterprise/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "relay",
+      "displayName": "Azure Relay",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Relay/namespaces"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Relay/namespaces/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "signalr",
+      "displayName": "SignalR",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.SignalRService/SignalR"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.SignalRService/SignalR/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "webserverfarm",
+      "displayName": "Azure App Service Plans",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Web/serverfarms"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Web/serverfarms/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "sqlmi",
+      "displayName": "SQL Managed Instances",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Sql/managedInstances"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Sql/managedInstances/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "logs": [
+              {
+                "category": "ResourceUsageStats",
+                "enabled": true
+              },
+              {
+                "category": "SQLSecurityAuditEvents",
+                "enabled": true
+              },
+              {
+                "category": "DevOpsOperationsAudit",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "timeseriesinsights",
+      "displayName": "Time Series Insights",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.TimeSeriesInsights/environments"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.TimeSeriesInsights/environments/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "mariadb",
+      "displayName": "MariaDB Databases",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.DBforMariaDB/servers"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.DBforMariaDB/servers/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "MySqlSlowLogs",
+                "enabled": true
+              },
+              {
+                "category": "MySqlAuditLogs",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "sqlserver",
+      "displayName": "SQL Server",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Sql/servers"
+        },
+        {
+          "field": "kind",
+          "notContains": "analytics"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Sql/servers/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": []
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "databricksws",
+      "displayName": "Data Bricks Workspace",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Databricks/workspaces"
+        },
+        {
+          "field": "Microsoft.Databricks/workspaces/sku.name",
+          "equals": "premium"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.databricks/workspaces/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [],
+            "logs": [
+              {
+                "category": "dbfs",
+                "enabled": true
+              },
+              {
+                "category": "clusters",
+                "enabled": true
+              },
+              {
+                "category": "accounts",
+                "enabled": true
+              },
+              {
+                "category": "jobs",
+                "enabled": true
+              },
+              {
+                "category": "notebook",
+                "enabled": true
+              },
+              {
+                "category": "ssh",
+                "enabled": true
+              },
+              {
+                "category": "workspace",
+                "enabled": true
+              },
+              {
+                "category": "secrets",
+                "enabled": true
+              },
+              {
+                "category": "sqlPermissions",
+                "enabled": true
+              },
+              {
+                "category": "instancePools",
+                "enabled": true
+              },
+              {
+                "category": "sqlanalytics",
+                "enabled": true
+              },
+              {
+                "category": "genie",
+                "enabled": true
+              },
+              {
+                "category": "globalInitScripts",
+                "enabled": true
+              },
+              {
+                "category": "iamRole",
+                "enabled": true
+              },
+              {
+                "category": "mlflowExperiment",
+                "enabled": true
+              },
+              {
+                "category": "featureStore",
+                "enabled": true
+              },
+              {
+                "category": "RemoteHistoryService",
+                "enabled": true
+              },
+              {
+                "category": "mlflowAcledArtifact",
+                "enabled": true
+              },
+              {
+                "category": "databrickssql",
+                "enabled": true
+              },
+              {
+                "category": "deltaPipelines",
+                "enabled": true
+              },
+              {
+                "category": "modelRegistry",
+                "enabled": true
+              },
+              {
+                "category": "repos",
+                "enabled": true
+              },
+              {
+                "category": "unityCatalog",
+                "enabled": true
+              },
+              {
+                "category": "gitCredentials",
+                "enabled": true
+              },
+              {
+                "category": "webTerminal",
+                "enabled": true
+              },
+              {
+                "category": "serverlessRealTimeInference",
+                "enabled": true
+              },
+              {
+                "category": "clusterLibraries",
+                "enabled": true
+              },
+              {
+                "category": "partnerHub",
+                "enabled": true
+              },
+              {
+                "category": "clamAVScan",
+                "enabled": true
+              },
+              {
+                "category": "capsule8Dataplane",
+                "enabled": true
+              }
+            ],
+            "logAnalyticsDestinationType": "Dedicated"
+          }
+        }
+      ]
+    },
+    {
+      "shortName": "websitefunctionapp",
+      "displayName": "Azure Web Sites of type Function App",
+      "deployAtSubscriptionLevel": false,
+      "useMetricsExistenceCondition": false,
+      "filterOnCompanyManagedTag": true,
+      "policyFilters": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Web/sites"
+        },
+        {
+          "field": "kind",
+          "contains": "functionapp"
+        }
+      ],
+      "deploymentResources": [
+        {
+          "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/{diagnosticRuleName}')]",
+          "properties": {
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true,
+                "retentionPolicy": {
+                  "days": 0,
+                  "enabled": false
+                },
+                "timeGrain": null
+              }
+            ],
+            "logs": [
+              {
+                "category": "FunctionAppLogs",
+                "enabled": true
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

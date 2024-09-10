@@ -1,0 +1,835 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{Subscription}"
+        ],
+        "parameters": [
+          {
+            "id": "c3f9d24c-2070-4d30-ad91-25b8ec5d68a4",
+            "version": "KqlParameterItem/1.0",
+            "name": "Name",
+            "label": "Scale Set Name",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type=~ 'microsoft.compute/virtualmachinescalesets'\r\n| project name\r\n| distinct name",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "ae0ae97a-aa91-4032-bdd7-f9c0feab0fb4",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subscription",
+            "type": 6,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": false,
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "8bacc0e3-f3a7-415e-9741-238632abf4e9",
+            "version": "KqlParameterItem/1.0",
+            "name": "Location",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type=~ 'microsoft.compute/virtualmachinescalesets'\r\n| project location\r\n| distinct location",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "2f656d7e-5070-4860-9176-6b361639fb7b",
+            "version": "KqlParameterItem/1.0",
+            "name": "Scaling",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Manual\", \"Custom Autoscale\"]",
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "2f656d7e-7352-4860-9176-5b361639fb7b",
+            "version": "KqlParameterItem/1.0",
+            "name": "OrchestrationMode",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Flexible\", \"Uniform\"]",
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "17c8c31b-3e03-43b0-86d0-2492fcb36024",
+            "version": "KqlParameterItem/1.0",
+            "name": "UpgradePolicy",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type=~ 'microsoft.compute/virtualmachinescalesets'\r\n| extend Mode = iif(notempty(tostring(properties.upgradePolicy.mode)), tostring(properties.upgradePolicy.mode), \"N/A\")\r\n| project Mode\r\n| distinct Mode",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "0f131a80-7b0e-4fa3-aa25-58becf5bc7bb",
+            "version": "KqlParameterItem/1.0",
+            "name": "OSType",
+            "label": "OS",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "Resources\r\n| where type=~ 'microsoft.compute/virtualmachinescalesets'\r\n| extend OsType= tostring(properties.virtualMachineProfile.storageProfile.osDisk.osType)\r\n| project OsType\r\n| distinct OsType",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "079dc8ce-25b6-4fba-b285-b6b3d3713c60",
+            "version": "KqlParameterItem/1.0",
+            "name": "Status",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Critical\", \"Healthy\", \"Unknown\", \"Warning\"]",
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "ca9d664c-99c4-46d0-bc11-e5baba01967a",
+            "version": "KqlParameterItem/1.0",
+            "name": "[parameter(tagPrefix)]Managed",
+            "label": "Managed by [parameter(companyName)]",
+            "type": 2,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "jsonData": "[\"Yes\", \"No\"]",
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "275f4cc3-5361-4d8e-b044-2ba35cdc1a58",
+            "version": "KqlParameterItem/1.0",
+            "name": "ASS",
+            "type": 1,
+            "isRequired": true,
+            "isHiddenWhenLocked": true,
+            "criteriaData": [
+              {
+                "criteriaContext": {
+                  "leftOperand": "Location",
+                  "operator": "isNotNull",
+                  "rightValType": "param",
+                  "resultValType": "static",
+                  "resultVal": "Available"
+                }
+              },
+              {
+                "criteriaContext": {
+                  "leftOperand": "Location",
+                  "operator": "is Empty",
+                  "rightValType": "param",
+                  "resultValType": "static",
+                  "resultVal": "UnAvailable"
+                }
+              },
+              {
+                "criteriaContext": {
+                  "operator": "Default",
+                  "rightValType": "param",
+                  "resultValType": "param"
+                }
+              }
+            ]
+          }
+        ],
+        "style": "above",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 1"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "#### No Azure Scale Sets are deployed in the environment yet"
+      },
+      "conditionalVisibility": {
+        "parameterName": "ASS",
+        "comparison": "isEqualTo",
+        "value": "UnAvailable"
+      },
+      "name": "text - 4"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "Resources\r\n| where type=~ 'microsoft.compute/virtualmachinescalesets'\r\n| extend ScaleSetName = name\r\n| extend Offer = properties.virtualMachineProfile.storageProfile.imageReference.offer\r\n| extend OSType = properties.virtualMachineProfile.storageProfile.osDisk.osType\r\n| extend Version = properties.virtualMachineProfile.storageProfile.imageReference.sku\r\n| extend UpgradePolicy = iif(notempty(tostring(properties.upgradePolicy.mode)), tostring(properties.upgradePolicy.mode), \"N/A\")\r\n| extend [parameter(tagPrefix)]Managed = iif(tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"', \"Yes\", \"No\")\r\n| extend FaultDomains=properties.platformFaultDomainCount\r\n| extend ScaleInPolicy = tostring (properties.scaleInPolicy.rules)\r\n| extend OverProvision = iif(tostring(properties.overprovision)=='true', \"Enabled\", \"Disabled\")\r\n| extend Placementgroups = iif(tostring(properties.singlePlacementGroup)=='true', \"Single\", \"Multiple\")\r\n| extend OrchestrationMode = properties.orchestrationMode\r\n|  project id, ScaleSetName, subscriptionId, location, resourceGroup, OrchestrationMode, Instances = toint(sku.capacity), FaultDomains, ScaleInPolicy, OverProvision, Placementgroups, UpgradePolicy,  Tier = sku.name, OSType, [parameter(tagPrefix)]Managed\r\n| join kind=leftouter (\r\nhealthresources\r\n| where type == \"microsoft.resourcehealth/availabilitystatuses\"\r\n| where properties.targetResourceType == \"Microsoft.Compute/virtualMachineScaleSets/virtualMachines\"\r\n| order by ['id'] asc\r\n| where tostring(properties.availabilityState) == \"Available\"\r\n| extend ScaleSetName = tostring(split (id,\"/\")[8])\r\n| extend InstanceId = tostring(split (id,\"/\")[10])\r\n| extend status = tostring(properties.availabilityState)\r\n| summarize RunInst=count() by status, ScaleSetName\r\n| union (\r\nresources\r\n| where type=~ 'microsoft.compute/virtualmachines'\r\n| where isnotnull(properties.virtualMachineScaleSet.id) \r\n| extend status = tostring(properties.extended.instanceView.powerState.displayStatus)\r\n| where status == 'VM running'\r\n| extend ScaleSetName = tostring(split(properties.virtualMachineScaleSet.id,\"/\",8)[0])\r\n| summarize RunInst=count() by status, ScaleSetName\r\n)) on ScaleSetName\r\n| join kind=leftouter (\r\nresources\r\n| where type == \"microsoft.insights/autoscalesettings\"\r\n| extend ScaleSetName = tostring(split(properties.targetResourceUri,\"/\")[8])\r\n| extend policy=split(id,\"/\")[8]\r\n| extend name=split(policy,\"-\")[0]\r\n| extend Scaling=iff(tostring(properties.enabled)==\"true\", \"Custom Autoscale\", \"Manual\")\r\n| project ScaleSetName, policy, properties.enabled, Scaling\r\n) on ScaleSetName\r\n| extend RunInst=iif(notnull(RunInst), tostring(RunInst),\"0\")\r\n| extend Scaling=iif(Scaling==\"\", \"Manual\", tostring(Scaling))\r\n| extend RunInst=iif(toint(RunInst) > toint(Instances), tostring(Instances), RunInst)\r\n| extend Status = case(\r\ntostring(Instances) == \"0\", \"Unknown\",\r\ntostring(RunInst) == \"0\", \"Critical\",\r\ntostring(RunInst) == \"1\", \"Warning\",\r\ntostring(RunInst) != tostring(Instances), \"Warning\", \"Healthy\")\r\n| where UpgradePolicy in~ ({UpgradePolicy})\r\n| where location in ({Location})\r\n| where ScaleSetName in ({Name})\r\n| where Scaling in ({Scaling})\r\n| where Status in ({Status})\r\n| where OSType in ({OSType})\r\n| where OrchestrationMode in ({OrchestrationMode})\r\n | where [parameter(tagPrefix)]Managed in ({[parameter(tagPrefix)]Managed})\r\n| project id, ScaleSetName, subscriptionId, location, resourceGroup, OrchestrationMode, Scaling, FaultDomains, OverProvision, Placementgroups, UpgradePolicy, OSType, Instances, RunInst, Status, [\"Managed by [parameter(companyName)]\"]=[parameter(tagPrefix)]Managed\r\n| project-away ScaleSetName\r\n| order by Instances asc\r\n",
+        "size": 0,
+        "title": "Overview scale sets",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscription}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 15,
+              "formatOptions": {
+                "linkTarget": null,
+                "showIcon": true
+              }
+            },
+            {
+              "columnMatch": "FaultDomains",
+              "formatter": 2
+            },
+            {
+              "columnMatch": "RunInst",
+              "formatter": 2
+            },
+            {
+              "columnMatch": "Status",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Healthy",
+                    "representation": "Available",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Warning",
+                    "representation": "2",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Critical",
+                    "representation": "critical",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Unknown",
+                    "representation": "unknown",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            }
+          ],
+          "sortBy": [
+            {
+              "itemKey": "$gen_link_id_0",
+              "sortOrder": 2
+            }
+          ],
+          "labelSettings": [
+            {
+              "columnId": "id",
+              "label": "Scale Set"
+            },
+            {
+              "columnId": "subscriptionId",
+              "label": "Subscription"
+            },
+            {
+              "columnId": "location",
+              "label": "Location"
+            },
+            {
+              "columnId": "resourceGroup",
+              "label": "Resource Group"
+            },
+            {
+              "columnId": "FaultDomains",
+              "label": "Fault Domains"
+            },
+            {
+              "columnId": "UpgradePolicy",
+              "label": "Upgrade Policy"
+            },
+            {
+              "columnId": "OSType",
+              "label": "OS"
+            },
+            {
+              "columnId": "Instances",
+              "label": "# Instances"
+            },
+            {
+              "columnId": "RunInst",
+              "label": "# Instances running"
+            }
+          ]
+        },
+        "sortBy": [
+          {
+            "itemKey": "$gen_link_id_0",
+            "sortOrder": 2
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "ASS",
+        "comparison": "isEqualTo",
+        "value": "Available"
+      },
+      "customWidth": "100",
+      "name": "query - 0"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### Scale Set Details (Flexible orchestration mode)\r\n\r\nFlexible Orchestration is the new default model of managing VMs in a scale set. This report shows the VM instance details."
+      },
+      "name": "text - 6"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "ea405a91-663a-4fb9-7352-6f03a8627239",
+            "version": "KqlParameterItem/1.0",
+            "name": "SubscriptionFlex",
+            "label": "Subscription",
+            "type": 6,
+            "isRequired": true,
+            "query": "Resources\r\n| where type=~ 'microsoft.compute/virtualmachinescalesets'\r\n| where name != \"\"\r\n| where properties.orchestrationMode == 'Flexible' | project subscriptionId\r\n| distinct subscriptionId\r\n",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::1"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::1",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "d9be7c80-0170-4505-7352-681c06a76a42",
+            "version": "KqlParameterItem/1.0",
+            "name": "rgFlex",
+            "label": "Resource Group",
+            "type": 2,
+            "isRequired": true,
+            "isGlobal": true,
+            "query": "Resources\r\n| where type=~ 'microsoft.compute/virtualmachinescalesets'\r\n| where properties.orchestrationMode == 'Flexible'| project resourceGroup\r\n| distinct resourceGroup",
+            "crossComponentResources": [
+              "{SubscriptionFlex}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::1"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::1",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "7a45553b-dcdd-41d4-7352-60857f01994e",
+            "version": "KqlParameterItem/1.0",
+            "name": "NameFlex",
+            "label": "Scale Set Name",
+            "type": 2,
+            "isRequired": true,
+            "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":null,\"headers\":[],\"method\":\"GET\",\"path\":\"/subscriptions/{SubscriptionFlex:id}/resourceGroups/{rgFlex}/providers/Microsoft.Compute/virtualMachineScaleSets/\",\"urlParams\":[{\"key\":\"api-version\",\"value\":\"2021-03-01\"}],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.value[*]\",\"columns\":[{\"path\":\"$.name\",\"columnid\":\"Name\"}]}}]}",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::1"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::1",
+            "queryType": 12,
+            "value": null
+          }
+        ],
+        "style": "above",
+        "queryType": 12
+      },
+      "conditionalVisibility": {
+        "parameterName": "ASS",
+        "comparison": "isEqualTo",
+        "value": "Available"
+      },
+      "name": "parameters - 3"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "resources\r\n| where type=~ 'microsoft.compute/virtualmachines'\r\n| extend Name = name\r\n| extend Location = location\r\n| extend Tags = tags\r\n| extend Sku = properties.hardwareProfile.vmSize\r\n| extend ComputerName = properties.osProfile.computerName\r\n| extend OSPublisher = properties.storageProfile.imageReference.publisher\r\n| extend OSVersion = properties.storageProfile.imageReference.sku\r\n| extend ScaleSetName = split(properties.virtualMachineScaleSet.id,\"/\",8)[0]\r\n| extend InstanceId = strcat(ScaleSetName, \"/\", name)\r\n| extend ProvisioningState = properties.provisioningState\r\n| extend PowerState = properties.extended.instanceView.powerState.displayStatus\r\n| where subscriptionId == '{SubscriptionFlex:id}'\r\n| where resourceGroup == '{rgFlex}'\r\n| where ScaleSetName == '{NameFlex}'\r\n| project Name, ComputerName, InstanceId, Location, Tags, Sku, OSPublisher, OSVersion, ProvisioningState, PowerState\r\n| order by InstanceId\r\n",
+        "size": 0,
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{SubscriptionFlex}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "ProvisioningState",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Succeeded",
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Updating",
+                    "representation": "uninitialized",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Creating",
+                    "representation": "pending",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "more",
+                    "text": "{0}{1}"
+                  }
+                ]
+              },
+              "tooltipFormat": {}
+            },
+            {
+              "columnMatch": "PowerState",
+              "formatter": 18,
+              "formatOptions": {
+                "thresholdsOptions": "icons",
+                "thresholdsGrid": [
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "VM running",
+                    "representation": "success",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "VM deallocated",
+                    "representation": "stopped",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "Updating",
+                    "representation": "pending",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "VM starting",
+                    "representation": "pending",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "startsWith",
+                    "thresholdValue": "VM deallocating",
+                    "representation": "pending",
+                    "text": "{0}{1}"
+                  },
+                  {
+                    "operator": "Default",
+                    "thresholdValue": null,
+                    "representation": "unknown",
+                    "text": "{0}{1}"
+                  }
+                ]
+              }
+            }
+          ],
+          "labelSettings": [
+            {
+              "columnId": "AvailabilityZone",
+              "label": "Availability Zone (if configured)"
+            }
+          ]
+        }
+      },
+      "conditionalVisibility": {
+        "parameterName": "ASS",
+        "comparison": "isEqualTo",
+        "value": "Available"
+      },
+      "customWidth": "100",
+      "name": "query - flex"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### Scale Set Details (Uniform orchestration mode)\r\n\r\nUniform Orchestration is the traditional model of managing VMs in a scale set. This report shows the VM instance details."
+      },
+      "name": "text - 5"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "ea405a91-663a-4fb9-9212-7f03a8627239",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subscription",
+            "label": "Subscription",
+            "type": 6,
+            "isRequired": true,
+            "query": "Resources\r\n| where type=~ 'microsoft.compute/virtualmachinescalesets'\r\n| where name != \"\"\r\n| where properties.orchestrationMode == 'Uniform' | project subscriptionId\r\n| distinct subscriptionId\r\n",
+            "crossComponentResources": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::1"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::1",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "d9be7c80-0170-4505-a1cf-781c06a76a42",
+            "version": "KqlParameterItem/1.0",
+            "name": "rg",
+            "label": "Resource Group",
+            "type": 2,
+            "isRequired": true,
+            "isGlobal": true,
+            "query": "Resources\r\n| where type=~ 'microsoft.compute/virtualmachinescalesets'\r\n| where properties.orchestrationMode == 'Uniform'| project resourceGroup\r\n| distinct resourceGroup",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::1"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::1",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "7a45553b-dcdd-41d4-a574-f0857f01994e",
+            "version": "KqlParameterItem/1.0",
+            "name": "Name",
+            "label": "Scale Set Name",
+            "type": 2,
+            "isRequired": true,
+            "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":null,\"headers\":[],\"method\":\"GET\",\"path\":\"/subscriptions/{Subscription:id}/resourceGroups/{rg}/providers/Microsoft.Compute/virtualMachineScaleSets/\",\"urlParams\":[{\"key\":\"api-version\",\"value\":\"2021-03-01\"}],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.value[*]\",\"columns\":[{\"path\":\"$.name\",\"columnid\":\"Name\"}]}}]}",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::1"
+              ],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "defaultValue": "value::1",
+            "queryType": 12,
+            "value": null
+          }
+        ],
+        "style": "above",
+        "queryType": 12
+      },
+      "conditionalVisibility": {
+        "parameterName": "ASS",
+        "comparison": "isEqualTo",
+        "value": "Available"
+      },
+      "name": "parameters - 2"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":null,\"headers\":[],\"method\":\"GET\",\"path\":\"/subscriptions/{Subscription:id}/resourceGroups/{rg}/providers/Microsoft.Compute/virtualMachineScaleSets/{Name}/virtualMachines/\",\"urlParams\":[{\"key\":\"api-version\",\"value\":\"2024-03-01\"},{\"key\":\"$expand\",\"value\":\"instanceView\"}],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.value[*]\",\"columns\":[{\"path\":\"$.name\",\"columnid\":\"Name\"},{\"path\":\"$.properties.osProfile.computerName\",\"columnid\":\"ComputerName\"},{\"path\":\"$.id\",\"columnid\":\"InstanceId\"},{\"path\":\"$.location\",\"columnid\":\"Location\"},{\"path\":\"$.tags\",\"columnid\":\"Tags\"},{\"path\":\"$.sku.name\",\"columnid\":\"Sku\"},{\"path\":\"$.properties.storageProfile.imageReference.publisher\",\"columnid\":\"OSpublisher\"},{\"path\":\"$.properties.storageProfile.imageReference.sku\",\"columnid\":\"OSVersion\"},{\"path\":\"$.properties.instanceView.osName\",\"columnid\":\"OSVersionFull\"},{\"path\":\"$.properties.provisioningState\",\"columnid\":\"ProvisioningState\"},{\"path\":\"$.properties.instanceView.statuses[1].displayStatus\",\"columnid\":\"PowerState\"},{\"path\":\"$.properties.instanceView.platformFaultDomain\",\"columnid\":\"PlatformFaultDomain\"},{\"path\":\"$.properties.priority\",\"columnid\":\"Priority\"},{\"path\":\"$.zones\",\"columnid\":\"AvailabilityZone\"}]}}]}",
+              "size": 0,
+              "queryType": 12,
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "OSVersionFull",
+                    "formatter": 0,
+                    "numberFormat": {
+                      "unit": 0,
+                      "options": {
+                        "style": "decimal"
+                      },
+                      "emptyValCustomText": "-"
+                    }
+                  },
+                  {
+                    "columnMatch": "ProvisioningState",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "startsWith",
+                          "thresholdValue": "Succeeded",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "startsWith",
+                          "thresholdValue": "Updating",
+                          "representation": "uninitialized",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "startsWith",
+                          "thresholdValue": "Creating",
+                          "representation": "pending",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "more",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    },
+                    "tooltipFormat": {}
+                  },
+                  {
+                    "columnMatch": "PowerState",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "startsWith",
+                          "thresholdValue": "VM running",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "startsWith",
+                          "thresholdValue": "VM deallocated",
+                          "representation": "stopped",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "startsWith",
+                          "thresholdValue": "Updating",
+                          "representation": "pending",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "startsWith",
+                          "thresholdValue": "VM starting",
+                          "representation": "pending",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "startsWith",
+                          "thresholdValue": "VM deallocating",
+                          "representation": "pending",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "unknown",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  }                  
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "AvailabilityZone",
+                    "label": "Availability Zone (if configured)"
+                  }
+                ]
+              }
+            },
+            "customWidth": "100",
+            "name": "query - 4"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "ASS",
+        "comparison": "isEqualTo",
+        "value": "Available"
+      },
+      "customWidth": "100",
+      "name": "group - 5"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

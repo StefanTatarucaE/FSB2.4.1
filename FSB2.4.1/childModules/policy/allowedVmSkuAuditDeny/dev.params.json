@@ -1,0 +1,20 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachineSkusAllowed": {
+            "value": [
+                "prevent_deploy"
+            ]
+        },
+        "allowedVmSkuDefAssignmentName": {
+            "value": "allowedvmsku.auditdeny.policy.def.assignment"
+        },
+        "allowedVmSkuDefAssignmentDisplayName": {
+            "value": "Allowed vm skus auditdeny policy definition"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

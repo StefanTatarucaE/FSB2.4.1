@@ -1,0 +1,34 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "acrSettings": {
+            "value": {
+                "adminAccountDisabled": "Audit",
+                "anonymousPullDisabled": "Audit",
+                "cmkEncryptionEnabled": "Audit",
+                "exportPolicy": "Audit",
+                "networkRulesExist": "Audit",
+                "privateEndpointEnabled": "Audit",
+                "publicNetworkAccess": "Audit",
+                "skuSupportsPrivateEndpoints": "Audit",
+                "tokenDisabled": "Audit"
+            }
+        },
+        "acrAuditDenySetName":{
+            "value": "acr.auditdeny.policy.set"
+        },
+        "acrAuditDenySetDisplayName":{
+            "value": "Acr auditdeny policy set"
+        },
+        "acrAuditDenySetAssignmentName":{
+            "value": "acr.auditdeny.policy.set.assignment"
+        },
+        "acrAuditDenySetAssignmentDisplayName":{
+            "value": "Acr auditdeny policy set assignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "runbooks": {
+            "value": [
+                {
+                    "name": "Create-OfflineReports",
+                    "filename": "Create-OfflineReports.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - For the creation of several periodic Offline Reports in a Storage Account.",
+                    "scheduleName": "Create-OfflineReports",
+                    "startTime" : "00:00",
+                    "interval": "24",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "Create-RemediationTaskSecurityCenterTier",
+                    "filename": "Create-RemediationTaskSecurityCenterTier.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - Create Remediation Task for non-compliant resources in the policy definition for Security Center Tier",
+                    "scheduleName": "Create-RemediationTaskSecurityCenterTier",
+                    "startTime" : "PT30M",
+                    "interval": "12",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "Get-AzureSubscriptionRolesForReporting",
+                    "filename": "Get-AzureSubscriptionRolesForReporting.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Runbook - For getting subscription roles with members to be able to report on them.",
+                    "scheduleName": "Get-AzureSubscriptionRolesForReporting",
+                    "startTime" : "00:00",
+                    "interval": "12",
+                    "frequency": "Hour"
+                },
+                {
+                    "name": "Update-AutomationAzureModulesForAccount",
+                    "filename": "Update-AutomationAzureModulesForAccount.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "This Azure Automation runbook updates Azure PowerShell modules imported into an Azure Automation account with the module versions published to the PowerShell Gallery."
+                },
+                {
+                    "name": "Update-AutomationAzureModulesForAccountWrapperAz",
+                    "filename": "Update-AutomationAzureModulesForAccountWrapperAz.ps1",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "Wrapper script that will find the required input parameters for starting the Update-AutomationAzureModulesForAccount script.",
+                    "scheduleName": "RunInitialModuleUpdate",
+                    "startTime" : "PT10M",
+                    "interval": "",
+                    "frequency": "Onetime"
+                }
+            ]
+        },
+        "modules": {
+            "value": [
+                {
+                    "name": "Az.ResourceGraph",
+                    "url": "https://devopsgallerystorage.blob.core.windows.net/packages/az.resourcegraph.0.12.0.nupkg"
+                },
+                {
+                    "name": "moduleNamePlaceHolder",
+                    "url": ""
+                }
+            ]
+        }
+    }
+}

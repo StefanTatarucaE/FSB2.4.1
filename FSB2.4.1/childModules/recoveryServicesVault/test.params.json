@@ -1,0 +1,245 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "recoveryServicesVaultName": {
+            "value": "mibtestbackupvault"
+        },
+        "storageTypeState": {
+            "value": "Unlocked"
+        },
+        "backupPolicyConfigurations": {
+            "value": {
+                "list": [
+                    {
+                        "backupTagNamePrefix": "Bronze",
+                        "scheduleStartTime": "09:00",
+                        "properties": {
+                            "policyType": "V2",
+                            "backupManagementType": "AzureIaasVM",
+                            "instantRpRetentionRangeInDays": "5",
+                            "schedulePolicy": {
+                                "scheduleRunFrequency": "Daily",
+                                "scheduleRunDays": null,
+                                "schedulePolicyType": "SimpleSchedulePolicyV2"
+                            },
+                            "retentionPolicy": {
+                                "dailySchedule": {
+                                    "retentionDuration": {
+                                        "count": "15",
+                                        "durationType": "Days"
+                                    }
+                                },
+                                "weeklySchedule": {
+                                    "daysOfTheWeek": [
+                                        "Sunday",
+                                        "Tuesday",
+                                        "Thursday"
+                                    ],
+                                    "retentionDuration": {
+                                        "count": "8",
+                                        "durationType": "Weeks"
+                                    }
+                                },
+                                "monthlySchedule": {
+                                    "retentionScheduleFormatType": "Daily",
+                                    "retentionScheduleDaily": {
+                                        "daysOfTheMonth": [
+                                            {
+                                                "date": 1,
+                                                "isLast": false
+                                            }
+                                        ]
+                                    },
+                                    "retentionScheduleWeekly": null,
+                                    "retentionDuration": {
+                                        "count": "6",
+                                        "durationType": "Months"
+                                    }
+                                },
+                                "yearlySchedule": {
+                                    "retentionScheduleFormatType": "Daily",
+                                    "monthsOfYear": [
+                                        "January",
+                                        "March",
+                                        "August"
+                                    ],
+                                    "retentionScheduleDaily": {
+                                        "daysOfTheMonth": [
+                                            {
+                                                "date": 1,
+                                                "isLast": false
+                                            }
+                                        ]
+                                    },
+                                    "retentionScheduleWeekly": null,
+                                    "retentionDuration": {
+                                        "count": "2",
+                                        "durationType": "Years"
+                                    }
+                                },
+                                "retentionPolicyType": "LongTermRetentionPolicy"
+                            },
+                            "timeZone": "UTC"
+                        }
+                    },
+                    {
+                        "backupTagNamePrefix": "Silver",
+                        "scheduleStartTime": "09:00",
+                        "properties": {
+                            "policyType": "V2",
+                            "backupManagementType": "AzureIaasVM",
+                            "instantRpRetentionRangeInDays": "5",
+                            "schedulePolicy": {
+                                "scheduleRunFrequency": "Daily",
+                                "scheduleRunDays": null,
+                                "schedulePolicyType": "SimpleSchedulePolicyV2"
+                            },
+                            "retentionPolicy": {
+                                "dailySchedule": {
+                                    "retentionDuration": {
+                                        "count": "15",
+                                        "durationType": "Days"
+                                    }
+                                },
+                                "weeklySchedule": {
+                                    "daysOfTheWeek": [
+                                        "Sunday",
+                                        "Tuesday",
+                                        "Thursday"
+                                    ],
+                                    "retentionDuration": {
+                                        "count": "8",
+                                        "durationType": "Weeks"
+                                    }
+                                },
+                                "monthlySchedule": {
+                                    "retentionScheduleFormatType": "Daily",
+                                    "retentionScheduleDaily": {
+                                        "daysOfTheMonth": [
+                                            {
+                                                "date": 1,
+                                                "isLast": false
+                                            }
+                                        ]
+                                    },
+                                    "retentionScheduleWeekly": null,
+                                    "retentionDuration": {
+                                        "count": "6",
+                                        "durationType": "Months"
+                                    }
+                                },
+                                "yearlySchedule": {
+                                    "retentionScheduleFormatType": "Daily",
+                                    "monthsOfYear": [
+                                        "January",
+                                        "March",
+                                        "August"
+                                    ],
+                                    "retentionScheduleDaily": {
+                                        "daysOfTheMonth": [
+                                            {
+                                                "date": 1,
+                                                "isLast": false
+                                            }
+                                        ]
+                                    },
+                                    "retentionScheduleWeekly": null,
+                                    "retentionDuration": {
+                                        "count": "2",
+                                        "durationType": "Years"
+                                    }
+                                },
+                                "retentionPolicyType": "LongTermRetentionPolicy"
+                            },
+                            "timeZone": "UTC"
+                        }
+                    },
+                    {
+                        "backupTagNamePrefix": "Gold",
+                        "scheduleStartTime": "09:00",
+                        "properties": {
+                            "policyType": "V2",
+                            "backupManagementType": "AzureIaasVM",
+                            "instantRpRetentionRangeInDays": "5",
+                            "schedulePolicy": {
+                                "scheduleRunFrequency": "Daily",
+                                "scheduleRunDays": null,
+                                "schedulePolicyType": "SimpleSchedulePolicyV2"
+                            },
+                            "retentionPolicy": {
+                                "dailySchedule": {
+                                    "retentionDuration": {
+                                        "count": "15",
+                                        "durationType": "Days"
+                                    }
+                                },
+                                "weeklySchedule": {
+                                    "daysOfTheWeek": [
+                                        "Sunday",
+                                        "Tuesday",
+                                        "Thursday"
+                                    ],
+                                    "retentionDuration": {
+                                        "count": "8",
+                                        "durationType": "Weeks"
+                                    }
+                                },
+                                "monthlySchedule": {
+                                    "retentionScheduleFormatType": "Daily",
+                                    "retentionScheduleDaily": {
+                                        "daysOfTheMonth": [
+                                            {
+                                                "date": 1,
+                                                "isLast": false
+                                            }
+                                        ]
+                                    },
+                                    "retentionScheduleWeekly": null,
+                                    "retentionDuration": {
+                                        "count": "6",
+                                        "durationType": "Months"
+                                    }
+                                },
+                                "yearlySchedule": {
+                                    "retentionScheduleFormatType": "Daily",
+                                    "monthsOfYear": [
+                                        "January",
+                                        "March",
+                                        "August"
+                                    ],
+                                    "retentionScheduleDaily": {
+                                        "daysOfTheMonth": [
+                                            {
+                                                "date": 1,
+                                                "isLast": false
+                                            }
+                                        ]
+                                    },
+                                    "retentionScheduleWeekly": null,
+                                    "retentionDuration": {
+                                        "count": "2",
+                                        "durationType": "Years"
+                                    }
+                                },
+                                "retentionPolicyType": "LongTermRetentionPolicy"
+                            },
+                            "timeZone": "UTC"
+                        }
+                    }
+                ]
+            }
+        },
+        "backupStorageType": {
+            "value": "GeoRedundant"
+        },
+        "tags": {
+            "value": {
+                "Owner": "Muhammad Ibrahim",
+                "Project": "Test Bicep",
+                "UserStory": "DCSAZ-xxx",
+                "EvidenManaged": "true"
+            }
+        }
+    }
+}

@@ -1,0 +1,70 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "pciSettings": {
+            "value": {
+                "includeArcMachines": "false",
+                "resourceTypesWithDiagnosticLogs": [
+                    "Microsoft.AnalysisServices/servers",
+                    "Microsoft.ApiManagement/service",
+                    "Microsoft.Network/applicationGateways",
+                    "Microsoft.Automation/automationAccounts",
+                    "Microsoft.ContainerInstance/containerGroups",
+                    "Microsoft.ContainerRegistry/registries",
+                    "Microsoft.ContainerService/managedClusters",
+                    "Microsoft.Batch/batchAccounts",
+                    "Microsoft.Cdn/profiles/endpoints",
+                    "Microsoft.CognitiveServices/accounts",
+                    "Microsoft.DocumentDB/databaseAccounts",
+                    "Microsoft.DataFactory/factories",
+                    "Microsoft.DataLakeAnalytics/accounts",
+                    "Microsoft.DataLakeStore/accounts",
+                    "Microsoft.EventGrid/topics",
+                    "Microsoft.EventHub/namespaces",
+                    "Microsoft.Network/expressRouteCircuits",
+                    "Microsoft.Network/azureFirewalls",
+                    "Microsoft.HDInsight/clusters",
+                    "Microsoft.Devices/IotHubs",
+                    "Microsoft.KeyVault/vaults",
+                    "Microsoft.Network/loadBalancers",
+                    "Microsoft.Logic/integrationAccounts",
+                    "Microsoft.Logic/workflows",
+                    "Microsoft.DBforMySQL/servers",
+                    "Microsoft.Network/networkInterfaces",
+                    "Microsoft.Network/networkSecurityGroups",
+                    "Microsoft.DBforPostgreSQL/servers",
+                    "Microsoft.PowerBIDedicated/capacities",
+                    "Microsoft.Network/publicIPAddresses",
+                    "Microsoft.RecoveryServices/vaults",
+                    "Microsoft.Cache/redis",
+                    "Microsoft.Relay/namespaces",
+                    "Microsoft.Search/searchServices",
+                    "Microsoft.ServiceBus/namespaces",
+                    "Microsoft.SignalRService/SignalR",
+                    "Microsoft.Sql/servers/databases",
+                    "Microsoft.Sql/servers/elasticPools",
+                    "Microsoft.StreamAnalytics/streamingjobs",
+                    "Microsoft.TimeSeriesInsights/environments",
+                    "Microsoft.Network/trafficManagerProfiles",
+                    "Microsoft.Compute/virtualMachines",
+                    "Microsoft.Compute/virtualMachineScaleSets",
+                    "Microsoft.Network/virtualNetworks",
+                    "Microsoft.Network/virtualNetworkGateways"
+                ]
+            }
+        },
+        "pciAuditDenySetAssignmentName": {
+            "value": "pci.auditdeny.policy.set.assignment"
+        },
+        "pciAuditDenySetAssignmentDisplayName": {
+            "value": "PCI auditdeny policy set assignment"
+        },
+        "pciPolicyDefinitionId": {
+            "value": "/providers/Microsoft.Authorization/policySetDefinitions/496eeda9-8f2f-4d5e-8dfd-204f0a92ed41"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "computerName":{
+            "value": "LGTestVM1"
+        },
+        "adminUsername": {
+            "value": "admintest1"
+        },
+        "adminPassword": {
+            "value": "AdminTest!555@!"
+        },
+        "vmSize": {
+            "value": "Standard_DS1_v2"
+        },
+        "imageReference": {
+            "value": {
+                "publisher": "Canonical",
+                "offer": "UbuntuServer",
+                "sku": "18.04-LTS",
+                "version": "latest"
+            }
+        },
+        "osDiskStorageAccountType": {
+            "value": "StandardSSD_LRS"
+        },
+        "dataDiskSizeGB": {
+            "value": 1023
+        },
+        "subnetId": {
+            "value": "/subscriptions/742e5c18-1754-419f-9b6c-9905e2483c9e/resourceGroups/mon-lnd1-t-rsg-spoke-network/providers/Microsoft.Network/virtualNetworks/mon-Lnd1-t-eune-vnet-spoke/subnets/mon-lnd1-t-eune-snet-spoke-back"
+        },
+        "deployPublicIp": {
+            "value": false
+        },
+        "publicIpName": {
+            "value": "TestVM1-pip"
+        },
+        "publicIPAllocationMethod": {
+            "value": "Dynamic"
+        },
+        "publicIpSku": {
+            "value": "Basic"
+        },
+        "domainNameLabel": {
+            "value": "lgtestvm1"
+        },
+        "nicName": {
+            "value": "nicName"
+        },
+        "tags": {
+            "value": {}
+        }
+    }
+}

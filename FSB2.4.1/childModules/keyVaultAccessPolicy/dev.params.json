@@ -1,0 +1,59 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName": {
+            "value": "cu1-sub1-d-kvt-001"
+        },
+        "accessPoliciesAdd": {
+            "value": [
+                {
+                    "objectId": "746672be-5081-4ad5-a7a2-405ce95b8e09",
+                    "permissions": {
+                        "keys": [
+                            "Get",
+                            "List"
+                        ],
+                        "secrets": [
+                            "Get"
+                        ],
+                        "certificates": [
+                            "Get"
+                        ]
+                    }
+                }
+            ]
+        },
+        "accessPoliciesRemove": {
+            "value": [
+                {
+                    "objectId": "cb8ac6ae-e266-48c8-9758-f2dae9e49d9c"
+                }
+            ]
+        },
+        "accessPoliciesUpdate": {
+            "value": [
+                {
+                    "objectId": "8fad8337-b903-4946-872b-a5d1538c941d",
+                    "permissions": {
+                        "keys": [
+                            "Get",
+                            "List"
+                        ],
+                        "secrets": [
+                            "Get",
+                            "List",
+                            "Set",
+                            "Delete",
+                            "Recover",
+                            "Backup",
+                            "Restore",
+                            "Purge"
+                        ],
+                        "certificates": []
+                    }
+                }
+            ]
+        }
+    }
+}

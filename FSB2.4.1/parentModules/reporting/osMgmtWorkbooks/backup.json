@@ -1,0 +1,992 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "parameters": [
+                {
+                  "id": "4ed6542c-bee3-4d77-8baa-df27cde9e0ae",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Subscription",
+                  "type": 6,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "includeAll": false
+                  }
+                },
+                {
+                  "id": "8735c371-e0de-4c8e-9690-c148a87f80e6",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Computer",
+                  "label": "VM Name",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\n| where type == \"microsoft.compute/virtualmachines\"\n| where tostring(tags) !has '\"databricks-instance-name\"'\n| distinct name",
+                  "crossComponentResources": [
+                    "{Subscription}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "3fb518eb-2464-4537-888e-50984f471c24",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Tag",
+                  "label": "VM Backup State",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "{\"version\":\"1.0.0\",\"content\":\"[\\\"VM is [parameter(tagPrefix)]Managed and in Backup\\\", \\\"VM does not have the correct tags\\\", \\\"VM is [parameter(tagPrefix)]Managed, but not in Backup\\\"]\",\"transformers\":null}",
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 8,
+                  "value": [
+                    "value::all"
+                  ]
+                },
+                {
+                  "id": "9889b913-9acf-41fb-83d3-5cd01078b9cc",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Policies",
+                  "label": "Policies ([parameter(tagPrefix)]Backup tag)",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "resources\r\n| where type == \"microsoft.compute/virtualmachines\"\r\n| where name in ({Computer})\r\n| extend Situation = case(\r\ntostring(tags) contains '\"[parameter(tagPrefix)]Managed\":\"true\"' and tags contains \"[parameter(tagPrefix)]Backup\", \"VM is [parameter(tagPrefix)]Managed and in Backup\",\r\ntostring(tags) contains '\"[parameter(tagPrefix)]Managed\":\"true\"', \"VM is [parameter(tagPrefix)]Managed, but not in Backup\",\r\n\"VM does not have the correct tags\")\r\n| extend BackupPolicy = iif(notempty(tostring(tags.[parameter(tagPrefix)]Backup)), tostring(tags.[parameter(tagPrefix)]Backup), \"-\")\r\n| where Situation in ({Tag})\r\n| distinct BackupPolicy\r\n| project BackupPolicy\r\n\r\n",
+                  "crossComponentResources": [
+                    "{Subscription}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                }
+              ],
+              "style": "above",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "name": "parameters - 3"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "#### No virtual machines are deployed in this environment yet or are available for selected filters"
+            },
+            "conditionalVisibility": {
+              "parameterName": "Computer",
+              "comparison": "isEqualTo"
+            },
+            "name": "text - 4"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\n| where type == \"microsoft.compute/virtualmachines\"\n| where name in ({Computer})\n| extend Situation = case(\ntostring(tags) contains '\"[parameter(tagPrefix)]Managed\":\"true\"' and tags contains \"[parameter(tagPrefix)]Backup\" and isnotempty(tostring(tags.[parameter(tagPrefix)]Backup)), \"VM is [parameter(tagPrefix)]Managed and in Backup\",\ntostring(tags) contains '\"[parameter(tagPrefix)]Managed\":\"true\"', \"VM is [parameter(tagPrefix)]Managed, but not in Backup\",\n\"VM does not have the correct tags\")\n| extend BackupPolicy = iif(notempty(tostring(tags.[parameter(tagPrefix)]Backup)), tostring(tags.[parameter(tagPrefix)]Backup), \"-\")\n| where Situation in ({Tag})\n| where BackupPolicy in ({Policies})\n| project [\"VM Name\"] = id ,ResourceGroup = resourceGroup, Subscription = subscriptionId, [\"VM Backup State\"]=Situation, [\"Policy ([parameter(tagPrefix)]Backup tag)\"] = BackupPolicy",
+              "size": 0,
+              "title": "VM backup configuration",
+              "showExportToExcel": true,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "ResourceGroup",
+                    "formatter": 14,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "Subscription",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "sortBy": [
+                  {
+                    "itemKey": "Policy ([parameter(tagPrefix)]Backup tag)",
+                    "sortOrder": 1
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "Policy ([parameter(tagPrefix)]Backup tag)",
+                  "sortOrder": 1
+                }
+              ]
+            },
+            "conditionalVisibility": {
+              "parameterName": "Computer",
+              "comparison": "isNotEqualTo"
+            },
+            "name": "query - 2",
+            "styleSettings": {
+              "padding": "0px"
+            }
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "parameters": [
+                {
+                  "id": "d7876173-003a-4b24-927c-7516ec9683a9",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "DefPolicies",
+                  "label": "Defined Policies",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "recoveryservicesresources\r\n| where type == \"microsoft.recoveryservices/vaults/backuppolicies\"\r\n| distinct name\r\n| project Policy = name",
+                  "crossComponentResources": [
+                    "{Subscription}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 86400000
+                  },
+                  "defaultValue": "value::all",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources",
+                  "value": [
+                    "value::all"
+                  ]
+                }
+              ],
+              "style": "above",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "name": "parameters - 4"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "recoveryservicesresources\n| where type == \"microsoft.recoveryservices/vaults/backuppolicies\"\n| where name in ({DefPolicies})\n| extend scheduleFrequency = properties.schedulePolicy.scheduleRunFrequency\n| extend retentionDaily = properties.retentionPolicy.dailySchedule.retentionDuration\n| extend retentionWeekly =properties.retentionPolicy.weeklySchedule.retentionDuration\n| extend retentionMonthly =  properties.retentionPolicy.monthlySchedule.retentionDuration\n| extend retentionYearly = properties.retentionPolicy.yearlySchedule.retentionDuration\n| extend DurationDaily = properties.retentionPolicy.dailySchedule.retentionDuration.durationType\n| extend DurationWeekly = properties.retentionPolicy.weeklySchedule.retentionDuration.durationType\n| extend DurationMonthly = properties.retentionPolicy.monthlySchedule.retentionDuration.durationType\n| extend DurationYearly =  properties.retentionPolicy.yearlySchedule.retentionDuration.durationType\n| extend splittedDaily = split(retentionDaily,\":\")\n| extend splittedWeekly = split(retentionWeekly,\":\")\n| extend splittedMonthly = split(retentionMonthly,\":\")\n| extend splittedYearly = split(retentionYearly,\":\")\n| extend retentionDurationDaily = split(splittedDaily[2],\"}\")\n| extend retentionDurationWeekly = split(splittedWeekly[2],\"}\")\n| extend retentionDurationMonthly = split(splittedMonthly[2],\"}\")\n| extend retentionDurationYearly = split(splittedYearly[2],\"}\")\n| extend RetentionDaily = iff(toint(retentionDurationDaily[0]) > 0, strcat(\"Retain backup taken every day for \",toint(retentionDurationDaily[0]),\" days\"),\"\")\n| extend RetentionWeekly = iff(toint(retentionDurationWeekly[0]) > 0, strcat(\"Retain backup taken every week for \",toint(retentionDurationWeekly[0]),\" weeks\"),\"\")\n| extend RetentionMonthly = iff(toint(retentionDurationMonthly[0]) > 0, strcat(\"Retain backup taken every month for \",toint(retentionDurationMonthly[0]),\" months\"),\"\")\n| extend RetentionYearly = iff(toint(retentionDurationYearly[0]) > 0, strcat(\"Retain backup taken every year for \",toint(retentionDurationYearly[0]),\" years\"),\"\")\n| project BackupPolicy = name, Subscription = subscriptionId, Frequency = scheduleFrequency, RetentionDaily, RetentionWeekly, RetentionMonthly, RetentionYearly\n\n",
+              "size": 0,
+              "title": "Retention period per Backup Policy",
+              "showExportToExcel": true,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "subscriptionId",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "Frequency",
+                    "formatter": 1,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "14ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "RetentionDaily",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "40ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "RetentionWeekly",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "40ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "RetentionMonthly",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "40ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "RetentionYearly",
+                    "formatter": 0,
+                    "formatOptions": {
+                      "customColumnWidthSetting": "40ch"
+                    }
+                  },
+                  {
+                    "columnMatch": "Subscription",
+                    "formatter": 15,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "ScheduleFrequency",
+                    "formatter": 1
+                  },
+                  {
+                    "columnMatch": "resourceGroup",
+                    "formatter": 14,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  },
+                  {
+                    "columnMatch": "id",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": null,
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "sortBy": [
+                  {
+                    "itemKey": "RetentionWeekly",
+                    "sortOrder": 1
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "RetentionWeekly",
+                  "sortOrder": 1
+                }
+              ]
+            },
+            "name": "query - 0"
+          }
+        ],
+        "exportParameters": true
+      },
+      "name": "Group"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "title": "Backup jobs status for VMs",
+        "items": [
+          {
+            "type": 11,
+            "content": {
+              "version": "LinkItem/1.0",
+              "style": "tabs",
+              "links": [
+                {
+                  "id": "fbbecb40-83ec-4fe8-a5e0-973f8b14b22f",
+                  "cellValue": "TabName",
+                  "linkTarget": "parameter",
+                  "linkLabel": "Jobs Reports",
+                  "subTarget": "JobDistribution",
+                  "style": "secondary",
+                  "workbookContext": {
+                    "componentIdSource": "workbook",
+                    "resourceIdsSource": "workbook",
+                    "templateIdSource": "static",
+                    "templateId": "Community-Workbooks/Azure Backup/Job Distribution",
+                    "typeSource": "default",
+                    "gallerySource": "static",
+                    "gallery": "Azure Monitor"
+                  }
+                }
+              ]
+            },
+            "name": "Tabs"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "parameters": [
+                {
+                  "id": "d1f42f81-eb8f-4653-a0ff-38564d7487b4",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Subscriptions",
+                  "type": 6,
+                  "description": "Subscriptions to filter the list of workspaces",
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "includeAll": false,
+                    "selectAllValue": "",
+                    "showDefault": false
+                  },
+                  "defaultValue": "value::all",
+                  "value": [
+                    "value::all"
+                  ]
+                },
+                {
+                  "id": "2373a24f-ad32-4909-a7f6-59b373dcde6c",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "Workspaces",
+                  "type": 5,
+                  "description": "LA Workspaces configured in vault diagnostic settings",
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "where type =~ 'microsoft.operationalinsights/workspaces' \r\n| where (tostring(tags) has '\"[parameter(tagPrefix)]Purpose\":\"[parameter(tagValuePrefix)]Monitoring\"')\r\n| project id",
+                  "crossComponentResources": [
+                    "{Subscriptions}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::1"
+                    ],
+                    "showDefault": false
+                  },
+                  "defaultValue": "value::1",
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "64dd748f-d528-4912-a3bf-4a503e0b17f6",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "VaultsUsingAzureDiagnostics",
+                  "type": 1,
+                  "query": "// function Params - Report Filters\r\nlet RangeStart = startofday(ago(3d));\r\nlet RangeEnd = startofday(now());\r\nlet VaultSubscriptionList = \"*\";\r\nlet VaultLocationList = \"*\"; \r\nlet VaultList = \"*\";\r\nlet VaultTypeList = \"*\";\r\nlet ExcludeLegacyEvent_1 = false;\r\nlet ExcludeLegacyEvent_2 = true;\r\n// calling LA System Function\r\n_AzureBackup_GetVaults(RangeStart, RangeEnd, VaultSubscriptionList, VaultLocationList, VaultList, VaultTypeList, ExcludeLegacyEvent_1) | distinct Id\r\n| join kind = leftanti ( \r\n// calling LA System Function\r\n_AzureBackup_GetVaults(RangeStart, RangeEnd, VaultSubscriptionList, VaultLocationList, VaultList, VaultTypeList, ExcludeLegacyEvent_2) | distinct Id) on Id\r\n| count ",
+                  "crossComponentResources": [
+                    "{Workspaces}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                },
+                {
+                  "id": "d894d309-7e5f-488e-afde-73796c84b711",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "AzureStorageCutOffDate",
+                  "type": 1,
+                  "description": "Cut-off Date To Enable AzureStorage",
+                  "isRequired": true,
+                  "query": "{\"version\":\"1.0.0\",\"content\":\"\\\"5/14/2020, 12:00:00.000 AM\\\"\",\"transformers\":null}",
+                  "isHiddenWhenLocked": true,
+                  "queryType": 8
+                }
+              ],
+              "style": "above",
+              "doNotRunWhenHidden": true,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "customWidth": "50",
+            "conditionalVisibility": {
+              "parameterName": "TabName",
+              "comparison": "isEqualTo",
+              "value": "JobDistribution"
+            },
+            "name": "Overview-WorkspaceParameterBlock"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "_____"
+            },
+            "conditionalVisibilities": [
+              {
+                "parameterName": "Workspaces",
+                "comparison": "isNotEqualTo"
+              },
+              {
+                "parameterName": "TabName",
+                "comparison": "isEqualTo",
+                "value": "Overview"
+              }
+            ],
+            "name": "Overview-DividingLine1"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "<div style=\"text-align:left;float:left;\"><span style=\"font-size:16px;font-weight:600\">Report Filters </span> "
+            },
+            "conditionalVisibilities": [
+              {
+                "parameterName": "Workspaces",
+                "comparison": "isNotEqualTo"
+              },
+              {
+                "parameterName": "TabName",
+                "comparison": "isEqualTo",
+                "value": "JobDistribution"
+              }
+            ],
+            "name": "Overview-ReportFiltersTitle"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Workspaces}"
+              ],
+              "parameters": [
+                {
+                  "id": "8c4ae44c-fa9a-4498-aedc-736a56e64b43",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TimeRange",
+                  "label": "Time Range",
+                  "type": 4,
+                  "description": "Time Range",
+                  "value": {
+                    "durationMs": 259200000
+                  },
+                  "typeSettings": {
+                    "selectableValues": [
+                      {
+                        "durationMs": 259200000
+                      },
+                      {
+                        "durationMs": 604800000
+                      },
+                      {
+                        "durationMs": 1209600000
+                      },
+                      {
+                        "durationMs": 2419200000
+                      },
+                      {
+                        "durationMs": 2592000000
+                      },
+                      {
+                        "durationMs": 5184000000
+                      },
+                      {
+                        "durationMs": 7776000000
+                      }
+                    ],
+                    "allowCustom": true
+                  },
+                  "timeContext": {
+                    "durationMs": 0
+                  },
+                  "timeContextFromParameter": "TimeRange"
+                },
+                {
+                  "id": "78c86854-fe3c-44c5-8ee3-23d4210827d1",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "ExcludeLegacyEvent",
+                  "label": "Exclude Legacy Table",
+                  "type": 2,
+                  "description": "Use this parameter to avoid querying data that is sent to the legacy Azure Diagnostics table. Excluding the legacy table improves query performance time. <a href=\"https://docs.microsoft.com/azure/backup/backup-azure-diagnostic-events#legacy-event\">Learn more </a>",
+                  "isRequired": true,
+                  "typeSettings": {
+                    "additionalResourceOptions": [],
+                    "showDefault": false
+                  },
+                  "jsonData": "[\r\n    { \"value\":\"True\",  \"selected\":true},\r\n    { \"value\":\"False\"}\r\n]",
+                  "value": "False"
+                }
+              ],
+              "style": "above",
+              "doNotRunWhenHidden": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "customWidth": "36",
+            "conditionalVisibilities": [
+              {
+                "parameterName": "Workspaces",
+                "comparison": "isNotEqualTo"
+              },
+              {
+                "parameterName": "TabName",
+                "comparison": "isEqualTo",
+                "value": "JobDistribution"
+              }
+            ],
+            "name": "Overview-TimeRangeParameterBlock",
+            "styleSettings": {
+              "maxWidth": "100%"
+            }
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "/subscriptions/759b3d1a-ba3b-46d7-a33c-76c0c6c75932/resourceGroups/dv4-mgmt-t-rsg-monitoring/providers/Microsoft.OperationalInsights/workspaces/dv4-mgmt-t-loganalytics"
+              ],
+              "parameters": [
+                {
+                  "id": "8ce61d1d-e371-40bf-ad53-7ba78afb976f",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "DatasourceType",
+                  "label": "Backup Solution",
+                  "type": 2,
+                  "description": "Use to filter reports by backup solution",
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "",
+                  "delimiter": ",",
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "selectAllValue": "*",
+                    "showDefault": false
+                  },
+                  "jsonData": "\r\n[    \r\n{ \"value\": \"Azure Backup Agent\", \t\t\t\t\t\t\"label\": \"Azure Backup Agent\" },\r\n{ \"value\": \"Azure Backup Server\", \t\t\t\"label\": \"Azure Backup Server\" },\r\n{ \"value\": \"Azure Storage (Azure Files) Backup\", \t\t\t\t\"label\": \"Azure Storage (Azure Files) Backup\" },\r\n{ \"value\": \"Azure Virtual Machine Backup\", \t\t\t\t\t\t\"label\": \"Azure Virtual Machine Backup\" },\r\n{ \"value\": \"DPM\", \t\t\t\t\t\t\"label\": \"DPM\" },\r\n{ \"value\": \"SAP HANA in Azure VM Backup\", \"label\": \"SAP HANA in Azure VM Backup\" },\r\n{ \"value\": \"SQL in Azure VM Backup\",     \"label\": \"SQL in Azure VM Backup\" }\r\n]"
+                },
+                {
+                  "id": "678680e5-76b5-4db8-bbef-5f73942caf2e",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "VaultSubscription",
+                  "label": "Subscription Name",
+                  "type": 6,
+                  "description": "Subscription(s) under which the vault(s) exist",
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "",
+                  "delimiter": ",",
+                  "query": "// function Params - Report Filters\r\nlet RangeStart = startofday({TimeRange:start});\r\nlet RangeEnd = iff(startofday({TimeRange:end}) == startofday(now()) ,startofday({TimeRange:end}) - 1d , startofday({TimeRange:end}));\r\nlet VaultSubscriptionList = \"*\";\r\nlet VaultLocationList = \"*\";\r\nlet VaultList = \"*\";\r\nlet VaultTypeList = \"*\";\r\nlet ExcludeLegacyEvent = @\"{ExcludeLegacyEvent}\";\r\nlet BackupSolutionList = @\"{DatasourceType}\";\r\n// function Params - other Filters\r\nlet ProtectionInfoList = \"*\";\r\nlet Item_search =  \"*;*\";\r\nlet ItemArray = split(Item_search, \";\");\r\nlet ItemArray_length = array_length(ItemArray);\r\nlet BackupInstanceName = iff(ItemArray_length == 2, ItemArray[1], ItemArray[0] );\r\nlet DatasourceSetName = iff(ItemArray_length == 2, ItemArray[0], \"\");\r\nlet DisplayAllFields = false;\r\n// calling LA System Function\r\n_AzureBackup_GetBackupInstances(RangeStart, RangeEnd, VaultSubscriptionList, VaultLocationList, VaultList, VaultTypeList, ExcludeLegacyEvent, BackupSolutionList, ProtectionInfoList, DatasourceSetName, BackupInstanceName, DisplayAllFields)\r\n// query to transform function output\r\n| distinct VaultSubscriptionId",
+                  "crossComponentResources": [
+                    "{Workspaces}"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "selectAllValue": "*",
+                    "showDefault": false
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces",
+                  "value": [
+                    "value::all"
+                  ]
+                },
+                {
+                  "id": "2a83acc5-2123-476f-8a4c-da2fddf231a1",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "VaultLocation",
+                  "label": "Vault Location",
+                  "type": 2,
+                  "description": "Location(s) in which the vault(s) were created",
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "",
+                  "delimiter": ",",
+                  "query": "// function Params - Report Filters\r\nlet RangeStart = startofday({TimeRange:start});\r\nlet RangeEnd = iff(startofday({TimeRange:end}) == startofday(now()) ,startofday({TimeRange:end}) - 1d , startofday({TimeRange:end}));\r\nlet VaultSubscriptionList = todynamic( replace(\"/subscriptions/\", \"\", @\"{VaultSubscription}\"));\r\nlet VaultLocationList = \"*\";\r\nlet VaultList = \"*\";\r\nlet VaultTypeList = \"*\";\r\nlet ExcludeLegacyEvent = @\"{ExcludeLegacyEvent}\";\r\nlet BackupSolutionList = @\"{DatasourceType}\";\r\n// function Params - other Filters\r\nlet ProtectionInfoList = \"*\";\r\nlet Item_search =  \"*;*\";\r\nlet ItemArray = split(Item_search, \";\");\r\nlet ItemArray_length = array_length(ItemArray);\r\nlet BackupInstanceName = iff(ItemArray_length == 2, ItemArray[1], ItemArray[0] );\r\nlet DatasourceSetName = iff(ItemArray_length == 2, ItemArray[0], \"\");\r\nlet DisplayAllFields = false;\r\n// calling LA System Function\r\n_AzureBackup_GetBackupInstances(RangeStart, RangeEnd, VaultSubscriptionList, VaultLocationList, VaultList, VaultTypeList, ExcludeLegacyEvent, BackupSolutionList, ProtectionInfoList, DatasourceSetName, BackupInstanceName, DisplayAllFields)\r\n// query to transform function output\r\n| distinct VaultLocation",
+                  "crossComponentResources": [
+                    "{Workspaces}"
+                  ],
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "selectAllValue": "*",
+                    "showDefault": false
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                },
+                {
+                  "id": "fefd31fa-2774-43ca-8cc3-44d477c969f0",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "VaultName",
+                  "label": "Vault Name",
+                  "type": 2,
+                  "description": "Name(s) of the vault(s)",
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "",
+                  "delimiter": ",",
+                  "query": "// function Params - Report Filters\r\nlet RangeStart = startofday({TimeRange:start});\r\nlet RangeEnd = iff(startofday({TimeRange:end}) == startofday(now()) ,startofday({TimeRange:end}) - 1d , startofday({TimeRange:end}));\r\nlet VaultSubscriptionList = todynamic( replace(\"/subscriptions/\", \"\", @\"{VaultSubscription}\"));\r\nlet VaultLocationList = todynamic( @\"{VaultLocation}\"); \r\nlet VaultList = \"*\";\r\nlet VaultTypeList = \"*\";\r\nlet ExcludeLegacyEvent = @\"{ExcludeLegacyEvent}\";\r\n// calling LA System Function\r\n_AzureBackup_GetVaults(RangeStart, RangeEnd, VaultSubscriptionList, VaultLocationList, VaultList, VaultTypeList, ExcludeLegacyEvent)\r\n// query to transform function output\r\n| distinct Name ",
+                  "crossComponentResources": [
+                    "{Workspaces}"
+                  ],
+                  "value": [
+                    "value::all"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "selectAllValue": "*",
+                    "showDefault": false
+                  },
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                }
+              ],
+              "style": "above",
+              "doNotRunWhenHidden": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "customWidth": "64",
+            "conditionalVisibilities": [
+              {
+                "parameterName": "Workspaces",
+                "comparison": "isNotEqualTo"
+              },
+              {
+                "parameterName": "TabName",
+                "comparison": "isEqualTo",
+                "value": "JobDistribution"
+              }
+            ],
+            "name": "Overview-ReportParameterBlock",
+            "styleSettings": {
+              "maxWidth": "100%"
+            }
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Subscriptions}"
+              ],
+              "parameters": [
+                {
+                  "id": "3c5a3e26-bce4-43d9-a22d-e963a0d734af",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "ResourceGroupId",
+                  "type": 1,
+                  "query": "resources | where type==\"microsoft.operationalinsights/workspaces\" | project name, resourceGroupId=strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup) | where \"{Workspaces}\" contains name | project resourceGroupId | take 1",
+                  "crossComponentResources": [
+                    "{Subscriptions}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "897957ad-a946-4b3b-98f0-02008d30ff0f",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "WorkspaceName",
+                  "type": 1,
+                  "query": "resources | where type==\"microsoft.operationalinsights/workspaces\" \r\n| project name, resourceGroupId=strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup) \r\n| where \"{Workspaces}\" contains name \r\n| where \"{ResourceGroupId}\" has resourceGroupId\r\n| take 1\r\n",
+                  "crossComponentResources": [
+                    "{Subscriptions}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "75065a95-e81f-470f-805e-427558ee0ea3",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "WorkspaceResourceGroup",
+                  "type": 1,
+                  "query": "resources | where type==\"microsoft.operationalinsights/workspaces\" \r\n| project name, resourceGroupId=strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup), resourceGroup, subscriptionId \r\n| where \"{WorkspaceName}\" has name \r\n| where \"{ResourceGroupId}\" has resourceGroupId\r\n| take 1\r\n| project resourceGroup\r\n",
+                  "crossComponentResources": [
+                    "{Subscriptions}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "2581aa73-ab5f-4f2c-82f1-1b4d0f9708ad",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "WorkspaceSubscriptionId",
+                  "type": 1,
+                  "query": "resources | where type==\"microsoft.operationalinsights/workspaces\" \r\n| project name, resourceGroupId=strcat(\"/subscriptions/\",subscriptionId,\"/resourceGroups/\",resourceGroup), resourceGroup, subscriptionId \r\n| where \"{WorkspaceName}\" has name \r\n| where \"{ResourceGroupId}\" has resourceGroupId\r\n| take 1\r\n| project subscriptionId\r\n",
+                  "crossComponentResources": [
+                    "{Subscriptions}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 1,
+                  "resourceType": "microsoft.resourcegraph/resources"
+                },
+                {
+                  "id": "5327529a-bd07-4305-bf65-4b36a3c787b9",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "LogicApp_VaultSubscriptionList",
+                  "type": 1,
+                  "query": "let VaultSubscriptionList = todynamic( replace(\"/subscriptions/\", \"\", @\"{VaultSubscription}\"));\r\nprint VaultSubscriptionList",
+                  "crossComponentResources": [
+                    "{Workspaces}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                },
+                {
+                  "id": "e404488a-5db7-42ba-9b44-996f1d8cd7b2",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "LogicApp_VaultLocationList",
+                  "type": 1,
+                  "query": "let VaultLocationList = todynamic( @\"{VaultLocation}\"); \r\nprint VaultLocationList",
+                  "crossComponentResources": [
+                    "{Workspaces}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                },
+                {
+                  "id": "8005c310-7839-42ff-a3a4-01e5a6c45223",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "LogicApp_VaultList",
+                  "type": 1,
+                  "query": "let VaultList = todynamic( @\"{VaultName}\"); \r\nprint VaultList",
+                  "crossComponentResources": [
+                    "{Workspaces}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                },
+                {
+                  "id": "2e3d4cd7-7393-4cc4-ab9e-793311eb291c",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "LogicApp_DatasourceTypeList",
+                  "type": 1,
+                  "query": "let DatasourceTypeList = @\"{DatasourceType}\";\r\nprint DatasourceTypeList",
+                  "crossComponentResources": [
+                    "{Workspaces}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                },
+                {
+                  "id": "376631ff-44ae-4824-b470-ac32d82cd4f2",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "LogicApp_ExcludeLegacyEvent",
+                  "type": 1,
+                  "query": "let ExcludeLegacyEvent = @\"{ExcludeLegacyEvent}\";\r\nprint ExcludeLegacyEvent",
+                  "crossComponentResources": [
+                    "{Workspaces}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                },
+                {
+                  "id": "5d1a9bc1-34ab-491d-bfa6-f7fc8402f3dc",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "LogicApp_AggregationType",
+                  "type": 1,
+                  "query": "// function Params - Report Filters\r\nlet RangeStart = startofday({TimeRange:start});\r\nlet RangeEnd = iff(startofday({TimeRange:end}) == startofday(now()) ,startofday({TimeRange:end}) - 1d , startofday({TimeRange:end}));\r\nprint AggregationType=iff(datetime_diff('day',RangeEnd,RangeStart)<=30,\"Daily\",iff(datetime_diff('day',RangeEnd,RangeStart)<=90,\"Weekly\",\"Monthly\"))\r\n\r\n\r\n\r\n\r\n\r\n",
+                  "crossComponentResources": [
+                    "{Workspaces}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                },
+                {
+                  "id": "892dcb11-ee52-478b-aac2-10892fb837ae",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "LogicApp_TimeRangeInDays",
+                  "type": 1,
+                  "query": "// function Params - Report Filters\r\nlet RangeStart = startofday({TimeRange:start});\r\nlet RangeEnd = startofday({TimeRange:end});\r\nprint TimeRangeInDays = datetime_diff('day',RangeEnd,RangeStart)\r\n\r\n",
+                  "crossComponentResources": [
+                    "{Workspaces}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                }
+              ],
+              "style": "above",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources"
+            },
+            "customWidth": "60",
+            "conditionalVisibilities": [
+              {
+                "parameterName": "Workspaces",
+                "comparison": "isNotEqualTo"
+              },
+              {
+                "parameterName": "TabName",
+                "comparison": "isEqualTo",
+                "value": "JobDistribution"
+              }
+            ],
+            "name": "Overview-ReportParameterBlock - Copy",
+            "styleSettings": {
+              "maxWidth": "100%"
+            }
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "<span style=\"font-size:12px;font-style:italic\"> All datetimes are in UTC. Data for the current partial day is not shown in the reports. <a href=\"https://aka.ms/AzureBackupReportTimezone\" target=\"_blank\">Learn More</a></span></div>"
+            },
+            "conditionalVisibility": {
+              "parameterName": "Workspaces",
+              "comparison": "isNotEqualTo"
+            },
+            "name": "Overview-InstructionText2a",
+            "styleSettings": {
+              "margin": "0% 0% 0% 0%",
+              "padding": "0% 0% 0% 0%"
+            }
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Workspaces}"
+              ],
+              "parameters": [
+                {
+                  "id": "396c89aa-fd11-4736-8eb9-40c10a04be21",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "AggregationType",
+                  "type": 1,
+                  "query": "// function Params - Report Filters\r\nlet RangeStart = startofday({TimeRange:start});\r\nlet RangeEnd = iff(startofday({TimeRange:end}) == startofday(now()) ,startofday({TimeRange:end}) - 1d , startofday({TimeRange:end}));\r\nprint AggregationType=iff(datetime_diff('day',RangeEnd,RangeStart)<=30,\"Daily\",iff(datetime_diff('day',RangeEnd,RangeStart)<=90,\"Weekly\",\"Monthly\"))\r\n\r\n",
+                  "crossComponentResources": [
+                    "{Workspaces}"
+                  ],
+                  "isHiddenWhenLocked": true,
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                }
+              ],
+              "style": "above",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "name": "AggregationTypeParam"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "_________________"
+            },
+            "conditionalVisibilities": [
+              {
+                "parameterName": "Workspaces",
+                "comparison": "isNotEqualTo"
+              },
+              {
+                "parameterName": "DatasourceType",
+                "comparison": "isNotEqualTo"
+              }
+            ],
+            "name": "text - 73"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "template",
+              "loadFromTemplateId": "community-Workbooks/Azure Backup/jobdistribution-tab",
+              "items": []
+            },
+            "conditionalVisibilities": [
+              {
+                "parameterName": "TabName",
+                "comparison": "isEqualTo",
+                "value": "JobDistribution"
+              },
+              {
+                "parameterName": "Workspaces",
+                "comparison": "isNotEqualTo"
+              },
+              {
+                "parameterName": "DatasourceType",
+                "comparison": "isNotEqualTo"
+              }
+            ],
+            "name": "jobs-group"
+          }
+        ]
+      },
+      "name": "group - jobs"
+    }
+  ],
+  "fallbackResourceIds": [
+    "Azure Monitor"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

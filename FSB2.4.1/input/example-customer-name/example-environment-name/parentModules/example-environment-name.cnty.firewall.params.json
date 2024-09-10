@@ -1,0 +1,499 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "additionalNetworkingTags": {
+            "value": {}
+        },
+        "deployAzureFirewall": {
+            "value": true
+        },
+        "azureFirewallSku": {
+            "value": "Standard"
+        },
+        "deployFirewallPolicy": {
+            "value": true
+        },
+        "azureFirewallPolicySku": {
+            "value": "Standard"
+        },
+        "enableTlsInspection": {
+            "value": false
+        },
+        "tlsKeyVaultCertId": {
+            "value": ""
+        },
+        "firewallUserIdentity": {
+            "value": "" 
+        }, 
+        "tlsKeyVaultName": {
+            "value": ""
+        },
+        "firewallThreatIntelMode": {
+            "value": "Alert"
+        },
+        "firewallPolicyWhitelistFqdns": {
+            "value": []
+        },
+        "firewallPolicyWhitelistIpAddresses": {
+            "value": []
+        },
+        "enableFirewallPolicyAnalytics": {
+            "value": false
+        },
+        "firewallIntrusionDetection": {
+            "value": {
+                "intrusionDetection": {
+                    "configuration": {
+                        "bypassTrafficSettings": [
+                            {
+                                "description": "Example Bypass Rule Description",
+                                "destinationAddresses": [
+                                    "10.4.5.x"
+                                ],
+                                "destinationIpGroups": [],
+                                "destinationPorts": [
+                                    "80"
+                                ],
+                                "name": "Example Bypass Rule Name",
+                                "protocol": "tcp",
+                                "sourceAddresses": [
+                                    "10.1.3.x"
+                                ],
+                                "sourceIpGroups": []
+                            }
+                        ],
+                        "privateRanges": [
+                            "10.0.0.0/8"
+                        ],
+                        "signatureOverrides": []
+                    },
+                    "mode": "alert"
+                }
+            }
+        },
+        "enableFirewallIntrusionDetection": {
+            "value": false
+        },
+        "firewallPolicyEnableProxy": {
+            "value": false
+        },
+        "firewallPolicyDnsServers": {
+            "value": []
+        },
+        "firewallNrOfPublicIps": {
+            "value": 1
+        },
+        "firewallAvailabilityZones": {
+            "value": []
+        },
+        "firewallRuleCollectionGroups": {
+            "value": [
+                {
+                    "name": "DefaultApplicationRuleCollectionGroup",
+                    "properties": {
+                        "priority": 1500,
+                        "ruleCollections": [
+                            {
+                                "name": "Eviden-Application-Allow-RC",
+                                "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                "priority": 1500,
+                                "action": {
+                                    "type": "Allow"
+                                },
+                                "rules": [
+                                    {
+                                        "ruleType": "ApplicationRule",
+                                        "name": "ExampleEvidenAllowMicrosoft",
+                                        "protocols": [
+                                            {
+                                                "protocolType": "Https",
+                                                "port": 443
+                                            }
+                                        ],
+                                        "fqdnTags": [],
+                                        "webCategories": [],
+                                        "targetFqdns": [
+                                            "*.microsoft.com"
+                                        ],
+                                        "targetUrls": [],
+                                        "terminateTLS": false,
+                                        "sourceAddresses": [
+                                            "*"
+                                        ],
+                                        "destinationAddresses": [],
+                                        "sourceIpGroups": []
+                                    },
+                                    {
+                                        "ruleType": "ApplicationRule",
+                                        "name": "EvidenAllowBackup",
+                                        "protocols": [
+                                            {
+                                                "protocolType": "Https",
+                                                "port": 443
+                                            }
+                                        ],
+                                        "fqdnTags": [
+                                            "AzureBackup"
+                                        ],
+                                        "webCategories": [],
+                                        "targetFqdns": [],
+                                        "targetUrls": [],
+                                        "terminateTLS": false,
+                                        "sourceAddresses": [
+                                            "10.0.0.0/8"
+                                        ],
+                                        "destinationAddresses": [],
+                                        "sourceIpGroups": []
+                                    },
+                                    {
+                                        "ruleType": "ApplicationRule",
+                                        "name": "EvidenAllowUpdateManagement",
+                                        "protocols": [
+                                            {
+                                                "protocolType": "Http",
+                                                "port": 80
+                                            },
+                                            {
+                                                "protocolType": "Https",
+                                                "port": 443
+                                            }
+                                        ],
+                                        "fqdnTags": [
+                                            "WindowsUpdate"
+                                        ],
+                                        "webCategories": [],
+                                        "targetFqdns": [],
+                                        "targetUrls": [],
+                                        "terminateTLS": false,
+                                        "sourceAddresses": [
+                                            "10.0.0.0/8"
+                                        ],
+                                        "destinationAddresses": [],
+                                        "sourceIpGroups": []
+                                    },
+                                    {
+                                        "ruleType": "ApplicationRule",
+                                        "name": "EvidenAllowOMS",
+                                        "protocols": [
+                                            {
+                                                "protocolType": "Https",
+                                                "port": 443
+                                            }
+                                        ],
+                                        "fqdnTags": [],
+                                        "webCategories": [],
+                                        "targetFqdns": [
+                                            "*.ods.opinsights.azure.com",
+                                            "*.oms.opinsights.azure.com",
+                                            "*.blob.core.windows.net"
+                                        ],
+                                        "targetUrls": [],
+                                        "terminateTLS": false,
+                                        "sourceAddresses": [
+                                            "10.0.0.0/8"
+                                        ],
+                                        "destinationAddresses": [],
+                                        "sourceIpGroups": []
+                                    },
+                                    {
+                                      "ruleType": "ApplicationRule",
+                                      "name": "EvidenAllowAMA",
+                                      "protocols": [
+                                          {
+                                              "protocolType": "Https",
+                                              "port": 443
+                                          }
+                                      ],
+                                      "fqdnTags": [],
+                                      "webCategories": [],
+                                      "targetFqdns": [
+                                          "*.ods.opinsights.azure.com",
+                                          "*.handler.control.monitor.azure.com"
+                                      ],
+                                      "targetUrls": [],
+                                      "terminateTLS": false,
+                                      "sourceAddresses": [
+                                          "10.0.0.0/8"
+                                      ],
+                                      "destinationAddresses": [],
+                                      "sourceIpGroups": []
+                                    },
+                                    {
+                                        "ruleType": "ApplicationRule",
+                                        "name": "EvidenAllowQualys",
+                                        "protocols": [
+                                            {
+                                                "protocolType": "Https",
+                                                "port": 443
+                                            }
+                                        ],
+                                        "fqdnTags": [],
+                                        "webCategories": [],
+                                        "targetFqdns": [
+                                            "*.apps.qualys.eu",
+                                            "*.apps.qualys.co.uk",
+                                            "*.apps.qualys.com"
+                                        ],
+                                        "targetUrls": [],
+                                        "terminateTLS": false,
+                                        "sourceAddresses": [
+                                            "10.0.0.0/8"
+                                        ],
+                                        "destinationAddresses": [],
+                                        "sourceIpGroups": []
+                                    },
+                                    {
+                                        "ruleType": "ApplicationRule",
+                                        "name": "EvidenAllowWindowsLinux",
+                                        "protocols": [
+                                            {
+                                                "protocolType": "Http",
+                                                "port": 80
+                                            },
+                                            {
+                                                "protocolType": "Https",
+                                                "port": 443
+                                            }
+                                        ],
+                                        "fqdnTags": [],
+                                        "webCategories": [],
+                                        "targetFqdns": [
+                                            "*.windows.com",
+                                            "*.ubuntu.com"
+                                        ],
+                                        "targetUrls": [],
+                                        "terminateTLS": false,
+                                        "sourceAddresses": [
+                                            "10.0.0.0/8"
+                                        ],
+                                        "destinationAddresses": [],
+                                        "sourceIpGroups": []
+                                    },
+                                    {
+                                        "ruleType": "ApplicationRule",
+                                        "name": "EvidenAllowWindowsNet",
+                                        "protocols": [
+                                            {
+                                                "protocolType": "Http",
+                                                "port": 80
+                                            },
+                                            {
+                                                "protocolType": "Https",
+                                                "port": 443
+                                            }
+                                        ],
+                                        "fqdnTags": [],
+                                        "webCategories": [],
+                                        "targetFqdns": [
+                                            "*.windows.net"
+                                        ],
+                                        "targetUrls": [],
+                                        "terminateTLS": false,
+                                        "sourceAddresses": [
+                                            "10.0.0.0/8"
+                                        ],
+                                        "destinationAddresses": [],
+                                        "sourceIpGroups": []
+                                    }
+                                ]
+                            },
+                            {
+                                "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                "action": {
+                                    "type": "Deny"
+                                },
+                                "rules": [],
+                                "name": "Example-Eviden-Application-Deny-RC",
+                                "priority": 500
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "DefaultNetworkRuleCollectionGroup",
+                    "properties": {
+                        "priority": 100,
+                        "ruleCollections": [
+                            {
+                                "name": "Eviden-Network-Allow-RC",
+                                "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                "priority": 500,
+                                "action": {
+                                    "type": "Allow"
+                                },
+                                "rules": [
+                                    {
+                                        "ruleType": "NetworkRule",
+                                        "name": "EvidenAllowLnd1ToLnd2",
+                                        "ipProtocols": [
+                                            "Any"
+                                        ],
+                                        "sourceAddresses": [
+                                            "10.5.0.0/16"
+                                        ],
+                                        "sourceIpGroups": [],
+                                        "destinationAddresses": [
+                                            "10.6.0.0/16"
+                                        ],
+                                        "destinationIpGroups": [],
+                                        "destinationFqdns": [],
+                                        "destinationPorts": [
+                                            "*"
+                                        ]
+                                    },
+                                    {
+                                        "ruleType": "NetworkRule",
+                                        "name": "EvidenAllowLnd2ToLnd1",
+                                        "ipProtocols": [
+                                            "Any"
+                                        ],
+                                        "sourceAddresses": [
+                                            "10.6.0.0/16"
+                                        ],
+                                        "sourceIpGroups": [],
+                                        "destinationAddresses": [
+                                            "10.5.0.0/16"
+                                        ],
+                                        "destinationIpGroups": [],
+                                        "destinationFqdns": [],
+                                        "destinationPorts": [
+                                            "*"
+                                        ]
+                                    },
+                                    {
+                                        "ruleType": "NetworkRule",
+                                        "name": "EvidenAllowLnd1toAzureMonitor",
+                                        "ipProtocols": [
+                                            "TCP"
+                                        ],
+                                        "sourceAddresses": [
+                                            "10.5.0.0/16"
+                                        ],
+                                        "sourceIpGroups": [],
+                                        "destinationAddresses": [
+                                            "AzureMonitor"
+                                        ],
+                                        "destinationIpGroups": [],
+                                        "destinationFqdns": [],
+                                        "destinationPorts": [
+                                            "443",
+                                            "80"
+                                        ]
+                                    },
+                                    {
+                                        "ruleType": "NetworkRule",
+                                        "name": "EvidenAllowLnd2toAzureMonitor",
+                                        "ipProtocols": [
+                                            "TCP"
+                                        ],
+                                        "sourceAddresses": [
+                                            "10.6.0.0/16"
+                                        ],
+                                        "sourceIpGroups": [],
+                                        "destinationAddresses": [
+                                            "AzureMonitor"
+                                        ],
+                                        "destinationIpGroups": [],
+                                        "destinationFqdns": [],
+                                        "destinationPorts": [
+                                            "443",
+                                            "80"
+                                        ]
+                                    },
+                                    {
+                                        "ruleType": "NetworkRule",
+                                        "name": "EvidenAllowLnd1toGuestAndHybrid",
+                                        "ipProtocols": [
+                                            "TCP"
+                                        ],
+                                        "sourceAddresses": [
+                                            "10.5.0.0/16"
+                                        ],
+                                        "sourceIpGroups": [],
+                                        "destinationAddresses": [
+                                            "GuestAndHybridManagement"
+                                        ],
+                                        "destinationIpGroups": [],
+                                        "destinationFqdns": [],
+                                        "destinationPorts": [
+                                            "443",
+                                            "80"
+                                        ]
+                                    },
+                                    {
+                                        "ruleType": "NetworkRule",
+                                        "name": "EvidenAllowLnd2toGuestAndHybrid",
+                                        "ipProtocols": [
+                                            "TCP"
+                                        ],
+                                        "sourceAddresses": [
+                                            "10.6.0.0/16"
+                                        ],
+                                        "sourceIpGroups": [],
+                                        "destinationAddresses": [
+                                            "GuestAndHybridManagement"
+                                        ],
+                                        "destinationIpGroups": [],
+                                        "destinationFqdns": [],
+                                        "destinationPorts": [
+                                            "443",
+                                            "80"
+                                        ]
+                                    },
+                                    {
+                                        "ruleType": "NetworkRule",
+                                        "name": "EvidenAllowLnd1toKMS",
+                                        "ipProtocols": [
+                                            "TCP"
+                                        ],
+                                        "sourceAddresses": [
+                                            "10.5.0.0/16"
+                                        ],
+                                        "sourceIpGroups": [],
+                                        "destinationAddresses": [
+                                            "23.102.135.246"
+                                        ],
+                                        "destinationIpGroups": [],
+                                        "destinationFqdns": [],
+                                        "destinationPorts": [
+                                            "1688"
+                                        ]
+                                    },
+                                    {
+                                        "ruleType": "NetworkRule",
+                                        "name": "EvidenAllowLnd2toKMS",
+                                        "ipProtocols": [
+                                            "TCP"
+                                        ],
+                                        "sourceAddresses": [
+                                            "10.6.0.0/16"
+                                        ],
+                                        "sourceIpGroups": [],
+                                        "destinationAddresses": [
+                                            "23.102.135.246"
+                                        ],
+                                        "destinationIpGroups": [],
+                                        "destinationFqdns": [],
+                                        "destinationPorts": [
+                                            "1688"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                "action": {
+                                    "type": "Allow"
+                                },
+                                "rules": [],
+                                "name": "Cust-Example-Network-Allow-RC",
+                                "priority": 1000
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

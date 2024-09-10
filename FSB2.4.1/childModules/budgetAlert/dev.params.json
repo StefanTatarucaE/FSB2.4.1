@@ -1,0 +1,68 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "budgetAlerts": {
+      "value": [
+        {
+          "budgetName": "budgetAlert-cu1-001",
+          "budgetAmount": 200,
+          "budgetPeriod": "monthly",
+          "startDate": "2023-03-01",
+          "endDate": "2029-04-01",
+          "filters": {},
+          "notifications": {
+            "notificationForExceededbudget": {
+              "alertEnabled": true,
+              "operator": "GreaterThan",
+              "threshold": 50,
+              "thresholdType": "actual",
+              "contactEmails": [
+                "abhijit.kakade@eviden.com",
+                "robert.vanvugt@eviden.com",
+                "wojciech.brzezinski@eviden.com",
+                "surbhi.2.sharma@eviden.com",
+                "sakar.chatta@eviden.com",
+                "frederic.trapet@eviden.com"
+              ],
+              "contactRoles": [
+                "Owner"
+              ],
+              "contactGroups": [
+                "itsmactiongroup"
+              ]
+            }
+          }
+        },
+        {
+          "budgetName": "budgetAlert-cu1-002",
+          "budgetAmount": 200,
+          "budgetPeriod": "monthly",
+          "startDate": "2023-03-01",
+          "endDate": "2023-04-01",
+          "filters": {},
+          "notifications": {
+            "notificationForExceededbudget": {
+              "alertEnabled": true,
+              "operator": "GreaterThan",
+              "threshold": 50,
+              "thresholdType": "forecasted",
+              "contactEmails": [
+                "abhijit.kakade@eviden.com",
+                "robert.vanvugt@eviden.com",
+                "wojciech.brzezinski@eviden.com",
+                "surbhi.2.sharma@eviden.com",
+                "sakar.chatta@eviden.com",
+                "frederic.trapet@eviden.com"
+              ],
+              "contactRoles": [
+                "Owner"
+              ],
+              "contactGroups": []
+            }
+          }
+        }
+      ]
+    }
+  }
+}

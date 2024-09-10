@@ -1,0 +1,221 @@
+{
+    "version": "Notebook/1.0",
+    "items": [
+      {
+        "type": 12,
+        "content": {
+          "version": "NotebookGroup/1.0",
+          "groupType": "editable",
+          "items": [
+            {
+              "type": 9,
+              "content": {
+                "version": "KqlParameterItem/1.0",
+                "parameters": [
+                  {
+                    "id": "f5f66862-c38c-4c25-98fa-ad1e7f463a0f",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "subscriptionPicker",
+                    "label": "Subscription",
+                    "type": 6,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "value": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "includeAll": false,
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all"
+                  },
+                  {
+                    "id": "b1ae8eeb-0570-482d-af41-aa81999ad44a",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "resourceGroupPicker",
+                    "label": "Resource Group",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resources\r\n| where type == \"microsoft.sql/servers\"\r\n| project resourceGroup\r\n| distinct resourceGroup",
+                    "crossComponentResources": [
+                      "{subscriptionPicker}"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  {
+                    "id": "2a6e9715-65ac-4e99-8087-36d38c6df94b",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "SQLServer",
+                    "label": "SQL Server",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "query": "resources\r\n| where type == \"microsoft.sql/servers/databases\"\r\n| extend SQLServer = tostring(split(id,\"/\")[8])\r\n| project SQLServer\r\n| distinct SQLServer",
+                    "crossComponentResources": [
+                      "{subscriptionPicker}"
+                    ],
+                    "value": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all",
+                    "queryType": 1,
+                    "resourceType": "microsoft.resourcegraph/resources"
+                  },
+                  {
+                    "id": "666b1c22-c5a5-4363-aa7f-d23be60afd42",
+                    "version": "KqlParameterItem/1.0",
+                    "name": "[parameter(tagPrefix)]Managed",
+                    "label": "Managed by [parameter(companyName)]",
+                    "type": 2,
+                    "isRequired": true,
+                    "multiSelect": true,
+                    "quote": "'",
+                    "delimiter": ",",
+                    "value": [
+                      "value::all"
+                    ],
+                    "typeSettings": {
+                      "additionalResourceOptions": [
+                        "value::all"
+                      ],
+                      "showDefault": false
+                    },
+                    "jsonData": "[\"Yes\", \"No\"]",
+                    "timeContext": {
+                      "durationMs": 86400000
+                    },
+                    "defaultValue": "value::all"
+                  }
+                ],
+                "style": "above",
+                "queryType": 0,
+                "resourceType": "microsoft.operationalinsights/workspaces"
+              },
+              "name": "parameters - 1"
+            },
+            {
+              "type": 3,
+              "content": {
+                "version": "KqlItem/1.0",
+                "query": "resources\r\n| where type == \"microsoft.sql/servers/databases\"\r\n| where id !contains \"master\"\r\n| extend SubscriptionId = split(id,\"/\")[2]\r\n//| extend Type = iif(type contains \"databases\", \"Database\", \"Elastic Pool\")\r\n| extend SQLServer = tostring(split(id,\"/databases/\")[0])\r\n| extend SQLServerName = tostring(split(id,\"/\")[8])\r\n| extend [parameter(tagPrefix)]Managed = iif((tostring(tags) has '\"[parameter(tagPrefix)]Managed\":\"true\"'), \"Yes\", \"No\")\r\n| extend Status=properties.status\r\n| extend elasticPoolId = tolower(tostring(properties.elasticPoolId))\r\n| join kind=leftouter (\r\n  Resources\r\n  | where type =~ 'microsoft.sql/servers/elasticpools'\r\n  | project elasticPoolId = tolower(id), ElasticPoolName = name, ElasticPoolState = properties.state) on elasticPoolId\r\n| where resourceGroup in ({resourceGroupPicker})\r\n| where SQLServerName in ({SQLServer})\r\n| where [parameter(tagPrefix)]Managed in ({[parameter(tagPrefix)]Managed})\r\n| project Name=id, SQLServer, kind, ElasticPoolName, ElasticPoolState, Subscription=SubscriptionId, ResourceGroup=resourceGroup, Location=location, [parameter(tagPrefix)]Managed, sku.name, Status",
+                "size": 0,
+                "queryType": 1,
+                "resourceType": "microsoft.resourcegraph/resources",
+                "crossComponentResources": [
+                  "{subscriptionPicker}"
+                ],
+                "gridSettings": {
+                  "formatters": [
+                    {
+                      "columnMatch": "Subscription",
+                      "formatter": 15,
+                      "formatOptions": {
+                        "linkTarget": null,
+                        "showIcon": true
+                      }
+                    },
+                    {
+                      "columnMatch": "Status",
+                      "formatter": 18,
+                      "formatOptions": {
+                        "thresholdsOptions": "icons",
+                        "thresholdsGrid": [
+                          {
+                            "operator": "startsWith",
+                            "thresholdValue": "Ready",
+                            "representation": "success",
+                            "text": "{0}{1}"
+                          },
+                          {
+                            "operator": "startsWith",
+                            "thresholdValue": "Online",
+                            "representation": "success",
+                            "text": "{0}{1}"
+                          },
+                          {
+                            "operator": "Default",
+                            "thresholdValue": null,
+                            "representation": "2",
+                            "text": "{0}{1}"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "columnMatch": "SubscriptionId",
+                      "formatter": 15,
+                      "formatOptions": {
+                        "linkTarget": null,
+                        "showIcon": true
+                      }
+                    }
+                  ],
+                  "labelSettings": [
+                    {
+                      "columnId": "kind",
+                      "label": "Kind"
+                    },
+                    {
+                      "columnId": "sku_name",
+                      "label": "SKU"
+                    }
+                  ]
+                }
+              },
+              "conditionalVisibility": {
+                "parameterName": "resourceGroupPicker",
+                "comparison": "isNotEqualTo"
+              },
+              "name": "query - 2"
+            },
+            {
+              "type": 1,
+              "content": {
+                "json": "#### No Azure SQL servers are deployed in this environment yet"
+              },
+              "conditionalVisibility": {
+                "parameterName": "resourceGroupPicker",
+                "comparison": "isEqualTo"
+              },
+              "name": "text - 2"
+            }
+          ]
+        },
+        "name": "group - 0"
+      }
+    ],
+    "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+  }

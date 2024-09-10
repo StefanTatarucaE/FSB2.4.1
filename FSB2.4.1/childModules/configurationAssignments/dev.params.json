@@ -1,0 +1,40 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "configurationAssignmentsLocations": {
+      "value": []
+    },
+    "configurationAssignmentsOsTypes": {
+      "value": []
+    },
+    "configurationAssignmentsResourceGroups": {
+      "value": []
+    },
+    "configurationAssignmentsResourceTypes": {
+      "value": ["Microsoft.Compute/virtualMachines"]
+    },
+    "configurationAssignmentsTagFilter": {
+      "value": "All"
+    },
+    "configurationAssignmentsTagObject": {
+      "value": {
+        "EvidenManaged": [
+          "True"
+        ],
+        "EvidenPatching": [
+          "linux-dev5"
+        ]
+      }
+    },
+    "lndzSubscriptionId": {
+      "value": "/subscriptions/3bed9a6a-xxxx-47e1-bbe5-6df00467a2e1"
+    },
+    "maintenanceConfigurationId": {
+      "value": "/subscriptions/954bc363-xxxx-42af-a14d-fc3f210d94a0/resourceGroups/dv3-mgmt-d-rsg-updatemanager/providers/Microsoft.Maintenance/maintenanceConfigurations/windows-dev"
+    },
+    "configurationAssignmentName": {
+      "value": "test-maintenance-configuration"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "value": "aaa-cnty-d-eune-rt-spoke"
+    },
+    "location": {
+      "value": "northeurope"
+    },
+    "tags": {
+      "value": {
+        "DCSVersion": "2.2"
+      }
+    },
+    "disableBgpRoutePropagation": {
+      "value": true
+    },
+    "routes": {
+      "value": [
+        {
+          "name": "DCSDefaultRoute",
+          "properties": {
+            "addressPrefix": "0.0.0.0/0",
+            "nextHopIpAddress" : "10.10.3.4",
+            "nextHopType": "VirtualAppliance"
+          }
+        }
+      ]
+    }
+  }
+}

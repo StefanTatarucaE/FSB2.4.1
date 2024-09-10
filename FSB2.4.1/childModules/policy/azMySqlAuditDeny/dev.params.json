@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "mySqlSettings": {
+            "value": {
+                "enableSslConnection": "Audit",
+                "enableGeoRedundantBackup": "Audit",
+                "enableInfraEncryption": "Audit",
+                "useVirtualNetworkServiceEndpoint": "AuditIfNotExists",
+                "useCustomerManagedKeyMySql": "AuditIfNotExists",
+                "enablePrivateEndpointMySql": "AuditIfNotExists",
+                "disablePublicAccessFlexibleMySql": "Audit",
+                "disablePublicAccessMySql": "Audit"
+            }
+        },
+        "mySqlAuditDenySetName": {
+            "value": "mysql.auditdeny.policy.set"
+        },
+        "mySqlAuditDenySetDisplayName": {
+            "value": "Mysql auditdeny policy set"
+        },
+        "mySqlAuditDenySetAssignmentName": {
+            "value": "mysql.auditdeny.policy.set.assignment"
+        },
+        "mySqlAuditDenySetAssignmentDisplayName": {
+            "value": "Mysql auditdeny policy set assignment"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        }
+    }
+}

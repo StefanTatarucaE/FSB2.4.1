@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "cosmosDbSettings": {
+      "value": {
+        "firewallRuleEnabledEffect": "Audit",
+        "useCustomerManagedKeyEffect": "Audit",
+        "allowedLocationEffect": "Audit",
+        "disablePublicNetworkAccessEffect": "Audit",
+        "throughputMaxEffect": "Audit",
+        "throughputMax": 1000000,
+        "listOfAllowedLocations": [
+          "uksouth",
+          "ukwest"
+        ],
+        "localAuthenticationDisableEffect": "Audit",
+        "virtualNetworkServiceEndpointEffect": "Audit",
+        "usePrivateLinkEffect": "Audit"
+      }
+    },
+    "cosmosDbAuditDenySetName": {
+      "value": "cosmosdb.auditdeny.policy.set"
+    },
+    "cosmosdbAuditDenySetDisplayName": {
+      "value": "Cosmosdb auditdeny policy set"
+    },
+    "cosmosdbAuditDenySetAssignmentName": {
+      "value": "cosmosdb.auditdeny.policy.set.assignment"
+    },
+    "cosmosdbAuditDenySetAssignmentDisplayName": {
+      "value": "Cosmosdb auditdeny policy set assignment"
+    },
+    "policyMetadata": {
+        "value": "EvidenELZ"
+    }
+  }
+}

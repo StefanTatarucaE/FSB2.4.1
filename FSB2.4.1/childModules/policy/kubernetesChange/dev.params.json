@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "aksAadAdminEffect": {
+      "value": "DeployIfNotExists"
+    },
+    "aksAdminGroupIds": {
+      "value": [
+        "d389b421-001c-42dd-b019-cf5c579c254c"
+      ]
+    },
+    "managementSubscriptionId": {
+      "value": "3e3ae977-9abe-4702-8132-b41d3107928b"
+    },
+    "kubernetesChangeAadAdminPolicyDefName": {
+      "value": "aks.aadconfig.change.policy.def"
+    },
+    "kubernetesChangeAadAdminPolicyDefDisplayName": {
+      "value": "Azure kubernetes services aad config change policy definition"
+    },
+    "kubernetesChangeDefAssignmentName": {
+      "value": "aks.change.policy.def.assignment"
+    },
+    "kubernetesChangeDefAssignmentDisplayName": {
+      "value": "Azure kubernetes change policy definition"
+    },
+    "policyMetadata": {
+      "value": "EvidenELZ"
+    },
+    "policyRuleTag": {
+      "value": "EvidenManaged"
+    }
+  }
+}

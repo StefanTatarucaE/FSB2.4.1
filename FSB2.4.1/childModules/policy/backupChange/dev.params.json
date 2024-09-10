@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "backupDefName": {
+            "value": "sub1-d-backup-policy-def"
+        },
+        "backupDefAssignmentName": {
+            "value": "sub1-d-backup-policy-assignment"
+        },
+        "backupTagName": {
+            "value": "EvidenBackup"
+        },
+        "managedTagName": {
+            "value": "EvidenManaged"
+        },
+        "policyMetadata": {
+            "value": "EvidenELZ"
+        },
+        "backupPolicyConfigurations": {
+            "value": {
+                "list": [
+                    {
+                        "backupTagNamePrefix": "Bronze"
+                    },
+                    {
+                        "backupTagNamePrefix": "Silver"
+                    },
+                    {
+                        "backupTagNamePrefix": "Gold"
+                    }
+                ]
+            }
+        },
+        "vaultLocation": {
+            "value": "westeurope"
+        },
+        "vaultId": {
+            "value": ""
+        }
+    }
+}

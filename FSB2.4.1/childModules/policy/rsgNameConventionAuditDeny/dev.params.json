@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "policyEffect": {
+      "value": "Audit"
+    },
+    "rsgNameConventionsAuditDenyDefName" : {
+      "value": "nameconvention.auditdeny.policy.def"
+    },
+    "rsgNameConventionsAuditDenyDefDisplayName" : {
+      "value": "Audit Resource Group naming convention"
+    },
+    "rsgNameConventionsAuditDenyDefAssignmentName" : {
+      "value": "nameconvention.auditdeny.policy.def.assignment"
+    },
+    "rsgNameConventionsAuditDenyDefAssignmentDisplayName" : {
+      "value": "Name convention auditdeny policy definition assignment"
+    },
+    "policyMetadata": {
+        "value": "EvidenELZ"
+    }
+  }
+}
